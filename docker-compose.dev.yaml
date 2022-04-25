@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      args:
+        - BUILD_TYPE=Debug
+      context: ./backend
+      dockerfile: Dockerfile
+      target: terrace-heating-backend
+    container_name: backend-dev
+    ports:
+      - "50051:50051"
+
+  envoy:
+    container_name: envoy
+    image: envoyproxy/envoy:v1.21.0
+    extra_hosts: # For Ubuntu
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8080:8080"  # Proxy
+      - "9901:9901"  # Admin
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    container_name: frontend-dev
+    depends_on:
+      - backend
+      - envoy
+    environment:
+      - NEXT_PUBLIC_ENVOY_ADDRESS=http://localhost:8080
+    extra_hosts: # For Ubuntu
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/:/usr/src/app
