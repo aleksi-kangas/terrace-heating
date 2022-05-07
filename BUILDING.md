@@ -7,5 +7,5 @@ $ docker-compose -f docker-compose.dev.yaml up
 
 ## Production Environment (Raspberry PI)
 ```bash
-# TODO
+$ docker-compose -f docker-compose.prod.yaml up
 ```
