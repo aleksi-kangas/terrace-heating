@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     tar \
-    python3
+    python3 \
+    gdb
 
 RUN export VCPKG_FORCE_SYSTEM_BINARIES=1
 
