@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  heat-pump-service:
+    build:
+      context: ./heat_pump_service
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: heat-pump-service
+    env_file:
+      - .env
+    environment:
+      - HEAT_PUMP_IP=${HEAT_PUMP_IP}
+      - HEAT_PUMP_PORT=${HEAT_PUMP_PORT}
+    ports:
+      - "50051:50051"
