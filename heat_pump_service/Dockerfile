@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     tar \
     python3 \
+    protobuf-compiler \
     gdb
 
 RUN export VCPKG_FORCE_SYSTEM_BINARIES=1
