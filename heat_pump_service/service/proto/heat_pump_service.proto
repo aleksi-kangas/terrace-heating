@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service HeatPumpSvc {
+  rpc GetTemperatures (google.protobuf.Empty) returns (Temperatures) {}
+  rpc GetTankLimits (google.protobuf.Empty) returns (TankLimits) {}
+}
+
+message Temperatures {
+  float circuit1 = 1;
+  float circuit2 = 2;
+  float circuit3 = 3;
+  float ground_input = 4;
+  float ground_output = 5;
+  float hot_gas = 6;
+  float inside = 7;
+  float lower_tank = 8;
+  float outside = 9;
+  float upper_tank = 10;
+}
+
+message TankLimits {
+  float lower_tank_minimum = 1;
+  float lower_tank_maximum = 2;
+  float upper_tank_minimum = 3;
+  float upper_tank_maximum = 4;
+}
