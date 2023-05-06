@@ -1,0 +1,6 @@
+.idea
+.gitignore
+.dockerignore
+
+HeatingService.API/bin
+HeatingService.API/obj

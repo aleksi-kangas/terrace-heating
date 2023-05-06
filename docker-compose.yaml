@@ -14,3 +14,19 @@ services:
       - HEAT_PUMP_PORT=${HEAT_PUMP_PORT}
     ports:
       - "50051:50051"
+  heating-service:
+    build:
+      context: ./heating_service
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: heating-service
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Development
+     - ASPNETCORE_HTTPS_PORT=8001
+     - ASPNETCORE_URLS=https://+;http://+
+    ports:
+      - "8000:80"
+      - "8001:443"
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https/
+      - ~/.microsoft/usersecrets/:/root/.microsoft/usersecrets
