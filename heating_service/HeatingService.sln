@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatingService.API", "HeatingService.API\HeatingService.API.csproj", "{C2E71F2F-F9B1-4453-9170-88679A8085CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatingService.Contracts", "HeatingService.Contracts\HeatingService.Contracts.csproj", "{511FC20D-9ADA-43A8-9ADD-E8538C675A27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{C2E71F2F-F9B1-4453-9170-88679A8085CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2E71F2F-F9B1-4453-9170-88679A8085CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2E71F2F-F9B1-4453-9170-88679A8085CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{511FC20D-9ADA-43A8-9ADD-E8538C675A27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511FC20D-9ADA-43A8-9ADD-E8538C675A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511FC20D-9ADA-43A8-9ADD-E8538C675A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511FC20D-9ADA-43A8-9ADD-E8538C675A27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
