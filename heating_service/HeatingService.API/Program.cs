@@ -1,6 +1,13 @@
+using HeatingService.API.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddGrpcClient<HeatPumpSvc.HeatPumpSvcClient>(o => {
+    o.Address = new Uri("http://host.docker.internal:50051");
+});
+builder.Services.AddScoped<IHeatPumpService, HeatPumpService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
