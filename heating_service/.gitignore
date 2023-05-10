@@ -1,3 +1,6 @@
 .idea
 HeatingService.API/bin
 HeatingService.API/obj
+
+HeatingService.Contracts/bin
+HeatingService.Contracts/obj
