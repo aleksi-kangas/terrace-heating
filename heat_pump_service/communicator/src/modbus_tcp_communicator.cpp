@@ -16,10 +16,8 @@ ModbusTCPCommunicator::ModbusTCPCommunicator(const std::string& host,
     throw std::runtime_error{"Failed to create modbus context"};
   }
 
-  // TODO Is this good to have?
-  //modbus_set_error_recovery(context_, MODBUS_ERROR_RECOVERY_LINK);
+  modbus_set_error_recovery(context_, MODBUS_ERROR_RECOVERY_LINK);
 
-  // TODO Write proper reconnect logic
   if (modbus_connect(context_) == -1) {
     throw std::runtime_error{"Failed to connect to modbus server: " +
                              std::string{modbus_strerror(errno)}};
@@ -27,11 +25,13 @@ ModbusTCPCommunicator::ModbusTCPCommunicator(const std::string& host,
 }
 
 ModbusTCPCommunicator::~ModbusTCPCommunicator() {
+  std::lock_guard<std::mutex> lock{mutex_};
   modbus_close(context_);
   modbus_free(context_);
 }
 
 uint32_t ModbusTCPCommunicator::ActiveCircuitCount() const {
+  std::lock_guard<std::mutex> lock{mutex_};
   uint16_t active_circuit_count{0};
   const int32_t rc = modbus_read_registers(
       context_, registers::kActiveCircuitCount, 1, &active_circuit_count);
@@ -43,6 +43,7 @@ uint32_t ModbusTCPCommunicator::ActiveCircuitCount() const {
 }
 
 bool ModbusTCPCommunicator::IsCompressorActive() const {
+  std::lock_guard<std::mutex> lock{mutex_};
   uint16_t is_compressor_active{0};
   const int32_t rc = modbus_read_registers(
       context_, registers::kCompressorActive, 1, &is_compressor_active);
@@ -54,6 +55,7 @@ bool ModbusTCPCommunicator::IsCompressorActive() const {
 }
 
 bool ModbusTCPCommunicator::IsSchedulingEnabled() const {
+  std::lock_guard<std::mutex> lock{mutex_};
   uint16_t is_scheduling_enabled{0};
   const int32_t rc = modbus_read_registers(
       context_, registers::kSchedulingEnabled, 1, &is_scheduling_enabled);
@@ -65,6 +67,7 @@ bool ModbusTCPCommunicator::IsSchedulingEnabled() const {
 }
 
 Temperatures ModbusTCPCommunicator::ReadTemperatures() const {
+  std::unique_lock<std::mutex> lock{mutex_};
   // Query values in bulk in order to limit the amount of round trips.
   constexpr int kStartAddress = registers::kTemperatureRegisterRange.first;
   constexpr int32_t kQuantity = registers::kTemperatureRegisterRange.second -
@@ -76,10 +79,12 @@ Temperatures ModbusTCPCommunicator::ReadTemperatures() const {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
   }
+  lock.unlock();
   return utils::ParseTemperatures(values);
 }
 
 TankLimits ModbusTCPCommunicator::ReadTankLimits() const {
+  std::unique_lock<std::mutex> lock{mutex_};
   // Query values in bulk in order to limit the amount of round trips.
   constexpr int kStartAddress = registers::kTankLimitRegisterRange.first;
   constexpr int32_t kQuantity = registers::kTankLimitRegisterRange.second -
@@ -91,6 +96,7 @@ TankLimits ModbusTCPCommunicator::ReadTankLimits() const {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
   }
+  lock.unlock();
   return utils::ParseTankLimits(values);
 }
 

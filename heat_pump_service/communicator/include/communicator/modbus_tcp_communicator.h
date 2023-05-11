@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <mutex>
 #include <string>
 
 #include <modbus.h>
@@ -21,5 +22,6 @@ class ModbusTCPCommunicator final : public ICommunicator {
 
  private:
   modbus_t* context_{nullptr};
+  mutable std::mutex mutex_{};
 };
 }  // namespace communicator
