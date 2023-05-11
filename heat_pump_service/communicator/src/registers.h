@@ -40,5 +40,6 @@ constexpr std::pair<int32_t, int32_t> kTankLimitRegisterRange{
 
 // Miscellaneous
 constexpr int32_t kActiveCircuitCount = 5100;
+constexpr int32_t kCompressorActive = 5158;
 
 }  // namespace communicator::registers

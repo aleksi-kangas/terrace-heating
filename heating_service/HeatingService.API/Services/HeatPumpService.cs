@@ -40,4 +40,9 @@ class HeatPumpService : IHeatPumpService {
       tankLimits.UpperTankMinimum,
       tankLimits.UpperTankMaximum);
   }
+
+  public async Task<Boolean> IsCompressorActiveAsync() {
+    var isCompressorActive = await _client.IsCompressorActiveAsync(new Empty());
+    return isCompressorActive.Value;
+  }
 }

@@ -14,6 +14,7 @@ class ModbusTCPCommunicator final : public ICommunicator {
   ~ModbusTCPCommunicator() override;
 
   [[nodiscard]] uint32_t ActiveCircuitCount() const override;
+  [[nodiscard]] bool IsCompressorActive() const override;
   [[nodiscard]] Temperatures ReadTemperatures() const override;
   [[nodiscard]] TankLimits ReadTankLimits() const override;
 

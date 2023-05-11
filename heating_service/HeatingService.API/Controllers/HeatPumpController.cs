@@ -17,6 +17,11 @@ public class HeatPumpController : ApiController {
     return await _heatPumpService.GetActiveCircuitCountAsync();
   }
 
+  [HttpGet("compressor-active")]
+  public async Task<Boolean> IsCompressorActive() {
+    return await _heatPumpService.IsCompressorActiveAsync();
+  }
+
   [HttpGet("temperatures")]
   public async Task<TemperaturesResponse> GetTemperatures() {
     return await _heatPumpService.GetTemperaturesAsync();

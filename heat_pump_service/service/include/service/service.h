@@ -27,6 +27,10 @@ class HeatPumpService final : public HeatPumpSvc::Service {
                              const google::protobuf::Empty* request,
                              TankLimits* response) override;
 
+  grpc::Status IsCompressorActive(
+      grpc::ServerContext* context, const google::protobuf::Empty* request,
+      google::protobuf::BoolValue* response) override;
+
  private:
   std::unique_ptr<communicator::ICommunicator> communicator_{nullptr};
 };

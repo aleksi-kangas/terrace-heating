@@ -54,4 +54,15 @@ grpc::Status HeatPumpService::GetTankLimits(
   }
 }
 
+grpc::Status HeatPumpService::IsCompressorActive(
+    grpc::ServerContext* context, const google::protobuf::Empty* request,
+    google::protobuf::BoolValue* response) {
+  try {
+    response->set_value(communicator_->IsCompressorActive());
+    return grpc::Status::OK;
+  } catch (const std::exception& e) {
+    return grpc::Status(grpc::StatusCode::INTERNAL, e.what());
+  }
+}
+
 }  // namespace service

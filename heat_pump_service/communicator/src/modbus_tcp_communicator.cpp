@@ -42,6 +42,17 @@ uint32_t ModbusTCPCommunicator::ActiveCircuitCount() const {
   return active_circuit_count;
 }
 
+bool ModbusTCPCommunicator::IsCompressorActive() const {
+  uint16_t is_compressor_active{0};
+  const int32_t rc = modbus_read_registers(
+      context_, registers::kCompressorActive, 1, &is_compressor_active);
+  if (rc != 1) {
+    throw std::runtime_error{"Failed to read registers: " +
+                             std::string{modbus_strerror(errno)}};
+  }
+  return is_compressor_active == 1;
+}
+
 Temperatures ModbusTCPCommunicator::ReadTemperatures() const {
   // Query values in bulk in order to limit the amount of round trips.
   constexpr int kStartAddress = registers::kTemperatureRegisterRange.first;
