@@ -25,8 +25,8 @@ message Temperatures {
 }
 
 message TankLimits {
-  float lower_tank_minimum = 1;
-  float lower_tank_maximum = 2;
-  float upper_tank_minimum = 3;
-  float upper_tank_maximum = 4;
+  uint32 lower_tank_minimum = 1;
+  uint32 lower_tank_maximum = 2;
+  uint32 upper_tank_minimum = 3;
+  uint32 upper_tank_maximum = 4;
 }

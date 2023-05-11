@@ -38,16 +38,17 @@ Temperatures ParseTemperatures(const std::array<uint16_t, 117>& values) {
 }
 
 TankLimits ParseTankLimits(const std::array<uint16_t, 8>& values) {
-  constexpr int32_t kOffset = registers::kTankLimitRegisterRange.first;
+  constexpr auto kOffset =
+      static_cast<uint32_t>(registers::kTankLimitRegisterRange.first);
   return TankLimits{
       .lower_tank_minimum =
-          static_cast<int32_t>(values[registers::kLowerTankMinimum - kOffset]),
+          static_cast<uint32_t>(values[registers::kLowerTankMinimum - kOffset]),
       .lower_tank_maximum =
-          static_cast<int32_t>(values[registers::kLowerTankMaximum - kOffset]),
+          static_cast<uint32_t>(values[registers::kLowerTankMaximum - kOffset]),
       .upper_tank_minimum =
-          static_cast<int32_t>(values[registers::kUpperTankMinimum - kOffset]),
+          static_cast<uint32_t>(values[registers::kUpperTankMinimum - kOffset]),
       .upper_tank_maximum =
-          static_cast<int32_t>(values[registers::kUpperTankMaximum - kOffset]),
+          static_cast<uint32_t>(values[registers::kUpperTankMaximum - kOffset]),
   };
 }
 

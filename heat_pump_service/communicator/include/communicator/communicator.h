@@ -15,10 +15,10 @@ struct Temperatures {
 };
 
 struct TankLimits {
-  int32_t lower_tank_minimum{0};
-  int32_t lower_tank_maximum{0};
-  int32_t upper_tank_minimum{0};
-  int32_t upper_tank_maximum{0};
+  uint32_t lower_tank_minimum{0};
+  uint32_t lower_tank_maximum{0};
+  uint32_t upper_tank_minimum{0};
+  uint32_t upper_tank_maximum{0};
 };
 
 class ICommunicator {
