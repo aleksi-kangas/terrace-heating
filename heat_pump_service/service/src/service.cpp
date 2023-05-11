@@ -8,19 +8,20 @@ HeatPumpService::HeatPumpService(
     : communicator_{std::move(communicator)} {}
 
 grpc::Status HeatPumpService::GetActiveCircuitCount(
-    grpc::ServerContext* context, const google::protobuf::Empty* request,
+    grpc::ServerContext* /* context */,
+    const google::protobuf::Empty* /* request */,
     google::protobuf::UInt32Value* response) {
   try {
     response->set_value(communicator_->ActiveCircuitCount());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return grpc::Status(grpc::StatusCode::INTERNAL, e.what());
+    return {grpc::StatusCode::INTERNAL, e.what()};
   }
 }
 
 grpc::Status HeatPumpService::GetTemperatures(
-    grpc::ServerContext* context, const google::protobuf::Empty* request,
-    Temperatures* response) {
+    grpc::ServerContext* /* context */,
+    const google::protobuf::Empty* /* request */, Temperatures* response) {
   try {
     const auto temperatures = communicator_->ReadTemperatures();
     response->set_circuit1(temperatures.circuit1);
@@ -35,13 +36,13 @@ grpc::Status HeatPumpService::GetTemperatures(
     response->set_upper_tank(temperatures.upper_tank);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return grpc::Status(grpc::StatusCode::INTERNAL, e.what());
+    return {grpc::StatusCode::INTERNAL, e.what()};
   }
 }
 
 grpc::Status HeatPumpService::GetTankLimits(
-    grpc::ServerContext* context, const google::protobuf::Empty* request,
-    TankLimits* response) {
+    grpc::ServerContext* /* context */,
+    const google::protobuf::Empty* /* request */, TankLimits* response) {
   try {
     const auto tank_limits = communicator_->ReadTankLimits();
     response->set_lower_tank_minimum(tank_limits.lower_tank_minimum);
@@ -50,18 +51,19 @@ grpc::Status HeatPumpService::GetTankLimits(
     response->set_upper_tank_maximum(tank_limits.upper_tank_maximum);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return grpc::Status(grpc::StatusCode::INTERNAL, e.what());
+    return {grpc::StatusCode::INTERNAL, e.what()};
   }
 }
 
 grpc::Status HeatPumpService::IsCompressorActive(
-    grpc::ServerContext* context, const google::protobuf::Empty* request,
+    grpc::ServerContext* /* context */,
+    const google::protobuf::Empty* /* request */,
     google::protobuf::BoolValue* response) {
   try {
     response->set_value(communicator_->IsCompressorActive());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return grpc::Status(grpc::StatusCode::INTERNAL, e.what());
+    return {grpc::StatusCode::INTERNAL, e.what()};
   }
 }
 
