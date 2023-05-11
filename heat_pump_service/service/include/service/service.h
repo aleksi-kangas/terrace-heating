@@ -31,6 +31,10 @@ class HeatPumpService final : public HeatPumpSvc::Service {
       grpc::ServerContext* context, const google::protobuf::Empty* request,
       google::protobuf::BoolValue* response) override;
 
+  grpc::Status IsSchedulingEnabled(
+      grpc::ServerContext* context, const google::protobuf::Empty* request,
+      google::protobuf::BoolValue* response) override;
+
  private:
   std::unique_ptr<communicator::ICommunicator> communicator_{nullptr};
 };
