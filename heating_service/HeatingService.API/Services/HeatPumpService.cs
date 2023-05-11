@@ -45,4 +45,9 @@ class HeatPumpService : IHeatPumpService {
     var isCompressorActive = await _client.IsCompressorActiveAsync(new Empty());
     return isCompressorActive.Value;
   }
+
+  public async Task<Boolean> IsSchedulingEnabledAsync() {
+    var isSchedulingEnabled = await _client.IsSchedulingEnabledAsync(new Empty());
+    return isSchedulingEnabled.Value;
+  }
 }

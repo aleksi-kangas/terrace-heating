@@ -22,6 +22,11 @@ public class HeatPumpController : ApiController {
     return await _heatPumpService.IsCompressorActiveAsync();
   }
 
+  [HttpGet("scheduling-enabled")]
+  public async Task<Boolean> IsSchedulingEnabled() {
+    return await _heatPumpService.IsSchedulingEnabledAsync();
+  }
+
   [HttpGet("temperatures")]
   public async Task<TemperaturesResponse> GetTemperatures() {
     return await _heatPumpService.GetTemperaturesAsync();

@@ -53,6 +53,17 @@ bool ModbusTCPCommunicator::IsCompressorActive() const {
   return is_compressor_active == 1;
 }
 
+bool ModbusTCPCommunicator::IsSchedulingEnabled() const {
+  uint16_t is_scheduling_enabled{0};
+  const int32_t rc = modbus_read_registers(
+      context_, registers::kSchedulingEnabled, 1, &is_scheduling_enabled);
+  if (rc != 1) {
+    throw std::runtime_error{"Failed to read registers: " +
+                             std::string{modbus_strerror(errno)}};
+  }
+  return is_scheduling_enabled == 1;
+}
+
 Temperatures ModbusTCPCommunicator::ReadTemperatures() const {
   // Query values in bulk in order to limit the amount of round trips.
   constexpr int kStartAddress = registers::kTemperatureRegisterRange.first;

@@ -27,6 +27,7 @@ class ICommunicator {
 
   [[nodiscard]] virtual uint32_t ActiveCircuitCount() const = 0;
   [[nodiscard]] virtual bool IsCompressorActive() const = 0;
+  [[nodiscard]] virtual bool IsSchedulingEnabled() const = 0;
   [[nodiscard]] virtual Temperatures ReadTemperatures() const = 0;
   [[nodiscard]] virtual TankLimits ReadTankLimits() const = 0;
 };

@@ -7,4 +7,5 @@ public interface IHeatPumpService {
   Task<TemperaturesResponse> GetTemperaturesAsync();
   Task<TankLimitsResponse> GetTankLimitsAsync();
   Task<Boolean> IsCompressorActiveAsync();
+  Task<Boolean> IsSchedulingEnabledAsync();
 }

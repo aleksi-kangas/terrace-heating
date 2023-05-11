@@ -8,6 +8,7 @@ service HeatPumpSvc {
   rpc GetTemperatures(google.protobuf.Empty) returns (Temperatures) {}
   rpc GetTankLimits(google.protobuf.Empty) returns (TankLimits) {}
   rpc IsCompressorActive(google.protobuf.Empty) returns (google.protobuf.BoolValue) {}
+  rpc IsSchedulingEnabled(google.protobuf.Empty) returns (google.protobuf.BoolValue) {}
 }
 
 message Temperatures {
