@@ -1,10 +1,12 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 
 service HeatPumpSvc {
-  rpc GetTemperatures (google.protobuf.Empty) returns (Temperatures) {}
-  rpc GetTankLimits (google.protobuf.Empty) returns (TankLimits) {}
+  rpc GetActiveCircuitCount(google.protobuf.Empty) returns (google.protobuf.UInt32Value) {}
+  rpc GetTemperatures(google.protobuf.Empty) returns (Temperatures) {}
+  rpc GetTankLimits(google.protobuf.Empty) returns (TankLimits) {}
 }
 
 message Temperatures {

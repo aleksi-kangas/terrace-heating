@@ -13,6 +13,7 @@ class ModbusTCPCommunicator final : public ICommunicator {
   ModbusTCPCommunicator(const std::string& host, int32_t port);
   ~ModbusTCPCommunicator() override;
 
+  [[nodiscard]] uint32_t ActiveCircuitCount() const override;
   [[nodiscard]] Temperatures ReadTemperatures() const override;
   [[nodiscard]] TankLimits ReadTankLimits() const override;
 

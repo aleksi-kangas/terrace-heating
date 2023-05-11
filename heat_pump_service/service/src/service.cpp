@@ -7,6 +7,17 @@ HeatPumpService::HeatPumpService(
     std::unique_ptr<communicator::ICommunicator> communicator)
     : communicator_{std::move(communicator)} {}
 
+grpc::Status HeatPumpService::GetActiveCircuitCount(
+    grpc::ServerContext* context, const google::protobuf::Empty* request,
+    google::protobuf::UInt32Value* response) {
+  try {
+    response->set_value(communicator_->ActiveCircuitCount());
+    return grpc::Status::OK;
+  } catch (const std::exception& e) {
+    return grpc::Status(grpc::StatusCode::INTERNAL, e.what());
+  }
+}
+
 grpc::Status HeatPumpService::GetTemperatures(
     grpc::ServerContext* context, const google::protobuf::Empty* request,
     Temperatures* response) {

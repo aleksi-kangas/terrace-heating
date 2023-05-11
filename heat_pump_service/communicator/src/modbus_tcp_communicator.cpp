@@ -31,6 +31,17 @@ ModbusTCPCommunicator::~ModbusTCPCommunicator() {
   modbus_free(context_);
 }
 
+uint32_t ModbusTCPCommunicator::ActiveCircuitCount() const {
+  uint16_t active_circuit_count{0};
+  const int32_t rc = modbus_read_registers(
+      context_, registers::kActiveCircuitCount, 1, &active_circuit_count);
+  if (rc != 1) {
+    throw std::runtime_error{"Failed to read registers: " +
+                             std::string{modbus_strerror(errno)}};
+  }
+  return active_circuit_count;
+}
+
 Temperatures ModbusTCPCommunicator::ReadTemperatures() const {
   // Query values in bulk in order to limit the amount of round trips.
   constexpr int kStartAddress = registers::kTemperatureRegisterRange.first;

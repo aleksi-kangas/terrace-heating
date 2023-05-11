@@ -12,6 +12,11 @@ public class HeatPumpController : ApiController {
     _heatPumpService = heatPumpService;
   }
 
+  [HttpGet("active-circuits")]
+  public async Task<UInt32> GetActiveCircuitCount() {
+    return await _heatPumpService.GetActiveCircuitCountAsync();
+  }
+
   [HttpGet("temperatures")]
   public async Task<TemperaturesResponse> GetTemperatures() {
     return await _heatPumpService.GetTemperaturesAsync();

@@ -38,4 +38,7 @@ constexpr std::pair<int32_t, int32_t> kTankLimitRegisterRange{
     std::max({kLowerTankMinimum, kLowerTankMaximum, kUpperTankMinimum,
               kUpperTankMaximum})};
 
+// Miscellaneous
+constexpr int32_t kActiveCircuitCount = 5100;
+
 }  // namespace communicator::registers

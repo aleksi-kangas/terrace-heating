@@ -10,6 +10,11 @@ class HeatPumpService : IHeatPumpService {
     _client = client;
   }
 
+  public async Task<UInt32> GetActiveCircuitCountAsync() {
+    var count = await _client.GetActiveCircuitCountAsync(new Empty());
+    return count.Value;
+  }
+
   public async Task<TemperaturesResponse> GetTemperaturesAsync() {
     var temperatures = await _client.GetTemperaturesAsync(new Empty());
     // TODO Use a proper mapper library
