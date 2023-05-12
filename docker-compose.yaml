@@ -1,6 +1,19 @@
 version: "3.9"
 
 services:
+  database:
+    container_name: database
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    image: postgres:15.3
+    ports:
+      - "5432:5432"
+    volumes:
+      - database-data:/var/lib/postgresql/data
+      
   heat-pump-service:
     build:
       context: ./heat_pump_service
@@ -14,6 +27,7 @@ services:
       - HEAT_PUMP_PORT=${HEAT_PUMP_PORT}
     ports:
       - "50051:50051"
+
   heating-service:
     build:
       context: ./heating_service
@@ -30,3 +44,18 @@ services:
     volumes:
       - ~/.aspnet/https:/root/.aspnet/https/
       - ~/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+
+  pgadmin:
+    container_name: pgadmin
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+      
+volumes:
+  database-data:
+    driver: local
