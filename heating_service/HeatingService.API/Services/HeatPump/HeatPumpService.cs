@@ -20,10 +20,10 @@ class HeatPumpService : IHeatPumpService {
     }
   }
 
-  public async Task<ErrorOr<Temperatures>> GetTemperaturesAsync() {
+  public async Task<ErrorOr<HeatingService.API.Domain.Temperatures>> GetTemperaturesAsync() {
     try {
       var temperatures = await _client.GetTemperaturesAsync(new Empty());
-      return new HeatingService.API.Services.HeatPump.Temperatures(
+      return new HeatingService.API.Domain.Temperatures(
         temperatures.Circuit1,
         temperatures.Circuit2,
         temperatures.Circuit3,
@@ -39,11 +39,10 @@ class HeatPumpService : IHeatPumpService {
     }
   }
 
-  public async Task<ErrorOr<TankLimits>> GetTankLimitsAsync() {
+  public async Task<ErrorOr<HeatingService.API.Domain.TankLimits>> GetTankLimitsAsync() {
     try {
       var tankLimits = await _client.GetTankLimitsAsync(new Empty());
-      // TODO Use a proper mapper library
-      return new HeatingService.API.Services.HeatPump.TankLimits(
+      return new HeatingService.API.Domain.TankLimits(
         tankLimits.LowerTankMinimum,
         tankLimits.LowerTankMaximum,
         tankLimits.UpperTankMinimum,
