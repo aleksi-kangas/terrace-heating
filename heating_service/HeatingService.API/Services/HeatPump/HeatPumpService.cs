@@ -1,13 +1,17 @@
 ﻿using ErrorOr;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using HeatPump;
+using MapsterMapper;
 
 namespace HeatingService.API.Services.HeatPump;
 
 class HeatPumpService : IHeatPumpService {
+  private readonly IMapper _mapper;
   private readonly HeatPumpSvc.HeatPumpSvcClient _client;
 
-  public HeatPumpService(HeatPumpSvc.HeatPumpSvcClient client) {
+  public HeatPumpService(IMapper mapper, HeatPumpSvc.HeatPumpSvcClient client) {
+    _mapper = mapper;
     _client = client;
   }
 
@@ -23,17 +27,7 @@ class HeatPumpService : IHeatPumpService {
   public async Task<ErrorOr<HeatingService.API.Domain.Temperatures>> GetTemperaturesAsync() {
     try {
       var temperatures = await _client.GetTemperaturesAsync(new Empty());
-      return new HeatingService.API.Domain.Temperatures(
-        temperatures.Circuit1,
-        temperatures.Circuit2,
-        temperatures.Circuit3,
-        temperatures.GroundInput,
-        temperatures.GroundOutput,
-        temperatures.HotGas,
-        temperatures.Inside,
-        temperatures.LowerTank,
-        temperatures.Outside,
-        temperatures.UpperTank);
+      return _mapper.Map<HeatingService.API.Domain.Temperatures>(temperatures);
     } catch (RpcException e) {
       return Error.Failure(e.Message);
     }
@@ -42,11 +36,7 @@ class HeatPumpService : IHeatPumpService {
   public async Task<ErrorOr<HeatingService.API.Domain.TankLimits>> GetTankLimitsAsync() {
     try {
       var tankLimits = await _client.GetTankLimitsAsync(new Empty());
-      return new HeatingService.API.Domain.TankLimits(
-        tankLimits.LowerTankMinimum,
-        tankLimits.LowerTankMaximum,
-        tankLimits.UpperTankMinimum,
-        tankLimits.UpperTankMaximum);
+      return _mapper.Map<HeatingService.API.Domain.TankLimits>(tankLimits);
     } catch (RpcException e) {
       return Error.Failure(e.Message);
     }

@@ -21,7 +21,8 @@ grpc::Status HeatPumpService::GetActiveCircuitCount(
 
 grpc::Status HeatPumpService::GetTemperatures(
     grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */, Temperatures* response) {
+    const google::protobuf::Empty* /* request */,
+    heat_pump::Temperatures* response) {
   try {
     const auto temperatures = communicator_->ReadTemperatures();
     response->set_circuit1(temperatures.circuit1);
@@ -42,7 +43,8 @@ grpc::Status HeatPumpService::GetTemperatures(
 
 grpc::Status HeatPumpService::GetTankLimits(
     grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */, TankLimits* response) {
+    const google::protobuf::Empty* /* request */,
+    heat_pump::TankLimits* response) {
   try {
     const auto tank_limits = communicator_->ReadTankLimits();
     response->set_lower_tank_minimum(tank_limits.lower_tank_minimum);
@@ -68,7 +70,8 @@ grpc::Status HeatPumpService::IsCompressorActive(
 }
 
 grpc::Status HeatPumpService::IsSchedulingEnabled(
-    grpc::ServerContext* context, const google::protobuf::Empty* request,
+    grpc::ServerContext* /* context */,
+    const google::protobuf::Empty* /* request */,
     google::protobuf::BoolValue* response) {
   try {
     response->set_value(communicator_->IsSchedulingEnabled());

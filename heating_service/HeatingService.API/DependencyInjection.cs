@@ -1,6 +1,7 @@
 using HeatingService.API.Common.Mapping;
 using HeatingService.API.Domain;
 using HeatingService.API.Services.HeatPump;
+using HeatPump;
 using Microsoft.EntityFrameworkCore;
 
 namespace HeatingService.API; 

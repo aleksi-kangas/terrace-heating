@@ -9,7 +9,7 @@
 #include "heat_pump_service.pb.h"
 
 namespace service {
-class HeatPumpService final : public HeatPumpSvc::Service {
+class HeatPumpService final : public heat_pump::HeatPumpSvc::Service {
  public:
   explicit HeatPumpService(
       std::unique_ptr<communicator::ICommunicator> communicator);
@@ -21,11 +21,11 @@ class HeatPumpService final : public HeatPumpSvc::Service {
 
   grpc::Status GetTemperatures(grpc::ServerContext* context,
                                const google::protobuf::Empty* request,
-                               Temperatures* response) override;
+                               heat_pump::Temperatures* response) override;
 
   grpc::Status GetTankLimits(grpc::ServerContext* context,
                              const google::protobuf::Empty* request,
-                             TankLimits* response) override;
+                             heat_pump::TankLimits* response) override;
 
   grpc::Status IsCompressorActive(
       grpc::ServerContext* context, const google::protobuf::Empty* request,
