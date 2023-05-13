@@ -1,6 +1,8 @@
+using CronScheduler.Extensions.Scheduler;
 using HeatingService.API.Common.Mapping;
 using HeatingService.API.Domain;
 using HeatingService.API.Services.HeatPump;
+using HeatingService.API.Tasks;
 using HeatPump;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +19,6 @@ public static class DependencyInjection {
           .AllowAnyMethod();
       });
     });
-    services.AddMappings();
     return services;
   }
 
@@ -29,6 +30,13 @@ public static class DependencyInjection {
     services.AddScoped<IHeatPumpService, HeatPumpService>();
     services.AddDbContext<HeatingDbContext>(options =>
       options.UseNpgsql(configurationManager.GetConnectionString("HeatingContext")));
+    services.AddMappings();
+    services.AddScheduler(builder => {
+        builder.Services.AddScoped<HeatPumpService>();
+        builder.Services.AddDbContext<HeatingDbContext>(options =>
+          options.UseNpgsql(configurationManager.GetConnectionString("HeatingContext")));
+        builder.AddJob<QueryHeatPumpRecordJob, QueryHeatPumpRecordJobOptions>();
+    });
     return services;
   }
 }
