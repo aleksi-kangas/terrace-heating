@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace communicator {
 struct Temperatures {
   float circuit1{0};
