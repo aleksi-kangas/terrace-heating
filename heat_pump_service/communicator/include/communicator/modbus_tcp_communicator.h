@@ -19,6 +19,7 @@ class ModbusTCPCommunicator final : public ICommunicator {
   [[nodiscard]] bool IsSchedulingEnabled() const override;
   [[nodiscard]] Temperatures ReadTemperatures() const override;
   [[nodiscard]] TankLimits ReadTankLimits() const override;
+  void WriteActiveCircuitCount(uint32_t count) override;
 
  private:
   modbus_t* context_{nullptr};

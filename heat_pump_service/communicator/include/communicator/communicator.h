@@ -30,5 +30,6 @@ class ICommunicator {
   [[nodiscard]] virtual bool IsSchedulingEnabled() const = 0;
   [[nodiscard]] virtual Temperatures ReadTemperatures() const = 0;
   [[nodiscard]] virtual TankLimits ReadTankLimits() const = 0;
+  virtual void WriteActiveCircuitCount(uint32_t count) = 0;
 };
 }  // namespace communicator

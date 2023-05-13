@@ -100,4 +100,17 @@ TankLimits ModbusTCPCommunicator::ReadTankLimits() const {
   return utils::ParseTankLimits(values);
 }
 
+void ModbusTCPCommunicator::WriteActiveCircuitCount(uint32_t count) {
+  if (count > 3)
+    throw std::invalid_argument{"Invalid active circuit count: " +
+                                std::to_string(count)};
+
+  std::lock_guard<std::mutex> lock{mutex_};
+  const int32_t rc = modbus_write_register(context_, registers::kActiveCircuitCount, count);
+  if (rc != 1) {
+    throw std::runtime_error{"Failed to write registers: " +
+                             std::string{modbus_strerror(errno)}};
+  }
+}
+
 }  // namespace communicator
