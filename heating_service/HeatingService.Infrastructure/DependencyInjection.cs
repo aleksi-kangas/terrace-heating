@@ -1,6 +1,8 @@
 using HeatingService.Application.Persistence;
+using HeatingService.Application.Services.HeatPump;
 using HeatingService.Infrastructure.Persistence;
 using HeatingService.Infrastructure.Persistence.Repositories;
+using HeatingService.Infrastructure.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,11 @@ public static class DependencyInjection {
     services.AddDbContext<HeatingDbContext>(options =>
       options.UseNpgsql(configurationManager.GetConnectionString("HeatingContext")));
     services.AddScoped<IHeatPumpRecordRepository, HeatPumpRecordRepository>();
+    services.AddScheduler(builder => {
+      builder.Services.AddScoped<HeatPumpService>();
+      builder.Services.AddScoped<HeatPumpRecordRepository>();
+      builder.AddJob<QueryHeatPumpRecordJob, QueryHeatPumpRecordJobOptions>();
+    });
     return services;
   }
 }

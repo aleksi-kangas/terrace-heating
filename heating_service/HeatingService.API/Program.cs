@@ -1,4 +1,5 @@
 using HeatingService.API;
+using HeatingService.Application;
 using HeatingService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);

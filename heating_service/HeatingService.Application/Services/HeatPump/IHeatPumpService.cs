@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using HeatingService.Domain.HeatPump;
 
-namespace HeatingService.API.Services.HeatPump;
+namespace HeatingService.Application.Services.HeatPump;
 
 public interface IHeatPumpService {
   Task<ErrorOr<UInt32>> GetActiveCircuitCountAsync();

@@ -1,4 +1,4 @@
-using HeatingService.API.Services.HeatPump;
+using HeatingService.Application.Services.HeatPump;
 using HeatingService.Contracts.HeatPump;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;

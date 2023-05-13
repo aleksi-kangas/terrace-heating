@@ -1,6 +1,6 @@
 using CronScheduler.Extensions.Scheduler;
 
-namespace HeatingService.API.Tasks; 
+namespace HeatingService.Infrastructure.Tasks; 
 
 public class QueryHeatPumpRecordJobOptions : SchedulerOptions {
   public QueryHeatPumpRecordJobOptions() {

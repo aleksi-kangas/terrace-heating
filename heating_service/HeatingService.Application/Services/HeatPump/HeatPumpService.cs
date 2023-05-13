@@ -6,9 +6,9 @@ using MapsterMapper;
 using TankLimits = HeatingService.Domain.HeatPump.TankLimits;
 using Temperatures = HeatingService.Domain.HeatPump.Temperatures;
 
-namespace HeatingService.API.Services.HeatPump;
+namespace HeatingService.Application.Services.HeatPump;
 
-class HeatPumpService : IHeatPumpService {
+public class HeatPumpService : IHeatPumpService {
   private readonly IMapper _mapper;
   private readonly HeatPumpSvc.HeatPumpSvcClient _client;
 
