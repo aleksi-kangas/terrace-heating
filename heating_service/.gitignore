@@ -2,5 +2,14 @@
 HeatingService.API/bin
 HeatingService.API/obj
 
+HeatingService.Application/bin
+HeatingService.Application/obj
+
 HeatingService.Contracts/bin
 HeatingService.Contracts/obj
+
+HeatingService.Domain/bin
+HeatingService.Domain/obj
+
+HeatingService.Infrastructure/bin
+HeatingService.Infrastructure/obj

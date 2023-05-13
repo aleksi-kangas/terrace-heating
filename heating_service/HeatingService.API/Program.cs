@@ -1,10 +1,12 @@
 using HeatingService.API;
+using HeatingService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
   .AddAPI()
-  .AddApplication(builder.Configuration);
+  .AddApplication(builder.Configuration)
+  .AddInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

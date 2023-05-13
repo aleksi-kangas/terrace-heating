@@ -1,5 +1,5 @@
-using HeatingService.API.Domain;
 using HeatingService.Contracts.HeatPump;
+using HeatingService.Domain.HeatPump;
 using Mapster;
 
 namespace HeatingService.API.Common.Mapping; 

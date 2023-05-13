@@ -1,6 +1,7 @@
 using CronScheduler.Extensions.Scheduler;
-using HeatingService.API.Domain;
 using HeatingService.API.Services.HeatPump;
+using HeatingService.Domain.HeatPump;
+using HeatingService.Infrastructure.Persistence;
 using Microsoft.Extensions.Options;
 
 namespace HeatingService.API.Tasks;

@@ -1,4 +1,4 @@
-namespace HeatingService.API.Domain; 
+namespace HeatingService.Domain.HeatPump; 
 
 public record Temperatures(
   float Circuit1,

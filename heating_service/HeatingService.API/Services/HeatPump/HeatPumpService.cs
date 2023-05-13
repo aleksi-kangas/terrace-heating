@@ -3,6 +3,8 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using HeatPump;
 using MapsterMapper;
+using TankLimits = HeatingService.Domain.HeatPump.TankLimits;
+using Temperatures = HeatingService.Domain.HeatPump.Temperatures;
 
 namespace HeatingService.API.Services.HeatPump;
 
@@ -24,19 +26,19 @@ class HeatPumpService : IHeatPumpService {
     }
   }
 
-  public async Task<ErrorOr<HeatingService.API.Domain.Temperatures>> GetTemperaturesAsync() {
+  public async Task<ErrorOr<Temperatures>> GetTemperaturesAsync() {
     try {
       var temperatures = await _client.GetTemperaturesAsync(new Empty());
-      return _mapper.Map<HeatingService.API.Domain.Temperatures>(temperatures);
+      return _mapper.Map<Temperatures>(temperatures);
     } catch (RpcException e) {
       return Error.Failure(e.Message);
     }
   }
 
-  public async Task<ErrorOr<HeatingService.API.Domain.TankLimits>> GetTankLimitsAsync() {
+  public async Task<ErrorOr<TankLimits>> GetTankLimitsAsync() {
     try {
       var tankLimits = await _client.GetTankLimitsAsync(new Empty());
-      return _mapper.Map<HeatingService.API.Domain.TankLimits>(tankLimits);
+      return _mapper.Map<TankLimits>(tankLimits);
     } catch (RpcException e) {
       return Error.Failure(e.Message);
     }

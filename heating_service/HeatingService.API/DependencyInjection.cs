@@ -1,8 +1,8 @@
 using CronScheduler.Extensions.Scheduler;
 using HeatingService.API.Common.Mapping;
-using HeatingService.API.Domain;
 using HeatingService.API.Services.HeatPump;
 using HeatingService.API.Tasks;
+using HeatingService.Infrastructure.Persistence;
 using HeatPump;
 using Microsoft.EntityFrameworkCore;
 

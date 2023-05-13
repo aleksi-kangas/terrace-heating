@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace HeatingService.API.Migrations
+namespace HeatingService.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,11 +36,6 @@ namespace HeatingService.API.Migrations
                 {
                     table.PrimaryKey("PK_HeatPumpRecords", x => x.Id);
                 });
-
-            migrationBuilder.InsertData(
-                table: "HeatPumpRecords",
-                columns: new[] { "Id", "TimeStamp", "TankLimits_LowerTankMaximum", "TankLimits_LowerTankMinimum", "TankLimits_UpperTankMaximum", "TankLimits_UpperTankMinimum", "Temperatures_Circuit1", "Temperatures_Circuit2", "Temperatures_Circuit3", "Temperatures_GroundInput", "Temperatures_GroundOutput", "Temperatures_HotGas", "Temperatures_Inside", "Temperatures_LowerTank", "Temperatures_Outside", "Temperatures_UpperTank" },
-                values: new object[] { new Guid("d743aa73-829f-4743-a699-f1ca7d578cc7"), new DateTime(2023, 5, 12, 15, 29, 52, 777, DateTimeKind.Utc).AddTicks(4947), 50L, 40L, 51L, 41L, 10f, 20f, 30f, 40f, 50f, 60f, 70f, 80f, 90f, 100f });
         }
 
         /// <inheritdoc />
