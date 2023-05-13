@@ -35,6 +35,11 @@ class HeatPumpService final : public heat_pump::HeatPumpSvc::Service {
       grpc::ServerContext* context, const google::protobuf::Empty* request,
       google::protobuf::BoolValue* response) override;
 
+  grpc::Status SetActiveCircuitCount(
+      grpc::ServerContext* context,
+      const google::protobuf::UInt32Value* request,
+      google::protobuf::Empty* response) override;
+
  private:
   std::unique_ptr<communicator::ICommunicator> communicator_{nullptr};
 };

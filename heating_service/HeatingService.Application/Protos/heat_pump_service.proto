@@ -11,6 +11,7 @@ service HeatPumpSvc {
   rpc GetTankLimits(google.protobuf.Empty) returns (TankLimits) {}
   rpc IsCompressorActive(google.protobuf.Empty) returns (google.protobuf.BoolValue) {}
   rpc IsSchedulingEnabled(google.protobuf.Empty) returns (google.protobuf.BoolValue) {}
+  rpc SetActiveCircuitCount(google.protobuf.UInt32Value) returns (google.protobuf.Empty) {}
 }
 
 message Temperatures {

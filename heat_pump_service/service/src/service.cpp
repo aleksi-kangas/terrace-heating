@@ -81,4 +81,20 @@ grpc::Status HeatPumpService::IsSchedulingEnabled(
   }
 }
 
+grpc::Status HeatPumpService::SetActiveCircuitCount(
+    grpc::ServerContext* /* context */,
+    const google::protobuf::UInt32Value* request,
+    google::protobuf::Empty* /* response */) {
+  try {
+    if (request->value() > 3) {
+      return {grpc::StatusCode::INVALID_ARGUMENT,
+              "Active circuit count must be between 0 and 3"};
+    }
+    communicator_->WriteActiveCircuitCount(request->value());
+    return grpc::Status::OK;
+  } catch (const std::exception& e) {
+    return {grpc::StatusCode::INTERNAL, e.what()};
+  }
+}
+
 }  // namespace service
