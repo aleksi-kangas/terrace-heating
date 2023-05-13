@@ -1,3 +1,4 @@
+using HeatingService.Application.Services.Heating;
 using HeatingService.Application.Services.HeatPump;
 using HeatPump;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ public static class DependencyInjection {
     services.AddGrpcClient<HeatPumpSvc.HeatPumpSvcClient>(o => {
       o.Address = new Uri("http://host.docker.internal:50051");
     });
+    services.AddScoped<IHeatingService, Services.Heating.HeatingService>();
     services.AddScoped<IHeatPumpService, HeatPumpService>();
     return services;
   }

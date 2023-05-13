@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Protobuf Include="Protos\heat_pump_service.proto">
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
