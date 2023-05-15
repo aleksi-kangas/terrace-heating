@@ -46,3 +46,19 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/build/heat_pump_service .
 
 CMD ["./heat_pump_service"]
+
+FROM dependencies as tests
+ARG BUILD_TYPE=Release
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN mkdir -p build && \
+    cd build && \
+    cmake -DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake .. && \
+    cmake --build . --config ${BUILD_TYPE}
+
+WORKDIR /usr/src/app/build
+CMD ["ctest", "-C", "${BUILD_TYPE}", "--progress", "--output-on-failure"]

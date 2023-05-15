@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.22)
 project(heat_pump_service)
 
+option(ENABLE_TESTS "Enable tests" ON)
+if (${ENABLE_TESTS})
+    enable_testing()
+endif ()
+
 add_subdirectory(communicator)
 add_subdirectory(service)
 
