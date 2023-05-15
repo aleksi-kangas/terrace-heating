@@ -3,8 +3,8 @@ name: "Heat Pump Service"
 on:
   push:
     branches: [ master ]
-  path:
-    - 'heat_pump_service/**'
+    paths:
+      - 'heat_pump_service/**'
   pull_request:
     branches: [ master ]
 
