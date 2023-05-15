@@ -1,0 +1,32 @@
+name: "Heat Pump Service"
+
+on:
+  push:
+    branches: [ master ]
+  path:
+    - 'heat_pump_service/**'
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build_test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      matrix:
+        language: [ 'cpp' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: cd heat_pump_service && docker build --target tests -t heat-pump-service-tests .
+
+      - name: Test
+        run: docker run --rm heat-pump-service-tests
