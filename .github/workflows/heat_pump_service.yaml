@@ -24,10 +24,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v3
+      - name: Setup buildx
+        uses: docker/setup-buildx-action@v1
       - name: Build
-        run: cd heat_pump_service && docker build --target tests -t heat-pump-service-tests .
-
+        uses: docker/build-push-action@v2
+        with:
+          context: heat_pump_service
+          file: heat_pump_service/Dockerfile
+          target: tests
+          tags: heat-pump-service-tests
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Test
         run: docker run --rm heat-pump-service-tests
