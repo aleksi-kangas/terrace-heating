@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <stdexcept>
 
-#include "registers.h"
-#include "utils.h"
+#include "communicator/registers.h"
+#include "communicator/utils.h"
 
 namespace communicator {
 

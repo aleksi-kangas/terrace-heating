@@ -1,6 +1,6 @@
-#include "utils.h"
+#include "communicator/utils.h"
 
-#include "registers.h"
+#include "communicator/registers.h"
 
 namespace {
 float TemperatureUInt16ToFloat(uint16_t value) {

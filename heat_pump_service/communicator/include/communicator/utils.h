@@ -5,7 +5,7 @@
 
 #include "communicator/communicator.h"
 
-#include "registers.h"
+#include "communicator/registers.h"
 
 namespace communicator::utils {
 [[nodiscard]] Temperatures ParseTemperatures(
