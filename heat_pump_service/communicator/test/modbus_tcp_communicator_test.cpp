@@ -25,9 +25,7 @@ class ModbusTCPCommunicatorTest : public Test {
     mock_server = nullptr;
   }
 
-  void SetUp() override {
-    mock_server->InitializeMapping();
-  }
+  void SetUp() override { mock_server->InitializeMapping(); }
 
  public:
   static std::atomic<bool> stop;
@@ -58,6 +56,14 @@ TEST_F(ModbusTCPCommunicatorTest, IsSchedulingEnabled) {
   ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
                                      MockModbusTCPServer::Port()};
   EXPECT_EQ(communicator.IsSchedulingEnabled(), kIsSchedulingEnabled);
+}
+
+TEST_F(ModbusTCPCommunicatorTest, ReadCircuit3BoostingSchedule) {
+  ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
+                                     MockModbusTCPServer::Port()};
+  const auto schedule = communicator.ReadCircuit3BoostingSchedule();
+  EXPECT_EQ(schedule, kCircuit3BoostingSchedule);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, ReadTankLimits) {

@@ -19,6 +19,10 @@ class HeatPumpService final : public heat_pump::HeatPumpSvc::Service {
       grpc::ServerContext* context, const google::protobuf::Empty* request,
       google::protobuf::UInt32Value* response) override;
 
+  grpc::Status GetCircuit3BoostingSchedule(
+      grpc::ServerContext* context, const google::protobuf::Empty* request,
+      heat_pump::BoostingSchedule* response) override;
+
   grpc::Status GetTemperatures(grpc::ServerContext* context,
                                const google::protobuf::Empty* request,
                                heat_pump::Temperatures* response) override;

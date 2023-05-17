@@ -11,8 +11,14 @@ MockModbusTCPServer::MockModbusTCPServer(std::atomic<bool>& stop)
   context_ = modbus_new_tcp(nullptr, MODBUS_TCP_DEFAULT_PORT);
   if (context_ == nullptr)
     throw std::runtime_error{"Failed to create modbus context"};
-  constexpr int32_t kMaxRegisters = 5158 + 1;
-  mapping_ = modbus_mapping_new(0, 0, kMaxRegisters, 0);
+  constexpr int32_t kRegisterCount = std::max(
+      {registers::kTemperatureRegisterRange.second,
+       registers::kTankLimitRegisterRange.second,
+       registers::kCircuit3BoostingSchedule.HourRegisterRange().second,
+       registers::kCircuit3BoostingSchedule.DeltaRegisterRange().second,
+       registers::kActiveCircuitCount, registers::kCompressorActive,
+       registers::kSchedulingEnabled});
+  mapping_ = modbus_mapping_new(0, 0, kRegisterCount + 1, 0);
   if (mapping_ == nullptr)
     throw std::runtime_error{"Failed to create modbus mapping"};
   InitializeMapping();
@@ -58,6 +64,51 @@ void MockModbusTCPServer::InitializeMapping() {
   mapping_->tab_registers[registers::kActiveCircuitCount] = kActiveCircuitCount;
   mapping_->tab_registers[registers::kCompressorActive] = kIsCompressorActive;
   mapping_->tab_registers[registers::kSchedulingEnabled] = kIsSchedulingEnabled;
+
+  // clang-format off
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.monday.start_hour] =
+      kCircuit3BoostingSchedule.monday.start_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.monday.end_hour] =
+      kCircuit3BoostingSchedule.monday.end_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.monday.delta] =
+      kCircuit3BoostingSchedule.monday.temperature_delta;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.tuesday.start_hour] =
+      kCircuit3BoostingSchedule.tuesday.start_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.tuesday.end_hour] =
+      kCircuit3BoostingSchedule.tuesday.end_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.tuesday.delta] =
+      kCircuit3BoostingSchedule.tuesday.temperature_delta;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.wednesday.start_hour] =
+      kCircuit3BoostingSchedule.wednesday.start_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.wednesday.end_hour] =
+      kCircuit3BoostingSchedule.wednesday.end_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.wednesday.delta] =
+      kCircuit3BoostingSchedule.wednesday.temperature_delta;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.thursday.start_hour] =
+      kCircuit3BoostingSchedule.thursday.start_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.thursday.end_hour] =
+      kCircuit3BoostingSchedule.thursday.end_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.thursday.delta] =
+      kCircuit3BoostingSchedule.thursday.temperature_delta;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.friday.start_hour] =
+      kCircuit3BoostingSchedule.friday.start_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.friday.end_hour] =
+      kCircuit3BoostingSchedule.friday.end_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.friday.delta] =
+      kCircuit3BoostingSchedule.friday.temperature_delta;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.saturday.start_hour] =
+      kCircuit3BoostingSchedule.saturday.start_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.saturday.end_hour] =
+      kCircuit3BoostingSchedule.saturday.end_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.saturday.delta] =
+      kCircuit3BoostingSchedule.saturday.temperature_delta;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.sunday.start_hour] =
+      kCircuit3BoostingSchedule.sunday.start_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.sunday.end_hour] =
+      kCircuit3BoostingSchedule.sunday.end_hour;
+  mapping_ -> tab_registers[registers::kCircuit3BoostingSchedule.sunday.delta] =
+      kCircuit3BoostingSchedule.sunday.temperature_delta;
+  // clang-format on
 
   mapping_->tab_registers[registers::kLowerTankMinimum] = kLowerTankMinimum;
   mapping_->tab_registers[registers::kLowerTankMaximum] = kLowerTankMaximum;

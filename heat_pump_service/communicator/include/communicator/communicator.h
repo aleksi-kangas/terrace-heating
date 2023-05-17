@@ -3,6 +3,27 @@
 #include <cstdint>
 
 namespace communicator {
+
+struct WeekdayBoostingSchedule {
+  uint32_t start_hour{0};         // [  0, 24]
+  uint32_t end_hour{0};           // [  0, 24]
+  uint32_t temperature_delta{0};  // [-10, 10]
+  
+  auto operator<=>(const WeekdayBoostingSchedule&) const = default;
+};
+
+struct BoostingSchedule {
+  WeekdayBoostingSchedule monday{};
+  WeekdayBoostingSchedule tuesday{};
+  WeekdayBoostingSchedule wednesday{};
+  WeekdayBoostingSchedule thursday{};
+  WeekdayBoostingSchedule friday{};
+  WeekdayBoostingSchedule saturday{};
+  WeekdayBoostingSchedule sunday{};
+
+  auto operator<=>(const BoostingSchedule&) const = default;
+};
+
 struct Temperatures {
   float circuit1{0};
   float circuit2{0};
@@ -30,6 +51,8 @@ class ICommunicator {
   [[nodiscard]] virtual uint32_t ActiveCircuitCount() const = 0;
   [[nodiscard]] virtual bool IsCompressorActive() const = 0;
   [[nodiscard]] virtual bool IsSchedulingEnabled() const = 0;
+  [[nodiscard]] virtual BoostingSchedule ReadCircuit3BoostingSchedule()
+      const = 0;
   [[nodiscard]] virtual Temperatures ReadTemperatures() const = 0;
   [[nodiscard]] virtual TankLimits ReadTankLimits() const = 0;
   virtual void WriteActiveCircuitCount(uint32_t count) = 0;

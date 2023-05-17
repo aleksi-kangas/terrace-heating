@@ -49,6 +49,62 @@ TEST_F(HeatPumpServiceTest, GetActiveCircuitCountFailure) {
   EXPECT_EQ(status.error_code(), grpc::StatusCode::INTERNAL);
 }
 
+TEST_F(HeatPumpServiceTest, GetCircuit3BoostingSchedule) {
+  constexpr communicator::BoostingSchedule kCircuit3BoostingSchedule{
+      .monday = {1, 2, 3},
+      .tuesday = {4, 5, 6},
+      .wednesday = {7, 8, 9},
+      .thursday = {10, 11, 12},
+      .friday = {13, 14, 15},
+      .saturday = {16, 17, 18},
+      .sunday = {19, 20, 21}};
+  EXPECT_CALL(*mockCommunicator_, ReadCircuit3BoostingSchedule())
+      .Times(1)
+      .WillOnce(Return(kCircuit3BoostingSchedule));
+
+  google::protobuf::Empty request{};
+  heat_pump::BoostingSchedule response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->GetCircuit3BoostingSchedule(&context, &request, &response);
+  EXPECT_TRUE(status.ok());
+  EXPECT_EQ(response.monday().start_hour(), 1);
+  EXPECT_EQ(response.monday().end_hour(), 2);
+  EXPECT_EQ(response.monday().temperature_delta(), 3);
+  EXPECT_EQ(response.tuesday().start_hour(), 4);
+  EXPECT_EQ(response.tuesday().end_hour(), 5);
+  EXPECT_EQ(response.tuesday().temperature_delta(), 6);
+  EXPECT_EQ(response.wednesday().start_hour(), 7);
+  EXPECT_EQ(response.wednesday().end_hour(), 8);
+  EXPECT_EQ(response.wednesday().temperature_delta(), 9);
+  EXPECT_EQ(response.thursday().start_hour(), 10);
+  EXPECT_EQ(response.thursday().end_hour(), 11);
+  EXPECT_EQ(response.thursday().temperature_delta(), 12);
+  EXPECT_EQ(response.friday().start_hour(), 13);
+  EXPECT_EQ(response.friday().end_hour(), 14);
+  EXPECT_EQ(response.friday().temperature_delta(), 15);
+  EXPECT_EQ(response.saturday().start_hour(), 16);
+  EXPECT_EQ(response.saturday().end_hour(), 17);
+  EXPECT_EQ(response.saturday().temperature_delta(), 18);
+  EXPECT_EQ(response.sunday().start_hour(), 19);
+  EXPECT_EQ(response.sunday().end_hour(), 20);
+  EXPECT_EQ(response.sunday().temperature_delta(), 21);
+}
+
+TEST_F(HeatPumpServiceTest, GetCircuit3BoostingScheduleFailure) {
+  EXPECT_CALL(*mockCommunicator_, ReadCircuit3BoostingSchedule())
+      .Times(1)
+      .WillOnce(Throw(std::runtime_error{"test"}));
+
+  google::protobuf::Empty request{};
+  heat_pump::BoostingSchedule response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->GetCircuit3BoostingSchedule(&context, &request, &response);
+  EXPECT_FALSE(status.ok());
+  EXPECT_EQ(status.error_code(), grpc::StatusCode::INTERNAL);
+}
+
 TEST_F(HeatPumpServiceTest, GetTemperatures) {
   EXPECT_CALL(*mockCommunicator_, ReadTemperatures())
       .Times(1)

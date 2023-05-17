@@ -43,4 +43,55 @@ constexpr int32_t kActiveCircuitCount = 5100;
 constexpr int32_t kCompressorActive = 5158;
 constexpr int32_t kSchedulingEnabled = 134;
 
+// Boosting schedule(s)
+struct BoostingScheduleAddresses {
+  struct Weekday {
+    int32_t start_hour{-1};
+    int32_t end_hour{-1};
+    int32_t delta{-1};
+  };
+
+  Weekday monday{};
+  Weekday tuesday{};
+  Weekday wednesday{};
+  Weekday thursday{};
+  Weekday friday{};
+  Weekday saturday{};
+  Weekday sunday{};
+
+  [[nodiscard]] constexpr std::pair<int32_t, int32_t> HourRegisterRange()
+      const {
+    return std::pair<int32_t, int32_t>{
+        std::min({monday.start_hour, monday.end_hour, tuesday.start_hour,
+                  tuesday.end_hour, wednesday.start_hour, wednesday.end_hour,
+                  thursday.start_hour, thursday.end_hour, friday.start_hour,
+                  friday.end_hour, saturday.start_hour, saturday.end_hour,
+                  sunday.start_hour, sunday.end_hour}),
+        std::max({monday.start_hour, monday.end_hour, tuesday.start_hour,
+                  tuesday.end_hour, wednesday.start_hour, wednesday.end_hour,
+                  thursday.start_hour, thursday.end_hour, friday.start_hour,
+                  friday.end_hour, saturday.start_hour, saturday.end_hour,
+                  sunday.start_hour, sunday.end_hour})};
+  }
+
+  [[nodiscard]] constexpr std::pair<int32_t, int32_t> DeltaRegisterRange()
+      const {
+    return std::pair<int32_t, int32_t>{
+        std::min({monday.delta, tuesday.delta, wednesday.delta, thursday.delta,
+                  friday.delta, saturday.delta, sunday.delta}),
+        std::max({monday.delta, tuesday.delta, wednesday.delta, thursday.delta,
+                  friday.delta, saturday.delta, sunday.delta})};
+  }
+};
+
+constexpr BoostingScheduleAddresses kCircuit3BoostingSchedule{
+    {5214, 5213, 107},  // Monday
+    {5211, 5212, 106},  // Tuesday
+    {5220, 5221, 110},  // Wednesday
+    {5222, 5215, 111},  // Thursday
+    {5223, 5224, 112},  // Friday
+    {5216, 5217, 108},  // Saturday
+    {5218, 5219, 109},  // Sunday
+};
+
 }  // namespace communicator::registers

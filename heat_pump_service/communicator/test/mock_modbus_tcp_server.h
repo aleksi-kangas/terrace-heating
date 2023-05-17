@@ -8,6 +8,8 @@
 
 #include <modbus.h>
 
+#include "communicator/communicator.h"
+
 constexpr uint32_t kActiveCircuitCount = 3;
 constexpr bool kIsCompressorActive = true;
 constexpr bool kIsSchedulingEnabled = true;
@@ -27,6 +29,16 @@ constexpr float kInsideTemperature = 7.7f;
 constexpr float kLowerTankTemperature = 8.8f;
 constexpr float kOutsideTemperature = 9.9f;
 constexpr float kUpperTankTemperature = 10.10f;
+
+constexpr communicator::BoostingSchedule kCircuit3BoostingSchedule{
+    .monday = {1, 2, 3},
+    .tuesday = {4, 5, 6},
+    .wednesday = {7, 8, 9},
+    .thursday = {10, 11, 12},
+    .friday = {13, 14, 15},
+    .saturday = {16, 17, 18},
+    .sunday = {19, 20, 21}
+};
 
 class MockModbusTCPServer {
  public:
