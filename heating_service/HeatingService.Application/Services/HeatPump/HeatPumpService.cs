@@ -3,6 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using HeatPump;
 using MapsterMapper;
+using BoostingSchedule = HeatingService.Domain.HeatPump.BoostingSchedule;
 using TankLimits = HeatingService.Domain.HeatPump.TankLimits;
 using Temperatures = HeatingService.Domain.HeatPump.Temperatures;
 
@@ -21,6 +22,15 @@ public class HeatPumpService : IHeatPumpService {
     try {
       var count = await _client.GetActiveCircuitCountAsync(new Empty());
       return count.Value;
+    } catch (RpcException e) {
+      return Error.Failure(e.Message);
+    }
+  }
+
+  public async Task<ErrorOr<BoostingSchedule>> GetCircuit3BoostingScheduleAsync() {
+    try {
+      var boostingSchedule = await _client.GetCircuit3BoostingScheduleAsync(new Empty());
+      return _mapper.Map<BoostingSchedule>(boostingSchedule);
     } catch (RpcException e) {
       return Error.Failure(e.Message);
     }
