@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 project(communicator)
 
+option(BUILD_COMMUNICATOR_TESTS "Build tests for communicator" ${ENABLE_TESTS})
+
 find_package(libmodbus CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME}
@@ -12,3 +14,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC include PRIVATE src)
 target_link_libraries(${PROJECT_NAME} PUBLIC modbus)
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+
+if (${BUILD_COMMUNICATOR_TESTS})
+    add_subdirectory(test)
+endif ()
