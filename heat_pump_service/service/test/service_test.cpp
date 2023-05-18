@@ -225,3 +225,43 @@ TEST_F(HeatPumpServiceTest, IsSchedulingEnabledFailure) {
   EXPECT_FALSE(status.ok());
   EXPECT_EQ(status.error_code(), grpc::StatusCode::INTERNAL);
 }
+
+TEST_F(HeatPumpServiceTest, SetActiveCircuitCount) {
+  EXPECT_CALL(*mockCommunicator_, WriteActiveCircuitCount(3)).Times(1);
+
+  google::protobuf::UInt32Value request{};
+  request.set_value(3);
+  google::protobuf::Empty response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->SetActiveCircuitCount(&context, &request, &response);
+  EXPECT_TRUE(status.ok());
+}
+
+TEST_F(HeatPumpServiceTest, SetActiveCircuitCountFailure) {
+  EXPECT_CALL(*mockCommunicator_, WriteActiveCircuitCount(_))
+      .Times(1)
+      .WillOnce(Throw(std::runtime_error{"test"}));
+
+  google::protobuf::UInt32Value request{};
+  request.set_value(3);
+  google::protobuf::Empty response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->SetActiveCircuitCount(&context, &request, &response);
+  EXPECT_FALSE(status.ok());
+  EXPECT_EQ(status.error_code(), grpc::StatusCode::INTERNAL);
+}
+
+TEST_F(HeatPumpServiceTest, SetActiveCircuitCountInvalidArgument) {
+  EXPECT_CALL(*mockCommunicator_, WriteActiveCircuitCount(_)).Times(0);
+
+  google::protobuf::UInt32Value request{};
+  request.set_value(4);
+  google::protobuf::Empty response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->SetActiveCircuitCount(&context, &request, &response);
+  EXPECT_FALSE(status.ok());
+  EXPECT_EQ(status.error_code(), grpc::StatusCode::INVALID_ARGUMENT);
+}
