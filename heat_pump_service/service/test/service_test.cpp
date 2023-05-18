@@ -218,7 +218,7 @@ TEST_F(HeatPumpServiceTest, GetTemperaturesFailure) {
 TEST_F(HeatPumpServiceTest, GetTankLimits) {
   EXPECT_CALL(*mockCommunicator_, ReadTankLimits())
       .Times(1)
-      .WillOnce(Return(communicator::TankLimits{1, 2, 3, 4}));
+      .WillOnce(Return(communicator::TankLimits{1, 2, 3, 4, 5, 6, 7, 8}));
 
   google::protobuf::Empty request{};
   heat_pump::TankLimits response{};
@@ -226,9 +226,13 @@ TEST_F(HeatPumpServiceTest, GetTankLimits) {
   const auto status = service_->GetTankLimits(&context, &request, &response);
   EXPECT_TRUE(status.ok());
   EXPECT_EQ(response.lower_tank_minimum(), 1);
-  EXPECT_EQ(response.lower_tank_maximum(), 2);
-  EXPECT_EQ(response.upper_tank_minimum(), 3);
-  EXPECT_EQ(response.upper_tank_maximum(), 4);
+  EXPECT_EQ(response.lower_tank_minimum_adjusted(), 2);
+  EXPECT_EQ(response.lower_tank_maximum(), 3);
+  EXPECT_EQ(response.lower_tank_maximum_adjusted(), 4);
+  EXPECT_EQ(response.upper_tank_minimum(), 5);
+  EXPECT_EQ(response.upper_tank_minimum_adjusted(), 6);
+  EXPECT_EQ(response.upper_tank_maximum(), 7);
+  EXPECT_EQ(response.upper_tank_maximum_adjusted(), 8);
 }
 
 TEST_F(HeatPumpServiceTest, GetTankLimitsFailure) {

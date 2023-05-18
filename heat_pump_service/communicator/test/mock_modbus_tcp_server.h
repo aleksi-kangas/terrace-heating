@@ -14,11 +14,6 @@ constexpr uint32_t kActiveCircuitCount = 3;
 constexpr bool kIsCompressorActive = true;
 constexpr bool kIsSchedulingEnabled = true;
 
-constexpr uint32_t kLowerTankMinimum = 10;
-constexpr uint32_t kLowerTankMaximum = 20;
-constexpr uint32_t kUpperTankMinimum = 30;
-constexpr uint32_t kUpperTankMaximum = 40;
-
 constexpr float kCircuit1Temperature = 1.1f;
 constexpr float kCircuit2Temperature = 2.2f;
 constexpr float kCircuit3Temperature = 3.3f;
@@ -47,6 +42,16 @@ constexpr communicator::BoostingSchedule kLowerTankBoostingSchedule{
     .friday = {12, 19, 5},
     .saturday = {13, 20, 6},
     .sunday = {14, 21, 7}};
+
+constexpr communicator::TankLimits kTankLimits{
+    .lower_tank_minimum = 10,
+    .lower_tank_minimum_adjusted = 11,
+    .lower_tank_maximum = 20,
+    .lower_tank_maximum_adjusted = 21,
+    .upper_tank_minimum = 30,
+    .upper_tank_minimum_adjusted = 31,
+    .upper_tank_maximum = 40,
+    .upper_tank_maximum_adjusted = 41};
 
 class MockModbusTCPServer {
  public:

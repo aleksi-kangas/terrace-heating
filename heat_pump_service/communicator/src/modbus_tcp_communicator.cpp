@@ -96,10 +96,9 @@ Temperatures ModbusTCPCommunicator::ReadTemperatures() const {
 TankLimits ModbusTCPCommunicator::ReadTankLimits() const {
   std::unique_lock<std::mutex> lock{mutex_};
   // Query values in bulk in order to limit the amount of round trips.
-  constexpr int kStartAddress = registers::kTankLimitRegisterRange.first;
-  constexpr int32_t kQuantity = registers::kTankLimitRegisterRange.second -
-                                registers::kTankLimitRegisterRange.first + 1;
-  std::array<uint16_t, kQuantity> values{};
+  const int kStartAddress = registers::kTankLimits.Range().first;
+  const int32_t kQuantity = registers::kTankLimits.RangeSpan();
+  std::vector<uint16_t> values(kQuantity, 0);
   const int32_t rc =
       modbus_read_registers(context_, kStartAddress, kQuantity, values.data());
   if (rc != kQuantity) {
@@ -107,7 +106,7 @@ TankLimits ModbusTCPCommunicator::ReadTankLimits() const {
                              std::string{modbus_strerror(errno)}};
   }
   lock.unlock();
-  return utils::ParseTankLimits(values);
+  return utils::ParseTankLimits(registers::kTankLimits, values);
 }
 
 void ModbusTCPCommunicator::WriteActiveCircuitCount(uint32_t count) {

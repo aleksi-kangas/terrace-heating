@@ -16,7 +16,7 @@ MockModbusTCPServer::MockModbusTCPServer(std::atomic<bool>& stop)
       registers::kCompressorActive,
       registers::kSchedulingEnabled,
       registers::kTemperatureRegisterRange.second,
-      registers::kTankLimitRegisterRange.second,
+      registers::kTankLimits.Range().second,
       registers::kCircuit3BoostingScheduleHours.Range().second,
       registers::kCircuit3BoostingScheduleDeltas.Range().second,
       registers::kLowerTankBoostingScheduleHours.Range().second,
@@ -123,7 +123,6 @@ void MockModbusTCPServer::InitializeMapping() {
             static_cast<uint16_t>(schedule.sunday.end_hour);
         mapping_->tab_registers[delta_addresses.sunday.delta] =
             static_cast<uint16_t>(schedule.sunday.temperature_delta);
-
       };
   InitializeBoostingSchedule(registers::kCircuit3BoostingScheduleHours,
                              registers::kCircuit3BoostingScheduleDeltas,
@@ -132,10 +131,27 @@ void MockModbusTCPServer::InitializeMapping() {
                              registers::kLowerTankBoostingScheduleDeltas,
                              kLowerTankBoostingSchedule);
 
-  mapping_->tab_registers[registers::kLowerTankMinimum] = kLowerTankMinimum;
-  mapping_->tab_registers[registers::kLowerTankMaximum] = kLowerTankMaximum;
-  mapping_->tab_registers[registers::kUpperTankMinimum] = kUpperTankMinimum;
-  mapping_->tab_registers[registers::kUpperTankMaximum] = kUpperTankMaximum;
+  auto InitializeTankLimits =
+      [this](const registers::TankLimitAddresses& addresses,
+             const TankLimits& limits) {
+        mapping_->tab_registers[addresses.lower.minimum] =
+            static_cast<uint16_t>(limits.lower_tank_minimum);
+        mapping_->tab_registers[addresses.lower.minimum_adjusted] =
+            static_cast<uint16_t>(limits.lower_tank_minimum_adjusted);
+        mapping_->tab_registers[addresses.lower.maximum] =
+            static_cast<uint16_t>(limits.lower_tank_maximum);
+        mapping_->tab_registers[addresses.lower.maximum_adjusted] =
+            static_cast<uint16_t>(limits.lower_tank_maximum_adjusted);
+        mapping_->tab_registers[addresses.upper.minimum] =
+            static_cast<uint16_t>(limits.upper_tank_minimum);
+        mapping_->tab_registers[addresses.upper.minimum_adjusted] =
+            static_cast<uint16_t>(limits.upper_tank_minimum_adjusted);
+        mapping_->tab_registers[addresses.upper.maximum] =
+            static_cast<uint16_t>(limits.upper_tank_maximum);
+        mapping_->tab_registers[addresses.upper.maximum_adjusted] =
+            static_cast<uint16_t>(limits.upper_tank_maximum_adjusted);
+      };
+  InitializeTankLimits(registers::kTankLimits, kTankLimits);
 
   auto TemperatureFloatToUInt16 = [](float temperature) {
     return static_cast<uint16_t>(temperature * 10);

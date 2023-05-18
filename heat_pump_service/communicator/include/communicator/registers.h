@@ -37,16 +37,40 @@ constexpr std::pair<int32_t, int32_t> kTemperatureRegisterRange{
               kHotGasTemperature, kInsideTemperature, kLowerTankTemperature,
               kOutsideTemperature, kUpperTankTemperature})};
 
-// Tank limits
-constexpr int32_t kLowerTankMinimum = 71;
-constexpr int32_t kLowerTankMaximum = 72;
-constexpr int32_t kUpperTankMinimum = 77;
-constexpr int32_t kUpperTankMaximum = 78;
-constexpr std::pair<int32_t, int32_t> kTankLimitRegisterRange{
-    std::min({kLowerTankMinimum, kLowerTankMaximum, kUpperTankMinimum,
-              kUpperTankMaximum}),
-    std::max({kLowerTankMinimum, kLowerTankMaximum, kUpperTankMinimum,
-              kUpperTankMaximum})};
+// Tank limit(s)
+struct TankLimitAddresses : IAddressRange {
+  constexpr TankLimitAddresses(
+      int32_t lower_tank_minimum, int32_t lower_tank_minimum_adjusted,
+      int32_t lower_tank_maximum, int32_t lower_tank_maximum_adjusted,
+      int32_t upper_tank_minimum, int32_t upper_tank_minimum_adjusted,
+      int32_t upper_tank_maximum, int32_t upper_tank_maximum_adjusted)
+      : lower{lower_tank_minimum, lower_tank_minimum_adjusted,
+              lower_tank_maximum, lower_tank_maximum_adjusted},
+        upper{upper_tank_minimum, upper_tank_minimum_adjusted,
+              upper_tank_maximum, upper_tank_maximum_adjusted} {}
+
+  struct Tank {
+    int32_t minimum;
+    int32_t minimum_adjusted;
+    int32_t maximum;
+    int32_t maximum_adjusted;
+  };
+
+  Tank lower{};
+  Tank upper{};
+
+  [[nodiscard]] constexpr std::pair<int32_t, int32_t> Range() const override {
+    return {
+        std::min({lower.minimum, lower.minimum_adjusted, lower.maximum,
+                  lower.maximum_adjusted, upper.minimum, upper.minimum_adjusted,
+                  upper.maximum, upper.maximum_adjusted}),
+        std::max({lower.minimum, lower.minimum_adjusted, lower.maximum,
+                  lower.maximum_adjusted, upper.minimum, upper.minimum_adjusted,
+                  upper.maximum, upper.maximum_adjusted})};
+  }
+};
+
+constexpr TankLimitAddresses kTankLimits{71, 75, 72, 76, 77, 79, 78, 80};
 
 // Miscellaneous
 constexpr int32_t kActiveCircuitCount = 5100;

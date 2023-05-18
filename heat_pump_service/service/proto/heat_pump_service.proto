@@ -46,8 +46,12 @@ message Temperatures {
 }
 
 message TankLimits {
-  uint32 lower_tank_minimum = 1;
-  uint32 lower_tank_maximum = 2;
-  uint32 upper_tank_minimum = 3;
-  uint32 upper_tank_maximum = 4;
+  int32 lower_tank_minimum = 1;
+  int32 lower_tank_minimum_adjusted = 2;
+  int32 lower_tank_maximum = 3;
+  int32 lower_tank_maximum_adjusted = 4;
+  int32 upper_tank_minimum = 5;
+  int32 upper_tank_minimum_adjusted = 6;
+  int32 upper_tank_maximum = 7;
+  int32 upper_tank_maximum_adjusted = 8;
 }

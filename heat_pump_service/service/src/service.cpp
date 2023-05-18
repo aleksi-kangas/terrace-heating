@@ -115,9 +115,17 @@ grpc::Status HeatPumpService::GetTankLimits(
   try {
     const auto tank_limits = communicator_->ReadTankLimits();
     response->set_lower_tank_minimum(tank_limits.lower_tank_minimum);
+    response->set_lower_tank_minimum_adjusted(
+        tank_limits.lower_tank_minimum_adjusted);
     response->set_lower_tank_maximum(tank_limits.lower_tank_maximum);
+    response->set_lower_tank_maximum_adjusted(
+        tank_limits.lower_tank_maximum_adjusted);
     response->set_upper_tank_minimum(tank_limits.upper_tank_minimum);
+    response->set_upper_tank_minimum_adjusted(
+        tank_limits.upper_tank_minimum_adjusted);
     response->set_upper_tank_maximum(tank_limits.upper_tank_maximum);
+    response->set_upper_tank_maximum_adjusted(
+        tank_limits.upper_tank_maximum_adjusted);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
     return {grpc::StatusCode::INTERNAL, "Internal server error."};

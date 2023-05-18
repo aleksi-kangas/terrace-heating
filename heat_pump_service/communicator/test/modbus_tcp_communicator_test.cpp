@@ -74,15 +74,12 @@ TEST_F(ModbusTCPCommunicatorTest, ReadLowerTankBoostingSchedule) {
   EXPECT_EQ(schedule, kLowerTankBoostingSchedule);
 }
 
-TEST_F(ModbusTCPCommunicatorTest, ReadTankLimits) {
+TEST_F(ModbusTCPCommunicatorTest, ReadTankLimitsAdjusted) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
   ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
                                      MockModbusTCPServer::Port()};
   const auto tank_limits = communicator.ReadTankLimits();
-  EXPECT_EQ(tank_limits.lower_tank_minimum, kLowerTankMinimum);
-  EXPECT_EQ(tank_limits.lower_tank_maximum, kLowerTankMaximum);
-  EXPECT_EQ(tank_limits.upper_tank_minimum, kUpperTankMinimum);
-  EXPECT_EQ(tank_limits.upper_tank_maximum, kUpperTankMaximum);
+  EXPECT_EQ(tank_limits, kTankLimits);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, ReadTemperatures) {

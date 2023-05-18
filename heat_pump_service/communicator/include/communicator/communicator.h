@@ -8,7 +8,7 @@ struct WeekdayBoostingSchedule {
   uint32_t start_hour{0};        // [  0, 24]
   uint32_t end_hour{0};          // [  0, 24]
   int32_t temperature_delta{0};  // [-10, 10]
-  
+
   auto operator<=>(const WeekdayBoostingSchedule&) const = default;
 };
 
@@ -38,10 +38,16 @@ struct Temperatures {
 };
 
 struct TankLimits {
-  uint32_t lower_tank_minimum{0};
-  uint32_t lower_tank_maximum{0};
-  uint32_t upper_tank_minimum{0};
-  uint32_t upper_tank_maximum{0};
+  int32_t lower_tank_minimum{0};
+  int32_t lower_tank_minimum_adjusted{0};
+  int32_t lower_tank_maximum{0};
+  int32_t lower_tank_maximum_adjusted{0};
+  int32_t upper_tank_minimum{0};
+  int32_t upper_tank_minimum_adjusted{0};
+  int32_t upper_tank_maximum{0};
+  int32_t upper_tank_maximum_adjusted{0};
+
+  auto operator<=>(const TankLimits&) const = default;
 };
 
 class ICommunicator {
