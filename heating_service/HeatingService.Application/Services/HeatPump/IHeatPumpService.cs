@@ -1,5 +1,7 @@
 ﻿using ErrorOr;
-using HeatingService.Domain.HeatPump;
+using BoostingSchedule = HeatingService.Application.Domain.BoostingSchedule;
+using TankLimits = HeatingService.Application.Domain.TankLimits;
+using Temperatures = HeatingService.Application.Domain.Temperatures;
 
 namespace HeatingService.Application.Services.HeatPump;
 

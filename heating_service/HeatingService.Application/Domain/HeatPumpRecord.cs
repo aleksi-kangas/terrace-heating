@@ -1,4 +1,4 @@
-namespace HeatingService.Domain.HeatPump; 
+namespace HeatingService.Application.Domain; 
 
 public class HeatPumpRecord {
   public Guid Id { get; set; }

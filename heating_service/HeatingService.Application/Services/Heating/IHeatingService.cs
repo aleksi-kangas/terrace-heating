@@ -1,5 +1,5 @@
 using ErrorOr;
-using HeatingService.Domain.HeatPump;
+using HeatPumpRecord = HeatingService.Application.Domain.HeatPumpRecord;
 
 namespace HeatingService.Application.Services.Heating; 
 

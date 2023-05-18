@@ -1,9 +1,7 @@
 using System.Linq.Expressions;
-using HeatingService.Application.Persistence;
-using HeatingService.Application.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace HeatingService.Infrastructure.Persistence.Repositories;
+namespace HeatingService.Application.Persistence.Repositories;
 
 public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class {
   protected HeatingDbContext Context { get; }

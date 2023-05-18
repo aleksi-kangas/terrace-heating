@@ -1,11 +1,12 @@
 using HeatingService.Application.Persistence;
+using HeatingService.Application.Persistence.Repositories;
 using HeatingService.Application.Services.HeatPump;
 using HeatingService.Infrastructure.Persistence;
-using HeatingService.Infrastructure.Persistence.Repositories;
 using HeatingService.Infrastructure.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using HeatPumpRecordRepository = HeatingService.Infrastructure.Persistence.Repositories.HeatPumpRecordRepository;
 
 namespace HeatingService.Infrastructure; 
 

@@ -1,4 +1,4 @@
-namespace HeatingService.Domain.HeatPump; 
+namespace HeatingService.Application.Domain; 
 
 public record TankLimits(
   UInt32 LowerTankMinimum,

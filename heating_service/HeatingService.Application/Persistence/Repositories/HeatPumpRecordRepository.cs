@@ -1,8 +1,6 @@
-using HeatingService.Application.Persistence;
-using HeatingService.Application.Persistence.Repositories;
-using HeatingService.Domain.HeatPump;
+using HeatingService.Application.Domain;
 
-namespace HeatingService.Infrastructure.Persistence.Repositories; 
+namespace HeatingService.Application.Persistence.Repositories; 
 
 public class HeatPumpRecordRepository : RepositoryBase<HeatPumpRecord>, IHeatPumpRecordRepository {
   public HeatPumpRecordRepository(HeatingDbContext context) : base(context) {}

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace HeatingService.Application.Persistence; 
+namespace HeatingService.Application.Persistence.Repositories; 
 
 public interface IRepositoryBase<T> {
   void Add(T entity);

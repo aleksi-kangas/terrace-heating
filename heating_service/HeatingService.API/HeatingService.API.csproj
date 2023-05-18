@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="../HeatingService.Application/HeatingService.Application.csproj" />
     <ProjectReference Include="../HeatingService.Contracts/HeatingService.Contracts.csproj" />
-    <ProjectReference Include="../HeatingService.Infrastructure/HeatingService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

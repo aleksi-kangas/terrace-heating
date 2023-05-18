@@ -1,6 +1,6 @@
 using ErrorOr;
-using HeatingService.Application.Persistence;
-using HeatingService.Domain.HeatPump;
+using HeatingService.Application.Persistence.Repositories;
+using HeatPumpRecord = HeatingService.Application.Domain.HeatPumpRecord;
 
 namespace HeatingService.Application.Services.Heating;
 

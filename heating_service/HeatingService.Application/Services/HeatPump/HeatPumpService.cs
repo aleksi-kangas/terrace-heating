@@ -3,9 +3,9 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using HeatPump;
 using MapsterMapper;
-using BoostingSchedule = HeatingService.Domain.HeatPump.BoostingSchedule;
-using TankLimits = HeatingService.Domain.HeatPump.TankLimits;
-using Temperatures = HeatingService.Domain.HeatPump.Temperatures;
+using BoostingSchedule = HeatingService.Application.Domain.BoostingSchedule;
+using TankLimits = HeatingService.Application.Domain.TankLimits;
+using Temperatures = HeatingService.Application.Domain.Temperatures;
 
 namespace HeatingService.Application.Services.HeatPump;
 
