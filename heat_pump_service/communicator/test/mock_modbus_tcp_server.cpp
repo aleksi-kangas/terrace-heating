@@ -44,16 +44,15 @@ std::thread MockModbusTCPServer::Run() {
     while (!stop_) {
       uint8_t query[MODBUS_TCP_MAX_ADU_LENGTH];
       const int32_t rc = modbus_receive(context_, query);
-      if (rc == -1) {
+      if (rc > 0) {
+        std::lock_guard<std::mutex> lock{mutex_};
+        modbus_reply(context_, query, rc, mapping_);
+      } else if (rc == -1) {
         if (errno == ECONNRESET) {
           modbus_tcp_accept(context_, &socket_);
           continue;
         }
-        throw std::runtime_error{"Failed to receive modbus TCP query: " +
-                                 std::string{modbus_strerror(errno)}};
       }
-      std::lock_guard<std::mutex> lock{mutex_};
-      modbus_reply(context_, query, rc, mapping_);
     }
   });
 }
