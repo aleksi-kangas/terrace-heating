@@ -94,4 +94,14 @@ constexpr BoostingScheduleAddresses kCircuit3BoostingSchedule{
     {5218, 5219, 109},  // Sunday
 };
 
+constexpr BoostingScheduleAddresses kLowerTankBoostingSchedule{
+    {5014, 5021, 36},  // Monday
+    {5015, 5022, 37},  // Tuesday
+    {5016, 5023, 38},  // Wednesday
+    {5017, 5024, 39},  // Thursday
+    {5018, 5025, 41},  // Friday
+    {5019, 5026, 42},  // Saturday
+    {5020, 5027, 43}   // Sunday
+};
+
 }  // namespace communicator::registers

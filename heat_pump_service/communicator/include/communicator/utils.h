@@ -14,7 +14,8 @@ namespace communicator::utils {
 [[nodiscard]] TankLimits ParseTankLimits(const std::array<uint16_t, 8>& values);
 
 [[nodiscard]] BoostingSchedule ParseBoostingSchedule(
-    const std::array<uint16_t, 7 * 2>& hour_values,
-    const std::array<uint16_t, 7>& delta_values);
+    const registers::BoostingScheduleAddresses& addresses,
+    const std::vector<uint16_t>& hour_values,
+    const std::vector<uint16_t>& delta_values);
 
 }  // namespace communicator::utils

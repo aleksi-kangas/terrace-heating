@@ -66,6 +66,14 @@ TEST_F(ModbusTCPCommunicatorTest, ReadCircuit3BoostingSchedule) {
   EXPECT_EQ(schedule, kCircuit3BoostingSchedule);
 }
 
+TEST_F(ModbusTCPCommunicatorTest, ReadLowerTankBoostingSchedule) {
+  ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
+                                     MockModbusTCPServer::Port()};
+  const auto schedule = communicator.ReadLowerTankBoostingSchedule();
+  EXPECT_EQ(schedule, kLowerTankBoostingSchedule);
+}
+
 TEST_F(ModbusTCPCommunicatorTest, ReadTankLimits) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
   ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),

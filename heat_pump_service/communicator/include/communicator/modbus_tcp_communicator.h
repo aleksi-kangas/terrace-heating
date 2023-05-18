@@ -1,11 +1,13 @@
 #pragma once
 
+#include <cstdint>
 #include <mutex>
 #include <string>
 
 #include <modbus.h>
 
 #include "communicator/communicator.h"
+#include "communicator/registers.h"
 
 namespace communicator {
 class ModbusTCPCommunicator final : public ICommunicator {
@@ -17,6 +19,7 @@ class ModbusTCPCommunicator final : public ICommunicator {
   [[nodiscard]] bool IsCompressorActive() const override;
   [[nodiscard]] bool IsSchedulingEnabled() const override;
   [[nodiscard]] BoostingSchedule ReadCircuit3BoostingSchedule() const override;
+  [[nodiscard]] BoostingSchedule ReadLowerTankBoostingSchedule() const override;
   [[nodiscard]] Temperatures ReadTemperatures() const override;
   [[nodiscard]] TankLimits ReadTankLimits() const override;
   void WriteActiveCircuitCount(uint32_t count) override;
@@ -24,5 +27,8 @@ class ModbusTCPCommunicator final : public ICommunicator {
  private:
   modbus_t* context_{nullptr};
   mutable std::mutex mutex_{};
+
+  [[nodiscard]] BoostingSchedule ReadBoostingSchedule(
+      const registers::BoostingScheduleAddresses& addresses) const;
 };
 }  // namespace communicator

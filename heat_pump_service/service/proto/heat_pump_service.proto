@@ -8,6 +8,7 @@ package heat_pump;
 service HeatPumpSvc {
   rpc GetActiveCircuitCount(google.protobuf.Empty) returns (google.protobuf.UInt32Value) {}
   rpc GetCircuit3BoostingSchedule(google.protobuf.Empty) returns (BoostingSchedule) {}
+  rpc GetLowerTankBoostingSchedule(google.protobuf.Empty) returns (BoostingSchedule) {}
   rpc GetTemperatures(google.protobuf.Empty) returns (Temperatures) {}
   rpc GetTankLimits(google.protobuf.Empty) returns (TankLimits) {}
   rpc IsCompressorActive(google.protobuf.Empty) returns (google.protobuf.BoolValue) {}
@@ -16,9 +17,9 @@ service HeatPumpSvc {
 }
 
 message WeekdayBoostingSchedule {
-  uint32 start_hour = 1;         // [  0, 24]
-  uint32 end_hour = 2;           // [  0, 24]
-  uint32 temperature_delta = 3;  // [-10, 10]
+  uint32 start_hour = 1;        // [  0, 24]
+  uint32 end_hour = 2;          // [  0, 24]
+  int32 temperature_delta = 3;  // [-10, 10]
 }
 
 message BoostingSchedule {

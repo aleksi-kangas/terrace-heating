@@ -5,9 +5,9 @@
 namespace communicator {
 
 struct WeekdayBoostingSchedule {
-  uint32_t start_hour{0};         // [  0, 24]
-  uint32_t end_hour{0};           // [  0, 24]
-  uint32_t temperature_delta{0};  // [-10, 10]
+  uint32_t start_hour{0};        // [  0, 24]
+  uint32_t end_hour{0};          // [  0, 24]
+  int32_t temperature_delta{0};  // [-10, 10]
   
   auto operator<=>(const WeekdayBoostingSchedule&) const = default;
 };
@@ -52,6 +52,8 @@ class ICommunicator {
   [[nodiscard]] virtual bool IsCompressorActive() const = 0;
   [[nodiscard]] virtual bool IsSchedulingEnabled() const = 0;
   [[nodiscard]] virtual BoostingSchedule ReadCircuit3BoostingSchedule()
+      const = 0;
+  [[nodiscard]] virtual BoostingSchedule ReadLowerTankBoostingSchedule()
       const = 0;
   [[nodiscard]] virtual Temperatures ReadTemperatures() const = 0;
   [[nodiscard]] virtual TankLimits ReadTankLimits() const = 0;

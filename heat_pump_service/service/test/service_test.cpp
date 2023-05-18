@@ -10,6 +10,24 @@
 using namespace ::testing;
 using namespace service;
 
+constexpr communicator::BoostingSchedule kCircuit3BoostingSchedule{
+    .monday = {1, 18, -1},
+    .tuesday = {2, 19, -2},
+    .wednesday = {3, 20, -3},
+    .thursday = {4, 21, -4},
+    .friday = {5, 22, -5},
+    .saturday = {6, 23, -6},
+    .sunday = {7, 24, -7}};
+
+constexpr communicator::BoostingSchedule kLowerTankBoostingSchedule{
+    .monday = {8, 15, 1},
+    .tuesday = {9, 16, 2},
+    .wednesday = {10, 17, 3},
+    .thursday = {11, 18, 4},
+    .friday = {12, 19, 5},
+    .saturday = {13, 20, 6},
+    .sunday = {14, 21, 7}};
+
 class HeatPumpServiceTest : public Test {
  protected:
   HeatPumpServiceTest() {
@@ -50,14 +68,6 @@ TEST_F(HeatPumpServiceTest, GetActiveCircuitCountFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, GetCircuit3BoostingSchedule) {
-  constexpr communicator::BoostingSchedule kCircuit3BoostingSchedule{
-      .monday = {1, 2, 3},
-      .tuesday = {4, 5, 6},
-      .wednesday = {7, 8, 9},
-      .thursday = {10, 11, 12},
-      .friday = {13, 14, 15},
-      .saturday = {16, 17, 18},
-      .sunday = {19, 20, 21}};
   EXPECT_CALL(*mockCommunicator_, ReadCircuit3BoostingSchedule())
       .Times(1)
       .WillOnce(Return(kCircuit3BoostingSchedule));
@@ -68,27 +78,35 @@ TEST_F(HeatPumpServiceTest, GetCircuit3BoostingSchedule) {
   const auto status =
       service_->GetCircuit3BoostingSchedule(&context, &request, &response);
   EXPECT_TRUE(status.ok());
-  EXPECT_EQ(response.monday().start_hour(), 1);
-  EXPECT_EQ(response.monday().end_hour(), 2);
-  EXPECT_EQ(response.monday().temperature_delta(), 3);
-  EXPECT_EQ(response.tuesday().start_hour(), 4);
-  EXPECT_EQ(response.tuesday().end_hour(), 5);
-  EXPECT_EQ(response.tuesday().temperature_delta(), 6);
-  EXPECT_EQ(response.wednesday().start_hour(), 7);
-  EXPECT_EQ(response.wednesday().end_hour(), 8);
-  EXPECT_EQ(response.wednesday().temperature_delta(), 9);
-  EXPECT_EQ(response.thursday().start_hour(), 10);
-  EXPECT_EQ(response.thursday().end_hour(), 11);
-  EXPECT_EQ(response.thursday().temperature_delta(), 12);
-  EXPECT_EQ(response.friday().start_hour(), 13);
-  EXPECT_EQ(response.friday().end_hour(), 14);
-  EXPECT_EQ(response.friday().temperature_delta(), 15);
-  EXPECT_EQ(response.saturday().start_hour(), 16);
-  EXPECT_EQ(response.saturday().end_hour(), 17);
-  EXPECT_EQ(response.saturday().temperature_delta(), 18);
-  EXPECT_EQ(response.sunday().start_hour(), 19);
-  EXPECT_EQ(response.sunday().end_hour(), 20);
-  EXPECT_EQ(response.sunday().temperature_delta(), 21);
+  // clang-format off
+  EXPECT_EQ(response.monday().start_hour(), kCircuit3BoostingSchedule.monday.start_hour);
+  EXPECT_EQ(response.monday().end_hour(), kCircuit3BoostingSchedule.monday.end_hour);
+  EXPECT_EQ(response.monday().temperature_delta(), kCircuit3BoostingSchedule.monday.temperature_delta);
+
+  EXPECT_EQ(response.tuesday().start_hour(), kCircuit3BoostingSchedule.tuesday.start_hour);
+  EXPECT_EQ(response.tuesday().end_hour(), kCircuit3BoostingSchedule.tuesday.end_hour);
+  EXPECT_EQ(response.tuesday().temperature_delta(), kCircuit3BoostingSchedule.tuesday.temperature_delta);
+
+  EXPECT_EQ(response.wednesday().start_hour(), kCircuit3BoostingSchedule.wednesday.start_hour);
+  EXPECT_EQ(response.wednesday().end_hour(), kCircuit3BoostingSchedule.wednesday.end_hour);
+  EXPECT_EQ(response.wednesday().temperature_delta(), kCircuit3BoostingSchedule.wednesday.temperature_delta);
+
+  EXPECT_EQ(response.thursday().start_hour(), kCircuit3BoostingSchedule.thursday.start_hour);
+  EXPECT_EQ(response.thursday().end_hour(), kCircuit3BoostingSchedule.thursday.end_hour);
+  EXPECT_EQ(response.thursday().temperature_delta(), kCircuit3BoostingSchedule.thursday.temperature_delta);
+
+  EXPECT_EQ(response.friday().start_hour(), kCircuit3BoostingSchedule.friday.start_hour);
+  EXPECT_EQ(response.friday().end_hour(), kCircuit3BoostingSchedule.friday.end_hour);
+  EXPECT_EQ(response.friday().temperature_delta(), kCircuit3BoostingSchedule.friday.temperature_delta);
+
+  EXPECT_EQ(response.saturday().start_hour(), kCircuit3BoostingSchedule.saturday.start_hour);
+  EXPECT_EQ(response.saturday().end_hour(), kCircuit3BoostingSchedule.saturday.end_hour);
+  EXPECT_EQ(response.saturday().temperature_delta(), kCircuit3BoostingSchedule.saturday.temperature_delta);
+
+  EXPECT_EQ(response.sunday().start_hour(), kCircuit3BoostingSchedule.sunday.start_hour);
+  EXPECT_EQ(response.sunday().end_hour(), kCircuit3BoostingSchedule.sunday.end_hour);
+  EXPECT_EQ(response.sunday().temperature_delta(), kCircuit3BoostingSchedule.sunday.temperature_delta);
+  // clang-format on
 }
 
 TEST_F(HeatPumpServiceTest, GetCircuit3BoostingScheduleFailure) {
@@ -101,6 +119,62 @@ TEST_F(HeatPumpServiceTest, GetCircuit3BoostingScheduleFailure) {
   grpc::ServerContext context{};
   const auto status =
       service_->GetCircuit3BoostingSchedule(&context, &request, &response);
+  EXPECT_FALSE(status.ok());
+  EXPECT_EQ(status.error_code(), grpc::StatusCode::INTERNAL);
+}
+
+TEST_F(HeatPumpServiceTest, GetLowerTankBoostingSchedule) {
+  EXPECT_CALL(*mockCommunicator_, ReadLowerTankBoostingSchedule())
+      .Times(1)
+      .WillOnce(Return(kLowerTankBoostingSchedule));
+
+  google::protobuf::Empty request{};
+  heat_pump::BoostingSchedule response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->GetLowerTankBoostingSchedule(&context, &request, &response);
+  EXPECT_TRUE(status.ok());
+  // clang-format off
+  EXPECT_EQ(response.monday().start_hour(), kLowerTankBoostingSchedule.monday.start_hour);
+  EXPECT_EQ(response.monday().end_hour(), kLowerTankBoostingSchedule.monday.end_hour);
+  EXPECT_EQ(response.monday().temperature_delta(), kLowerTankBoostingSchedule.monday.temperature_delta);
+
+  EXPECT_EQ(response.tuesday().start_hour(), kLowerTankBoostingSchedule.tuesday.start_hour);
+  EXPECT_EQ(response.tuesday().end_hour(), kLowerTankBoostingSchedule.tuesday.end_hour);
+  EXPECT_EQ(response.tuesday().temperature_delta(), kLowerTankBoostingSchedule.tuesday.temperature_delta);
+
+  EXPECT_EQ(response.wednesday().start_hour(), kLowerTankBoostingSchedule.wednesday.start_hour);
+  EXPECT_EQ(response.wednesday().end_hour(), kLowerTankBoostingSchedule.wednesday.end_hour);
+  EXPECT_EQ(response.wednesday().temperature_delta(), kLowerTankBoostingSchedule.wednesday.temperature_delta);
+
+  EXPECT_EQ(response.thursday().start_hour(), kLowerTankBoostingSchedule.thursday.start_hour);
+  EXPECT_EQ(response.thursday().end_hour(), kLowerTankBoostingSchedule.thursday.end_hour);
+  EXPECT_EQ(response.thursday().temperature_delta(), kLowerTankBoostingSchedule.thursday.temperature_delta);
+
+  EXPECT_EQ(response.friday().start_hour(), kLowerTankBoostingSchedule.friday.start_hour);
+  EXPECT_EQ(response.friday().end_hour(), kLowerTankBoostingSchedule.friday.end_hour);
+  EXPECT_EQ(response.friday().temperature_delta(), kLowerTankBoostingSchedule.friday.temperature_delta);
+
+  EXPECT_EQ(response.saturday().start_hour(), kLowerTankBoostingSchedule.saturday.start_hour);
+  EXPECT_EQ(response.saturday().end_hour(), kLowerTankBoostingSchedule.saturday.end_hour);
+  EXPECT_EQ(response.saturday().temperature_delta(), kLowerTankBoostingSchedule.saturday.temperature_delta);
+
+  EXPECT_EQ(response.sunday().start_hour(), kLowerTankBoostingSchedule.sunday.start_hour);
+  EXPECT_EQ(response.sunday().end_hour(), kLowerTankBoostingSchedule.sunday.end_hour);
+  EXPECT_EQ(response.sunday().temperature_delta(), kLowerTankBoostingSchedule.sunday.temperature_delta);
+  // clang-format on
+}
+
+TEST_F(HeatPumpServiceTest, GetLowerTankBoostingScheduleFailure) {
+  EXPECT_CALL(*mockCommunicator_, ReadLowerTankBoostingSchedule())
+      .Times(1)
+      .WillOnce(Throw(std::runtime_error{"test"}));
+
+  google::protobuf::Empty request{};
+  heat_pump::BoostingSchedule response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->GetLowerTankBoostingSchedule(&context, &request, &response);
   EXPECT_FALSE(status.ok());
   EXPECT_EQ(status.error_code(), grpc::StatusCode::INTERNAL);
 }

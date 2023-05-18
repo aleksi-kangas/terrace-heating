@@ -53,48 +53,47 @@ TankLimits ParseTankLimits(const std::array<uint16_t, 8>& values) {
 }
 
 BoostingSchedule ParseBoostingSchedule(
-    const std::array<uint16_t, 7 * 2>& hour_values,
-    const std::array<uint16_t, 7>& delta_values) {
-  constexpr auto kHourOffset = static_cast<uint32_t>(
-      registers::kCircuit3BoostingSchedule.HourRegisterRange().first);
-  constexpr auto kDeltaOffset = static_cast<uint32_t>(
-      registers::kCircuit3BoostingSchedule.DeltaRegisterRange().first);
+    const registers::BoostingScheduleAddresses& addresses,
+    const std::vector<uint16_t>& hour_values,
+    const std::vector<uint16_t>& delta_values) {
+  const auto kHourOffset = addresses.HourRegisterRange().first;
+  const auto kDeltaOffset = addresses.DeltaRegisterRange().first;
   // clang-format off
   return {
       .monday = {
-          .start_hour = hour_values[registers::kCircuit3BoostingSchedule.monday.start_hour - kHourOffset],
-          .end_hour = hour_values[registers::kCircuit3BoostingSchedule.monday.end_hour - kHourOffset],
-          .temperature_delta = delta_values[registers::kCircuit3BoostingSchedule.monday.delta - kDeltaOffset],
+          .start_hour = hour_values[addresses.monday.start_hour - kHourOffset],
+          .end_hour = hour_values[addresses.monday.end_hour - kHourOffset],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.monday.delta - kDeltaOffset]),
       },
       .tuesday = {
-          .start_hour = hour_values[registers::kCircuit3BoostingSchedule.tuesday.start_hour - kHourOffset],
-          .end_hour = hour_values[registers::kCircuit3BoostingSchedule.tuesday.end_hour - kHourOffset],
-          .temperature_delta = delta_values[registers::kCircuit3BoostingSchedule.tuesday.delta - kDeltaOffset],
+          .start_hour = hour_values[addresses.tuesday.start_hour - kHourOffset],
+          .end_hour = hour_values[addresses.tuesday.end_hour - kHourOffset],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.tuesday.delta - kDeltaOffset]),
       },
       .wednesday = {
-          .start_hour = hour_values[registers::kCircuit3BoostingSchedule.wednesday.start_hour - kHourOffset],
-          .end_hour = hour_values[registers::kCircuit3BoostingSchedule.wednesday.end_hour - kHourOffset],
-          .temperature_delta = delta_values[registers::kCircuit3BoostingSchedule.wednesday.delta - kDeltaOffset],
+          .start_hour = hour_values[addresses.wednesday.start_hour - kHourOffset],
+          .end_hour = hour_values[addresses.wednesday.end_hour - kHourOffset],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.wednesday.delta - kDeltaOffset]),
       },
       .thursday = {
-          .start_hour = hour_values[registers::kCircuit3BoostingSchedule.thursday.start_hour - kHourOffset],
-          .end_hour = hour_values[registers::kCircuit3BoostingSchedule.thursday.end_hour - kHourOffset],
-          .temperature_delta = delta_values[registers::kCircuit3BoostingSchedule.thursday.delta - kDeltaOffset],
+          .start_hour = hour_values[addresses.thursday.start_hour - kHourOffset],
+          .end_hour = hour_values[addresses.thursday.end_hour - kHourOffset],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.thursday.delta - kDeltaOffset]),
       },
       .friday = {
-          .start_hour = hour_values[registers::kCircuit3BoostingSchedule.friday.start_hour - kHourOffset],
-          .end_hour = hour_values[registers::kCircuit3BoostingSchedule.friday.end_hour - kHourOffset],
-          .temperature_delta = delta_values[registers::kCircuit3BoostingSchedule.friday.delta - kDeltaOffset],
+          .start_hour = hour_values[addresses.friday.start_hour - kHourOffset],
+          .end_hour = hour_values[addresses.friday.end_hour - kHourOffset],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.friday.delta - kDeltaOffset]),
       },
       .saturday = {
-          .start_hour = hour_values[registers::kCircuit3BoostingSchedule.saturday.start_hour - kHourOffset],
-          .end_hour = hour_values[registers::kCircuit3BoostingSchedule.saturday.end_hour - kHourOffset],
-          .temperature_delta = delta_values[registers::kCircuit3BoostingSchedule.saturday.delta - kDeltaOffset],
+          .start_hour = hour_values[addresses.saturday.start_hour - kHourOffset],
+          .end_hour = hour_values[addresses.saturday.end_hour - kHourOffset],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.saturday.delta - kDeltaOffset]),
       },
       .sunday = {
-          .start_hour = hour_values[registers::kCircuit3BoostingSchedule.sunday.start_hour - kHourOffset],
-          .end_hour = hour_values[registers::kCircuit3BoostingSchedule.sunday.end_hour - kHourOffset],
-          .temperature_delta = delta_values[registers::kCircuit3BoostingSchedule.sunday.delta - kDeltaOffset],
+          .start_hour = hour_values[addresses.sunday.start_hour - kHourOffset],
+          .end_hour = hour_values[addresses.sunday.end_hour - kHourOffset],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.sunday.delta - kDeltaOffset]),
       }
   };
   // clang-format on

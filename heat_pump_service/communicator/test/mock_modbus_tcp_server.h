@@ -31,14 +31,22 @@ constexpr float kOutsideTemperature = 9.9f;
 constexpr float kUpperTankTemperature = 10.10f;
 
 constexpr communicator::BoostingSchedule kCircuit3BoostingSchedule{
-    .monday = {1, 2, 3},
-    .tuesday = {4, 5, 6},
-    .wednesday = {7, 8, 9},
-    .thursday = {10, 11, 12},
-    .friday = {13, 14, 15},
-    .saturday = {16, 17, 18},
-    .sunday = {19, 20, 21}
-};
+    .monday = {1, 18, -1},
+    .tuesday = {2, 19, -2},
+    .wednesday = {3, 20, -3},
+    .thursday = {4, 21, -4},
+    .friday = {5, 22, -5},
+    .saturday = {6, 23, -6},
+    .sunday = {7, 24, -7}};
+
+constexpr communicator::BoostingSchedule kLowerTankBoostingSchedule{
+    .monday = {8, 15, 1},
+    .tuesday = {9, 16, 2},
+    .wednesday = {10, 17, 3},
+    .thursday = {11, 18, 4},
+    .friday = {12, 19, 5},
+    .saturday = {13, 20, 6},
+    .sunday = {14, 21, 7}};
 
 class MockModbusTCPServer {
  public:

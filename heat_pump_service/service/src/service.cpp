@@ -2,6 +2,47 @@
 
 #include <utility>
 
+namespace {
+void MapBoostingScheduleToProto(const communicator::BoostingSchedule& schedule,
+                                heat_pump::BoostingSchedule* proto) {
+  proto->mutable_monday()->set_start_hour(schedule.monday.start_hour);
+  proto->mutable_monday()->set_end_hour(schedule.monday.end_hour);
+  proto->mutable_monday()->set_temperature_delta(
+      schedule.monday.temperature_delta);
+
+  proto->mutable_tuesday()->set_start_hour(schedule.tuesday.start_hour);
+  proto->mutable_tuesday()->set_end_hour(schedule.tuesday.end_hour);
+  proto->mutable_tuesday()->set_temperature_delta(
+      schedule.tuesday.temperature_delta);
+
+  proto->mutable_wednesday()->set_start_hour(schedule.wednesday.start_hour);
+  proto->mutable_wednesday()->set_end_hour(schedule.wednesday.end_hour);
+  proto->mutable_wednesday()->set_temperature_delta(
+      schedule.wednesday.temperature_delta);
+
+  proto->mutable_thursday()->set_start_hour(schedule.thursday.start_hour);
+  proto->mutable_thursday()->set_end_hour(schedule.thursday.end_hour);
+  proto->mutable_thursday()->set_temperature_delta(
+      schedule.thursday.temperature_delta);
+
+  proto->mutable_friday()->set_start_hour(schedule.friday.start_hour);
+  proto->mutable_friday()->set_end_hour(schedule.friday.end_hour);
+  proto->mutable_friday()->set_temperature_delta(
+      schedule.friday.temperature_delta);
+
+  proto->mutable_saturday()->set_start_hour(schedule.saturday.start_hour);
+  proto->mutable_saturday()->set_end_hour(schedule.saturday.end_hour);
+  proto->mutable_saturday()->set_temperature_delta(
+      schedule.saturday.temperature_delta);
+
+  proto->mutable_sunday()->set_start_hour(schedule.sunday.start_hour);
+  proto->mutable_sunday()->set_end_hour(schedule.sunday.end_hour);
+  proto->mutable_sunday()->set_temperature_delta(
+      schedule.sunday.temperature_delta);
+}
+
+}  // namespace
+
 namespace service {
 HeatPumpService::HeatPumpService(
     std::unique_ptr<communicator::ICommunicator> communicator)
@@ -25,43 +66,20 @@ grpc::Status HeatPumpService::GetCircuit3BoostingSchedule(
     heat_pump::BoostingSchedule* response) {
   try {
     const auto schedule = communicator_->ReadCircuit3BoostingSchedule();
+    MapBoostingScheduleToProto(schedule, response);
+    return grpc::Status::OK;
+  } catch (const std::exception& e) {
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+  }
+}
 
-    response->mutable_monday()->set_start_hour(schedule.monday.start_hour);
-    response->mutable_monday()->set_end_hour(schedule.monday.end_hour);
-    response->mutable_monday()->set_temperature_delta(
-        schedule.monday.temperature_delta);
-
-    response->mutable_tuesday()->set_start_hour(schedule.tuesday.start_hour);
-    response->mutable_tuesday()->set_end_hour(schedule.tuesday.end_hour);
-    response->mutable_tuesday()->set_temperature_delta(
-        schedule.tuesday.temperature_delta);
-
-    response->mutable_wednesday()->set_start_hour(
-        schedule.wednesday.start_hour);
-    response->mutable_wednesday()->set_end_hour(schedule.wednesday.end_hour);
-    response->mutable_wednesday()->set_temperature_delta(
-        schedule.wednesday.temperature_delta);
-
-    response->mutable_thursday()->set_start_hour(schedule.thursday.start_hour);
-    response->mutable_thursday()->set_end_hour(schedule.thursday.end_hour);
-    response->mutable_thursday()->set_temperature_delta(
-        schedule.thursday.temperature_delta);
-
-    response->mutable_friday()->set_start_hour(schedule.friday.start_hour);
-    response->mutable_friday()->set_end_hour(schedule.friday.end_hour);
-    response->mutable_friday()->set_temperature_delta(
-        schedule.friday.temperature_delta);
-
-    response->mutable_saturday()->set_start_hour(schedule.saturday.start_hour);
-    response->mutable_saturday()->set_end_hour(schedule.saturday.end_hour);
-    response->mutable_saturday()->set_temperature_delta(
-        schedule.saturday.temperature_delta);
-
-    response->mutable_sunday()->set_start_hour(schedule.sunday.start_hour);
-    response->mutable_sunday()->set_end_hour(schedule.sunday.end_hour);
-    response->mutable_sunday()->set_temperature_delta(
-        schedule.sunday.temperature_delta);
-
+grpc::Status HeatPumpService::GetLowerTankBoostingSchedule(
+    grpc::ServerContext* /* context */,
+    const google::protobuf::Empty* /* request */,
+    heat_pump::BoostingSchedule* response) {
+  try {
+    const auto schedule = communicator_->ReadLowerTankBoostingSchedule();
+    MapBoostingScheduleToProto(schedule, response);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
     return {grpc::StatusCode::INTERNAL, "Internal server error."};
