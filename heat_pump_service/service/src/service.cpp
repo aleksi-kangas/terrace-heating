@@ -15,7 +15,7 @@ grpc::Status HeatPumpService::GetActiveCircuitCount(
     response->set_value(communicator_->ActiveCircuitCount());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, e.what()};
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
   }
 }
 
@@ -64,7 +64,7 @@ grpc::Status HeatPumpService::GetCircuit3BoostingSchedule(
 
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, e.what()};
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
   }
 }
 
@@ -86,7 +86,7 @@ grpc::Status HeatPumpService::GetTemperatures(
     response->set_upper_tank(temperatures.upper_tank);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, e.what()};
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
   }
 }
 
@@ -102,7 +102,7 @@ grpc::Status HeatPumpService::GetTankLimits(
     response->set_upper_tank_maximum(tank_limits.upper_tank_maximum);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, e.what()};
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
   }
 }
 
@@ -114,7 +114,7 @@ grpc::Status HeatPumpService::IsCompressorActive(
     response->set_value(communicator_->IsCompressorActive());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, e.what()};
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
   }
 }
 
@@ -126,7 +126,7 @@ grpc::Status HeatPumpService::IsSchedulingEnabled(
     response->set_value(communicator_->IsSchedulingEnabled());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, e.what()};
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
   }
 }
 
@@ -135,14 +135,13 @@ grpc::Status HeatPumpService::SetActiveCircuitCount(
     const google::protobuf::UInt32Value* request,
     google::protobuf::Empty* /* response */) {
   try {
-    if (request->value() > 3) {
+    if (request->value() > 3)
       return {grpc::StatusCode::INVALID_ARGUMENT,
-              "Active circuit count must be between 0 and 3"};
-    }
+              "Active circuit count must be in [0, 3]."};
     communicator_->WriteActiveCircuitCount(request->value());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, e.what()};
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
   }
 }
 
