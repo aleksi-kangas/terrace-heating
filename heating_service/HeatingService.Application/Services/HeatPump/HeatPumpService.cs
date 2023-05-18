@@ -35,6 +35,15 @@ public class HeatPumpService : IHeatPumpService {
       return Error.Failure(e.Message);
     }
   }
+  
+  public async Task<ErrorOr<BoostingSchedule>> GetLowerTankBoostingScheduleAsync() {
+    try {
+      var boostingSchedule = await _client.GetLowerTankBoostingScheduleAsync(new Empty());
+      return _mapper.Map<BoostingSchedule>(boostingSchedule);
+    } catch (RpcException e) {
+      return Error.Failure(e.Message);
+    }
+  }
 
   public async Task<ErrorOr<Temperatures>> GetTemperaturesAsync() {
     try {

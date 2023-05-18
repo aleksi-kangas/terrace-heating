@@ -47,6 +47,15 @@ public class HeatPumpController : ApiController {
         Ok(_mapper.Map<BoostingScheduleResponse>(circuit3BoostingSchedule)),
       onError: _ => Problem());
   }
+  
+  [HttpGet("schedules/lower-tank")]
+  public async Task<IActionResult> GetLowerTankBoostingSchedule() {
+    var result = await _heatPumpService.GetLowerTankBoostingScheduleAsync();
+    return result.Match(
+      onValue: lowerTankBoostingSchedule =>
+        Ok(_mapper.Map<BoostingScheduleResponse>(lowerTankBoostingSchedule)),
+      onError: _ => Problem());
+  }
 
   [HttpGet("temperatures")]
   public async Task<IActionResult> GetTemperatures() {

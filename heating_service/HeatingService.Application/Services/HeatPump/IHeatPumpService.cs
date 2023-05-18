@@ -8,6 +8,7 @@ namespace HeatingService.Application.Services.HeatPump;
 public interface IHeatPumpService {
   Task<ErrorOr<UInt32>> GetActiveCircuitCountAsync();
   Task<ErrorOr<BoostingSchedule>> GetCircuit3BoostingScheduleAsync();
+  Task<ErrorOr<BoostingSchedule>> GetLowerTankBoostingScheduleAsync();
   Task<ErrorOr<Temperatures>> GetTemperaturesAsync();
   Task<ErrorOr<TankLimits>> GetTankLimitsAsync();
   Task<ErrorOr<Boolean>> IsCompressorActiveAsync();
