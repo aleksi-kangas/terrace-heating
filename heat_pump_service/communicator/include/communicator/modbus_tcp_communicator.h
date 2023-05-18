@@ -29,6 +29,7 @@ class ModbusTCPCommunicator final : public ICommunicator {
   mutable std::mutex mutex_{};
 
   [[nodiscard]] BoostingSchedule ReadBoostingSchedule(
-      const registers::BoostingScheduleAddresses& addresses) const;
+      const registers::BoostingScheduleHourAddresses& hour_addresses,
+      const registers::BoostingScheduleDeltaAddresses& delta_addresses) const;
 };
 }  // namespace communicator
