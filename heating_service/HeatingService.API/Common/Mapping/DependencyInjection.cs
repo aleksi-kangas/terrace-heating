@@ -7,7 +7,7 @@ namespace HeatingService.API.Common.Mapping;
 public static class DependencyInjection {
   public static IServiceCollection AddMappings(this IServiceCollection services) {
     var config = TypeAdapterConfig.GlobalSettings;
-    TypeAdapterConfig.GlobalSettings.RequireExplicitMapping = false;
+    TypeAdapterConfig.GlobalSettings.RequireExplicitMapping = true;
     TypeAdapterConfig.GlobalSettings.RequireDestinationMemberSource = true;
     config.Scan(Assembly.GetExecutingAssembly());
     TypeAdapterConfig.GlobalSettings.Compile();
