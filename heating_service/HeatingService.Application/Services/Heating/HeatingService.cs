@@ -15,12 +15,11 @@ public class HeatingService : IHeatingService {
     DateTime from,
     DateTime to) {
     if (from.Kind != DateTimeKind.Utc)
-      return Error.Validation(description: "From must be UTC");
+      return Error.Validation(description: "'From' must be a valid UTC timestamp, e.g. 1970-01-01T00:00:00Z");
     if (to.Kind != DateTimeKind.Utc)
-      return Error.Validation(description: "To must be UTC");
+      return Error.Validation(description: "'To' must be a valid UTC timestamp, e.g. 1970-01-01T00:00:00Z");
     if (to < from)
-      return Error.Validation(description: "To must be greater than from");
-
+      return Error.Validation(description: "'To' must be greater than 'From'");
     try {
       var records = await _heatPumpRecordRepository.FindByDateTimeRangeAsync(from, to);
       return ErrorOr.ErrorOr.From(records);
