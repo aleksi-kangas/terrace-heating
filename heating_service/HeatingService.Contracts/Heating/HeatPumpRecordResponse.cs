@@ -5,4 +5,4 @@ namespace HeatingService.Contracts.Heating;
 public record HeatPumpRecordResponse(
   TankLimitsResponse TankLimits,
   TemperaturesResponse Temperatures,
-  DateTime TimeStamp);
+  DateTime Time);

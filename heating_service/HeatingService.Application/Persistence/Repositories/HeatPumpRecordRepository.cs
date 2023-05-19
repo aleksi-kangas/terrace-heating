@@ -7,6 +7,6 @@ public class HeatPumpRecordRepository : RepositoryBase<HeatPumpRecord>, IHeatPum
   
   public async Task<IEnumerable<HeatPumpRecord>> FindByDateTimeRangeAsync(DateTime from, DateTime to, bool trackChanges)
   {
-    return await FindByConditionAsync(r => from <= r.TimeStamp && r.TimeStamp <= to, trackChanges);
+    return await FindByConditionAsync(r => from <= r.Time && r.Time <= to, trackChanges);
   }
 }

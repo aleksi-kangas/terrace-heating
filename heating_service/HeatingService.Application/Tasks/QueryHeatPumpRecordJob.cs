@@ -41,17 +41,17 @@ public class QueryHeatPumpRecordJob : IScheduledJob {
       }
 
       var now = DateTime.UtcNow;
-      var timeStamp = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Utc);
+      var time = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Utc);
       var heatPumpRecord = new HeatPumpRecord() {
         TankLimits = tankLimits.Value,
         Temperatures = temperatures.Value,
-        TimeStamp = timeStamp
+        Time = time
       };
 
       heatPumpRecordRepository.Add(heatPumpRecord);
       await heatPumpRecordRepository.SaveAsync();
     
-      _logger.LogInformation("Queried HeatPumpRecord at: " + timeStamp + "Z");
+      _logger.LogInformation("Queried HeatPumpRecord at: " + time + "Z");
     }
     catch (Exception e) {
       _logger.LogError(e.Message);
