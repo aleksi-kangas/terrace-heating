@@ -8,7 +8,7 @@ RUN for file in $(ls *.csproj); do mkdir -p ${file%.*}/ && mv $file ${file%.*}/;
 RUN dotnet restore
 
 COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release --property PublishDir=/app/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
