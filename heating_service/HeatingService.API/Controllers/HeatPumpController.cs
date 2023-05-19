@@ -20,7 +20,7 @@ public class HeatPumpController : ApiController {
     var result = await _heatPumpService.GetActiveCircuitCountAsync();
     return result.Match(
       onValue: activeCircuitCount => Ok(activeCircuitCount),
-      onError: _ => Problem());
+      onError: Problem);
   }
 
   [HttpGet("compressor-active")]
@@ -28,7 +28,7 @@ public class HeatPumpController : ApiController {
     var result = await _heatPumpService.IsCompressorActiveAsync();
     return result.Match(
       onValue: isCompressorActive => Ok(isCompressorActive),
-      onError: _ => Problem());
+      onError: Problem);
   }
 
   [HttpGet("scheduling-enabled")]
@@ -36,7 +36,7 @@ public class HeatPumpController : ApiController {
     var result = await _heatPumpService.IsSchedulingEnabledAsync();
     return result.Match(
       onValue: isSchedulingEnabled => Ok(isSchedulingEnabled),
-      onError: _ => Problem());
+      onError: Problem);
   }
 
   [HttpGet("schedules/circuit3")]
@@ -45,16 +45,16 @@ public class HeatPumpController : ApiController {
     return result.Match(
       onValue: circuit3BoostingSchedule =>
         Ok(_mapper.Map<BoostingScheduleResponse>(circuit3BoostingSchedule)),
-      onError: _ => Problem());
+      onError: Problem);
   }
-  
+
   [HttpGet("schedules/lower-tank")]
   public async Task<IActionResult> GetLowerTankBoostingSchedule() {
     var result = await _heatPumpService.GetLowerTankBoostingScheduleAsync();
     return result.Match(
       onValue: lowerTankBoostingSchedule =>
         Ok(_mapper.Map<BoostingScheduleResponse>(lowerTankBoostingSchedule)),
-      onError: _ => Problem());
+      onError: Problem);
   }
 
   [HttpGet("temperatures")]
@@ -62,7 +62,7 @@ public class HeatPumpController : ApiController {
     var result = await _heatPumpService.GetTemperaturesAsync();
     return result.Match(
       onValue: temperatures => Ok(_mapper.Map<TemperaturesResponse>(temperatures)),
-      onError: _ => Problem());
+      onError: Problem);
   }
 
   [HttpGet("tank-limits")]
@@ -70,6 +70,6 @@ public class HeatPumpController : ApiController {
     var result = await _heatPumpService.GetTankLimitsAsync();
     return result.Match(
       onValue: tankLimits => Ok(_mapper.Map<TankLimitsResponse>(tankLimits)),
-      onError: _ => Problem());
+      onError: Problem);
   }
 }

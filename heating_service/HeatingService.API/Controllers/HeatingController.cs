@@ -20,6 +20,6 @@ public class HeatingController : ApiController {
     var result = await _heatingService.GetHeatPumpRecordsDateTimeRangeAsync(request.From, request.To);
     return result.Match(
       onValue: records => Ok(_mapper.Map<List<HeatPumpRecordResponse>>(records)),
-      onError: _ => Problem());
+      onError: Problem);
   }
 }
