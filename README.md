@@ -16,7 +16,7 @@ controlling the heating of the terrace.
 
 The overall architecture is illustrated with the following image:
 
-![Architecture](/docs/architecture.svg)
+![Architecture](docs/architecture.svg)
 
 - Periodical querying of heat-pump values with [Modbus](https://en.wikipedia.org/wiki/Modbus) TCP connection
   using [libmodbus](https://libmodbus.org/)-library
