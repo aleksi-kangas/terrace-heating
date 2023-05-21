@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using HeatingService.Application.Persistence;
 using HeatingService.Application.Persistence.Repositories;
 using HeatingService.Application.Services.Heating;
@@ -21,9 +22,22 @@ public static class DependencyInjection {
   }
 
   private static IServiceCollection AddServices(this IServiceCollection services) {
-    services.AddGrpcClient<HeatPumpSvc.HeatPumpSvcClient>(o => {
-      o.Address = new Uri("http://host.docker.internal:50051");
-    });
+    services
+      .AddGrpcClient<HeatPumpSvc.HeatPumpSvcClient>(o => {
+        o.Address = new Uri("https://host.docker.internal:50051");
+      })
+      .ConfigurePrimaryHttpMessageHandler(() => {
+        var heatingServiceCert = X509Certificate2.CreateFromPemFile(
+          "/usr/src/app/certs/heating-service-cert.pem",
+          "/usr/src/app/certs/heating-service-key.pem");
+        var handler = new HttpClientHandler();
+        handler.ClientCertificates.Add(heatingServiceCert);
+        // An ugly hack to accept an untrusted root CA used in the internal network
+        // While this is 'dangerous', it does not matter that much as we are the client
+        handler.ServerCertificateCustomValidationCallback =
+          HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+        return handler;
+      });
     services.AddScoped<IHeatingService, Services.Heating.HeatingService>();
     services.AddScoped<IHeatPumpService, HeatPumpService>();
     return services;
