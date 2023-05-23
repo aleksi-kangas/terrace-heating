@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "communicator/registers.h"
+#include "communicator/addresses.h"
 
 #include "mock_modbus_tcp_server.h"
 

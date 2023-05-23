@@ -2,7 +2,9 @@
 
 #include <array>
 #include <cstdint>
+#include <ranges>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "communicator/utils.h"
@@ -34,7 +36,8 @@ uint32_t ModbusTCPCommunicator::ActiveCircuitCount() const {
   std::lock_guard<std::mutex> lock{mutex_};
   uint16_t active_circuit_count{0};
   const int32_t rc = modbus_read_registers(
-      context_, registers::kActiveCircuitCount, 1, &active_circuit_count);
+      context_, addresses::miscellaneous::kActiveCircuitCount, 1,
+      &active_circuit_count);
   if (rc != 1) {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
@@ -46,7 +49,8 @@ bool ModbusTCPCommunicator::IsCompressorActive() const {
   std::lock_guard<std::mutex> lock{mutex_};
   uint16_t is_compressor_active{0};
   const int32_t rc = modbus_read_registers(
-      context_, registers::kCompressorActive, 1, &is_compressor_active);
+      context_, addresses::miscellaneous::kCompressorActive, 1,
+      &is_compressor_active);
   if (rc != 1) {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
@@ -58,7 +62,8 @@ bool ModbusTCPCommunicator::IsSchedulingEnabled() const {
   std::lock_guard<std::mutex> lock{mutex_};
   uint16_t is_scheduling_enabled{0};
   const int32_t rc = modbus_read_registers(
-      context_, registers::kSchedulingEnabled, 1, &is_scheduling_enabled);
+      context_, addresses::miscellaneous::kSchedulingEnabled, 1,
+      &is_scheduling_enabled);
   if (rc != 1) {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
@@ -67,25 +72,21 @@ bool ModbusTCPCommunicator::IsSchedulingEnabled() const {
 }
 
 BoostingSchedule ModbusTCPCommunicator::ReadCircuit3BoostingSchedule() const {
-  return ReadBoostingSchedule(registers::kCircuit3BoostingScheduleHours,
-                              registers::kCircuit3BoostingScheduleDeltas);
+  return ReadBoostingSchedule(addresses::boosting_schedules::kCircuit3);
 }
 
 BoostingSchedule ModbusTCPCommunicator::ReadLowerTankBoostingSchedule() const {
-  return ReadBoostingSchedule(registers::kLowerTankBoostingScheduleHours,
-                              registers::kLowerTankBoostingScheduleDeltas);
+  return ReadBoostingSchedule(addresses::boosting_schedules::kLowerTank);
 }
 
 Temperatures ModbusTCPCommunicator::ReadTemperatures() const {
   std::unique_lock<std::mutex> lock{mutex_};
   // Query values in bulk in order to limit the amount of round trips.
-  constexpr int kStartAddress = registers::kTemperatureRegisterRange.first;
-  constexpr int32_t kQuantity = registers::kTemperatureRegisterRange.second -
-                                registers::kTemperatureRegisterRange.first + 1;
-  std::array<uint16_t, kQuantity> values{};
+  std::array<uint16_t, addresses::temperatures::kQuantity> values{};
   const int32_t rc =
-      modbus_read_registers(context_, kStartAddress, kQuantity, values.data());
-  if (rc != kQuantity) {
+      modbus_read_registers(context_, addresses::temperatures::kFirst,
+                            addresses::temperatures::kQuantity, values.data());
+  if (rc != addresses::temperatures::kQuantity) {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
   }
@@ -96,17 +97,16 @@ Temperatures ModbusTCPCommunicator::ReadTemperatures() const {
 TankLimits ModbusTCPCommunicator::ReadTankLimits() const {
   std::unique_lock<std::mutex> lock{mutex_};
   // Query values in bulk in order to limit the amount of round trips.
-  const int kStartAddress = registers::kTankLimits.Range().first;
-  const int32_t kQuantity = registers::kTankLimits.RangeSpan();
-  std::vector<uint16_t> values(kQuantity, 0);
+  std::array<uint16_t, addresses::tank_limits::kQuantity> values{};
   const int32_t rc =
-      modbus_read_registers(context_, kStartAddress, kQuantity, values.data());
-  if (rc != kQuantity) {
+      modbus_read_registers(context_, addresses::tank_limits::kFirst,
+                            addresses::tank_limits::kQuantity, values.data());
+  if (rc != addresses::tank_limits::kQuantity) {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
   }
   lock.unlock();
-  return utils::ParseTankLimits(registers::kTankLimits, values);
+  return utils::ParseTankLimits(values);
 }
 
 void ModbusTCPCommunicator::WriteActiveCircuitCount(uint32_t count) {
@@ -115,8 +115,8 @@ void ModbusTCPCommunicator::WriteActiveCircuitCount(uint32_t count) {
                                 std::to_string(count)};
 
   std::lock_guard<std::mutex> lock{mutex_};
-  const int32_t rc =
-      modbus_write_register(context_, registers::kActiveCircuitCount, count);
+  const int32_t rc = modbus_write_register(
+      context_, addresses::miscellaneous::kActiveCircuitCount, count);
   if (rc != 1) {
     throw std::runtime_error{"Failed to write registers: " +
                              std::string{modbus_strerror(errno)}};
@@ -124,33 +124,28 @@ void ModbusTCPCommunicator::WriteActiveCircuitCount(uint32_t count) {
 }
 
 BoostingSchedule ModbusTCPCommunicator::ReadBoostingSchedule(
-    const registers::BoostingScheduleHourAddresses& hour_addresses,
-    const registers::BoostingScheduleDeltaAddresses& delta_addresses) const {
-  const int32_t kHourStartAddress = hour_addresses.Range().first;
-  const int32_t kHourQuantity = hour_addresses.RangeSpan();
-  const int32_t kDeltaStartAddress = delta_addresses.Range().first;
-  const int32_t kDeltaQuantity = delta_addresses.RangeSpan();
-
+    const addresses::boosting_schedules::BoostingScheduleAddresses& addresses)
+    const {
   std::unique_lock<std::mutex> lock{mutex_};
   // Query hour values in bulk in order to limit the amount of round trips.
-  std::vector<uint16_t> hour_values(kHourQuantity, 0);
-  int32_t rc = modbus_read_registers(context_, kHourStartAddress, kHourQuantity,
-                                     hour_values.data());
-  if (rc != kHourQuantity) {
+  std::vector<uint16_t> hour_values(addresses.QuantityHour(), 0);
+  int32_t rc =
+      modbus_read_registers(context_, addresses.FirstHour(),
+                            addresses.QuantityHour(), hour_values.data());
+  if (rc != addresses.QuantityHour()) {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
   }
   // Query delta values in bulk in order to limit the amount of round trips.
-  std::vector<uint16_t> delta_values(kDeltaQuantity, 0);
-  rc = modbus_read_registers(context_, kDeltaStartAddress, kDeltaQuantity,
-                             delta_values.data());
-  if (rc != kDeltaQuantity) {
+  std::vector<uint16_t> delta_values(addresses.QuantityDelta(), 0);
+  rc = modbus_read_registers(context_, addresses.FirstDelta(),
+                             addresses.QuantityDelta(), delta_values.data());
+  if (rc != addresses.QuantityDelta()) {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
   }
   lock.unlock();
-  return utils::ParseBoostingSchedule(hour_addresses, hour_values,
-                                      delta_addresses, delta_values);
+  return utils::ParseBoostingSchedule(addresses, hour_values, delta_values);
 }
 
 }  // namespace communicator

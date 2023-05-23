@@ -6,8 +6,8 @@
 
 #include <modbus.h>
 
+#include "communicator/addresses.h"
 #include "communicator/communicator.h"
-#include "communicator/registers.h"
 
 namespace communicator {
 class ModbusTCPCommunicator final : public ICommunicator {
@@ -29,7 +29,7 @@ class ModbusTCPCommunicator final : public ICommunicator {
   mutable std::mutex mutex_{};
 
   [[nodiscard]] BoostingSchedule ReadBoostingSchedule(
-      const registers::BoostingScheduleHourAddresses& hour_addresses,
-      const registers::BoostingScheduleDeltaAddresses& delta_addresses) const;
+      const addresses::boosting_schedules::BoostingScheduleAddresses& addresses)
+      const;
 };
 }  // namespace communicator

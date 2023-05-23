@@ -1,6 +1,7 @@
 #include "communicator/utils.h"
 
-#include "communicator/registers.h"
+#include <ranges>
+#include <utility>
 
 namespace {
 float TemperatureUInt16ToFloat(uint16_t value) {
@@ -11,101 +12,83 @@ float TemperatureUInt16ToFloat(uint16_t value) {
 }  // namespace
 
 namespace communicator::utils {
-Temperatures ParseTemperatures(const std::array<uint16_t, 117>& values) {
-  constexpr int32_t kOffset = registers::kTemperatureRegisterRange.first;
-  return Temperatures{
-      .circuit1 = TemperatureUInt16ToFloat(
-          values[registers::kCircuit1Temperature - kOffset]),
-      .circuit2 = TemperatureUInt16ToFloat(
-          values[registers::kCircuit2Temperature - kOffset]),
-      .circuit3 = TemperatureUInt16ToFloat(
-          values[registers::kCircuit3Temperature - kOffset]),
-      .ground_input = TemperatureUInt16ToFloat(
-          values[registers::kGroundInputTemperature - kOffset]),
-      .ground_output = TemperatureUInt16ToFloat(
-          values[registers::kGroundOutputTemperature - kOffset]),
-      .hot_gas = TemperatureUInt16ToFloat(
-          values[registers::kHotGasTemperature - kOffset]),
-      .inside = TemperatureUInt16ToFloat(
-          values[registers::kInsideTemperature - kOffset]),
-      .lower_tank = TemperatureUInt16ToFloat(
-          values[registers::kLowerTankTemperature - kOffset]),
-      .outside = TemperatureUInt16ToFloat(
-          values[registers::kOutsideTemperature - kOffset]),
-      .upper_tank = TemperatureUInt16ToFloat(
-          values[registers::kUpperTankTemperature - kOffset]),
+Temperatures ParseTemperatures(
+    const std::array<uint16_t, addresses::temperatures::kQuantity>& values) {
+  using namespace addresses::temperatures;
+  return {
+      .circuit1 = TemperatureUInt16ToFloat(values[kCircuit1 - kFirst]),
+      .circuit2 = TemperatureUInt16ToFloat(values[kCircuit2 - kFirst]),
+      .circuit3 = TemperatureUInt16ToFloat(values[kCircuit3 - kFirst]),
+      .ground_input = TemperatureUInt16ToFloat(values[kGroundInput - kFirst]),
+      .ground_output = TemperatureUInt16ToFloat(values[kGroundOutput - kFirst]),
+      .hot_gas = TemperatureUInt16ToFloat(values[kHotGas - kFirst]),
+      .inside = TemperatureUInt16ToFloat(values[kInside - kFirst]),
+      .lower_tank = TemperatureUInt16ToFloat(values[kLowerTank - kFirst]),
+      .outside = TemperatureUInt16ToFloat(values[kOutside - kFirst]),
+      .upper_tank = TemperatureUInt16ToFloat(values[kUpperTank - kFirst]),
   };
 }
 
-TankLimits ParseTankLimits(const registers::TankLimitAddresses& addresses,
-                           const std::vector<uint16_t>& values) {
-  const auto kOffset = addresses.Range().first;
-  return TankLimits{
-      .lower_tank_minimum =
-          static_cast<int16_t>(values[addresses.lower.minimum - kOffset]),
-      .lower_tank_minimum_adjusted = static_cast<int16_t>(
-          values[addresses.lower.minimum_adjusted - kOffset]),
-      .lower_tank_maximum =
-          static_cast<int16_t>(values[addresses.lower.maximum - kOffset]),
-      .lower_tank_maximum_adjusted = static_cast<int16_t>(
-          values[addresses.lower.maximum_adjusted - kOffset]),
-      .upper_tank_minimum =
-          static_cast<int16_t>(values[addresses.upper.minimum - kOffset]),
-      .upper_tank_minimum_adjusted = static_cast<int16_t>(
-          values[addresses.upper.minimum_adjusted - kOffset]),
-      .upper_tank_maximum =
-          static_cast<int16_t>(values[addresses.upper.maximum - kOffset]),
-      .upper_tank_maximum_adjusted = static_cast<int16_t>(
-          values[addresses.upper.maximum_adjusted - kOffset]),
+TankLimits ParseTankLimits(
+    const std::array<uint16_t, addresses::tank_limits::kQuantity>& values) {
+  using namespace addresses::tank_limits;
+  return {
+      // clang-format off
+      .lower_tank_minimum = static_cast<int16_t>(values[kLowerTankMinimum - kFirst]),
+      .lower_tank_minimum_adjusted = static_cast<int16_t>(values[kLowerTankMinimumAdjusted - kFirst]),
+      .lower_tank_maximum = static_cast<int16_t>(values[kLowerTankMaximum - kFirst]),
+      .lower_tank_maximum_adjusted = static_cast<int16_t>(values[kLowerTankMaximumAdjusted - kFirst]),
+      .upper_tank_minimum = static_cast<int16_t>(values[kUpperTankMinimum - kFirst]),
+      .upper_tank_minimum_adjusted = static_cast<int16_t>(values[kUpperTankMinimumAdjusted - kFirst]),
+      .upper_tank_maximum = static_cast<int16_t>(values[kUpperTankMaximum - kFirst]),
+      .upper_tank_maximum_adjusted = static_cast<int16_t>(values[kUpperTankMaximumAdjusted - kFirst]),
+      // clang-format off
   };
 }
 
 BoostingSchedule ParseBoostingSchedule(
-    const registers::BoostingScheduleHourAddresses& hour_addresses,
+    const addresses::boosting_schedules::BoostingScheduleAddresses& addresses,
     const std::vector<uint16_t>& hour_values,
-    const registers::BoostingScheduleDeltaAddresses& delta_addresses,
     const std::vector<uint16_t>& delta_values) {
-  const auto kHourOffset = hour_addresses.Range().first;
-  const auto kDeltaOffset = delta_addresses.Range().first;
-  // clang-format off
   return {
+      // clang-format off
       .monday = {
-          .start_hour = hour_values[hour_addresses.monday.start_hour - kHourOffset],
-          .end_hour = hour_values[hour_addresses.monday.end_hour - kHourOffset],
-          .temperature_delta = static_cast<int16_t>(delta_values[delta_addresses.monday.delta - kDeltaOffset]),
+          .start_hour = hour_values[addresses.monday.start_hour - addresses.FirstHour()],
+          .end_hour = hour_values[addresses.monday.end_hour - addresses.FirstHour()],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.monday.delta - addresses.FirstDelta()]),
       },
       .tuesday = {
-          .start_hour = hour_values[hour_addresses.tuesday.start_hour - kHourOffset],
-          .end_hour = hour_values[hour_addresses.tuesday.end_hour - kHourOffset],
-          .temperature_delta = static_cast<int16_t>(delta_values[delta_addresses.tuesday.delta - kDeltaOffset]),
+          .start_hour = hour_values[addresses.tuesday.start_hour - addresses.FirstHour()],
+          .end_hour = hour_values[addresses.tuesday.end_hour - addresses.FirstHour()],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.tuesday.delta - addresses.FirstDelta()]),
       },
       .wednesday = {
-          .start_hour = hour_values[hour_addresses.wednesday.start_hour - kHourOffset],
-          .end_hour = hour_values[hour_addresses.wednesday.end_hour - kHourOffset],
-          .temperature_delta = static_cast<int16_t>(delta_values[delta_addresses.wednesday.delta - kDeltaOffset]),
+          .start_hour = hour_values[addresses.wednesday.start_hour - addresses.FirstHour()],
+          .end_hour = hour_values[addresses.wednesday.end_hour - addresses.FirstHour()],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.wednesday.delta - addresses.FirstDelta()]),
       },
       .thursday = {
-          .start_hour = hour_values[hour_addresses.thursday.start_hour - kHourOffset],
-          .end_hour = hour_values[hour_addresses.thursday.end_hour - kHourOffset],
-          .temperature_delta = static_cast<int16_t>(delta_values[delta_addresses.thursday.delta - kDeltaOffset]),
+          .start_hour = hour_values[addresses.thursday.start_hour - addresses.FirstHour()],
+          .end_hour = hour_values[addresses.thursday.end_hour - addresses.FirstHour()],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.thursday.delta - addresses.FirstDelta()]),
       },
       .friday = {
-          .start_hour = hour_values[hour_addresses.friday.start_hour - kHourOffset],
-          .end_hour = hour_values[hour_addresses.friday.end_hour - kHourOffset],
-          .temperature_delta = static_cast<int16_t>(delta_values[delta_addresses.friday.delta - kDeltaOffset]),
+          .start_hour = hour_values[addresses.friday.start_hour - addresses.FirstHour()],
+          .end_hour = hour_values[addresses.friday.end_hour - addresses.FirstHour()],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.friday.delta - addresses.FirstDelta()]),
       },
       .saturday = {
-          .start_hour = hour_values[hour_addresses.saturday.start_hour - kHourOffset],
-          .end_hour = hour_values[hour_addresses.saturday.end_hour - kHourOffset],
-          .temperature_delta = static_cast<int16_t>(delta_values[delta_addresses.saturday.delta - kDeltaOffset]),
+          .start_hour = hour_values[addresses.saturday.start_hour - addresses.FirstHour()],
+          .end_hour = hour_values[addresses.saturday.end_hour - addresses.FirstHour()],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.saturday.delta - addresses.FirstDelta()]),
       },
       .sunday = {
-          .start_hour = hour_values[hour_addresses.sunday.start_hour - kHourOffset],
-          .end_hour = hour_values[hour_addresses.sunday.end_hour - kHourOffset],
-          .temperature_delta = static_cast<int16_t>(delta_values[delta_addresses.sunday.delta - kDeltaOffset]),
+          .start_hour = hour_values[addresses.sunday.start_hour - addresses.FirstHour()],
+          .end_hour = hour_values[addresses.sunday.end_hour - addresses.FirstHour()],
+          .temperature_delta = static_cast<int16_t>(delta_values[addresses.sunday.delta - addresses.FirstDelta()]),
       }
+      // clang-format on
   };
-  // clang-format on
 }
 
 }  // namespace communicator::utils
