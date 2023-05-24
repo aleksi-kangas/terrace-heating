@@ -23,6 +23,9 @@ class ModbusTCPCommunicator final : public ICommunicator {
   [[nodiscard]] Temperatures ReadTemperatures() const override;
   [[nodiscard]] TankLimits ReadTankLimits() const override;
   void WriteActiveCircuitCount(uint32_t count) override;
+  void WriteCircuit3BoostingSchedule(const BoostingSchedule& schedule) override;
+  void WriteLowerTankBoostingSchedule(
+      const BoostingSchedule& schedule) override;
 
  private:
   modbus_t* context_{nullptr};
@@ -31,5 +34,9 @@ class ModbusTCPCommunicator final : public ICommunicator {
   [[nodiscard]] BoostingSchedule ReadBoostingSchedule(
       const addresses::boosting_schedules::BoostingScheduleAddresses& addresses)
       const;
+
+  void WriteBoostingSchedule(
+      const addresses::boosting_schedules::BoostingScheduleAddresses& addresses,
+      const BoostingSchedule& schedule);
 };
 }  // namespace communicator

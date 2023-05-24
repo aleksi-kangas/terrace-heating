@@ -18,4 +18,17 @@ namespace communicator::utils {
     const addresses::boosting_schedules::BoostingScheduleAddresses& addresses,
     const std::vector<uint16_t>& hour_values,
     const std::vector<uint16_t>& delta_values);
+
+using ScheduleAddressValueMapping = std::pair<int32_t, uint16_t>;
+using ScheduleAddressValueMappings =
+    std::array<ScheduleAddressValueMapping, 3 * 7>;
+
+[[nodiscard]] ScheduleAddressValueMappings
+GenerateSortedScheduleAddressValueMappings(
+    const addresses::boosting_schedules::BoostingScheduleAddresses& addresses,
+    const BoostingSchedule& schedule);
+
+[[nodiscard]] std::vector<std::vector<ScheduleAddressValueMapping>>
+ExtractContiguousAddressRanges(
+    const ScheduleAddressValueMappings& address_value_mappings);
 }  // namespace communicator::utils

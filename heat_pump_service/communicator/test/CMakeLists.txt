@@ -10,7 +10,8 @@ include(GoogleTest)
 
 add_executable(${PROJECT_NAME}
         mock_modbus_tcp_server.h    mock_modbus_tcp_server.cpp
-        modbus_tcp_communicator_test.cpp)
+        modbus_tcp_communicator_test.cpp
+        utils_test.cpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC communicator modbus gtest gmock gtest_main)
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)

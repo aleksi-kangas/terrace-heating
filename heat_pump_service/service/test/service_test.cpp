@@ -343,3 +343,67 @@ TEST_F(HeatPumpServiceTest, SetActiveCircuitCountInvalidArgument) {
   EXPECT_FALSE(status.ok());
   EXPECT_EQ(status.error_code(), grpc::StatusCode::INVALID_ARGUMENT);
 }
+
+TEST_F(HeatPumpServiceTest, SetCircuit3BoostingSchedule) {
+  EXPECT_CALL(*mockCommunicator_,
+              WriteCircuit3BoostingSchedule(_))
+      .Times(1);
+
+  heat_pump::BoostingSchedule request{};
+  request.mutable_monday()->set_start_hour(1);
+  request.mutable_monday()->set_end_hour(18);
+  request.mutable_monday()->set_temperature_delta(-1);
+  request.mutable_tuesday()->set_start_hour(2);
+  request.mutable_tuesday()->set_end_hour(19);
+  request.mutable_tuesday()->set_temperature_delta(-2);
+  request.mutable_wednesday()->set_start_hour(3);
+  request.mutable_wednesday()->set_end_hour(20);
+  request.mutable_wednesday()->set_temperature_delta(-3);
+  request.mutable_thursday()->set_start_hour(4);
+  request.mutable_thursday()->set_end_hour(21);
+  request.mutable_thursday()->set_temperature_delta(-4);
+  request.mutable_friday()->set_start_hour(5);
+  request.mutable_friday()->set_end_hour(22);
+  request.mutable_friday()->set_temperature_delta(-5);
+  request.mutable_saturday()->set_start_hour(6);
+  request.mutable_saturday()->set_end_hour(23);
+  request.mutable_saturday()->set_temperature_delta(-6);
+  request.mutable_sunday()->set_start_hour(7);
+  request.mutable_sunday()->set_end_hour(24);
+  request.mutable_sunday()->set_temperature_delta(-7);
+
+  google::protobuf::Empty response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->SetCircuit3BoostingSchedule(&context, &request, &response);
+  EXPECT_TRUE(status.ok());
+}
+
+TEST_F(HeatPumpServiceTest, SetCircuit3BoostingScheduleFailure) {
+  EXPECT_CALL(*mockCommunicator_, WriteCircuit3BoostingSchedule(_))
+      .Times(1)
+      .WillOnce(Throw(std::runtime_error{"test"}));
+
+  heat_pump::BoostingSchedule request{};
+  google::protobuf::Empty response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->SetCircuit3BoostingSchedule(&context, &request, &response);
+  EXPECT_FALSE(status.ok());
+  EXPECT_EQ(status.error_code(), grpc::StatusCode::INTERNAL);
+}
+
+TEST_F(HeatPumpServiceTest, SetCircuit3BoostingScheduleArgument) {
+  EXPECT_CALL(*mockCommunicator_, WriteCircuit3BoostingSchedule(_)).Times(0);
+
+  heat_pump::BoostingSchedule request{};
+  request.mutable_monday()->set_start_hour(25);
+  request.mutable_monday()->set_temperature_delta(-11);
+
+  google::protobuf::Empty response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->SetCircuit3BoostingSchedule(&context, &request, &response);
+  EXPECT_FALSE(status.ok());
+  EXPECT_EQ(status.error_code(), grpc::StatusCode::INVALID_ARGUMENT);
+}

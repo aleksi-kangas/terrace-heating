@@ -48,6 +48,14 @@ class HeatPumpService final : public heat_pump::HeatPumpSvc::Service {
       const google::protobuf::UInt32Value* request,
       google::protobuf::Empty* response) override;
 
+  grpc::Status SetCircuit3BoostingSchedule(
+      grpc::ServerContext* context, const heat_pump::BoostingSchedule* request,
+      google::protobuf::Empty* response) override;
+
+  grpc::Status SetLowerTankBoostingSchedule(
+      grpc::ServerContext* context, const heat_pump::BoostingSchedule* request,
+      google::protobuf::Empty* response) override;
+
  private:
   std::unique_ptr<communicator::ICommunicator> communicator_{nullptr};
 };

@@ -41,6 +41,41 @@ void MapBoostingScheduleToProto(const communicator::BoostingSchedule& schedule,
       schedule.sunday.temperature_delta);
 }
 
+communicator::BoostingSchedule MapProtoToBoostingSchedule(
+    const heat_pump::BoostingSchedule& proto) {
+  communicator::BoostingSchedule schedule{};
+
+  schedule.monday.start_hour = proto.monday().start_hour();
+  schedule.monday.end_hour = proto.monday().end_hour();
+  schedule.monday.temperature_delta = proto.monday().temperature_delta();
+
+  schedule.tuesday.start_hour = proto.tuesday().start_hour();
+  schedule.tuesday.end_hour = proto.tuesday().end_hour();
+  schedule.tuesday.temperature_delta = proto.tuesday().temperature_delta();
+
+  schedule.wednesday.start_hour = proto.wednesday().start_hour();
+  schedule.wednesday.end_hour = proto.wednesday().end_hour();
+  schedule.wednesday.temperature_delta = proto.wednesday().temperature_delta();
+
+  schedule.thursday.start_hour = proto.thursday().start_hour();
+  schedule.thursday.end_hour = proto.thursday().end_hour();
+  schedule.thursday.temperature_delta = proto.thursday().temperature_delta();
+
+  schedule.friday.start_hour = proto.friday().start_hour();
+  schedule.friday.end_hour = proto.friday().end_hour();
+  schedule.friday.temperature_delta = proto.friday().temperature_delta();
+
+  schedule.saturday.start_hour = proto.saturday().start_hour();
+  schedule.saturday.end_hour = proto.saturday().end_hour();
+  schedule.saturday.temperature_delta = proto.saturday().temperature_delta();
+
+  schedule.sunday.start_hour = proto.sunday().start_hour();
+  schedule.sunday.end_hour = proto.sunday().end_hour();
+  schedule.sunday.temperature_delta = proto.sunday().temperature_delta();
+
+  return schedule;
+}
+
 }  // namespace
 
 namespace service {
@@ -165,6 +200,36 @@ grpc::Status HeatPumpService::SetActiveCircuitCount(
       return {grpc::StatusCode::INVALID_ARGUMENT,
               "Active circuit count must be in [0, 3]."};
     communicator_->WriteActiveCircuitCount(request->value());
+    return grpc::Status::OK;
+  } catch (const std::exception& e) {
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+  }
+}
+
+grpc::Status HeatPumpService::SetCircuit3BoostingSchedule(
+    grpc::ServerContext* /* context */,
+    const heat_pump::BoostingSchedule* request,
+    google::protobuf::Empty* /* response */) {
+  try {
+    const auto boosting_schedule = MapProtoToBoostingSchedule(*request);
+    if (!boosting_schedule.IsValid())
+      return {grpc::StatusCode::INVALID_ARGUMENT, "Invalid boosting schedule."};
+    communicator_->WriteCircuit3BoostingSchedule(boosting_schedule);
+    return grpc::Status::OK;
+  } catch (const std::exception& e) {
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+  }
+}
+
+grpc::Status HeatPumpService::SetLowerTankBoostingSchedule(
+    grpc::ServerContext* /* context */,
+    const heat_pump::BoostingSchedule* request,
+    google::protobuf::Empty* /* response */) {
+  try {
+    const auto boosting_schedule = MapProtoToBoostingSchedule(*request);
+    if (!boosting_schedule.IsValid())
+      return {grpc::StatusCode::INVALID_ARGUMENT, "Invalid boosting schedule."};
+    communicator_->WriteLowerTankBoostingSchedule(boosting_schedule);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
     return {grpc::StatusCode::INTERNAL, "Internal server error."};

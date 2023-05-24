@@ -1,8 +1,8 @@
 #include "communicator/modbus_tcp_communicator.h"
+#include <modbus.h>
 
 #include <array>
 #include <cstdint>
-#include <ranges>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -19,6 +19,10 @@ ModbusTCPCommunicator::ModbusTCPCommunicator(const std::string& host,
   }
 
   modbus_set_error_recovery(context_, MODBUS_ERROR_RECOVERY_LINK);
+
+  constexpr int32_t kTimeoutSeconds = 2;
+  modbus_set_response_timeout(context_, kTimeoutSeconds, 0);
+  modbus_set_byte_timeout(context_, kTimeoutSeconds, 0);
 
   if (modbus_connect(context_) == -1) {
     throw std::runtime_error{"Failed to connect to modbus server: " +
@@ -123,6 +127,16 @@ void ModbusTCPCommunicator::WriteActiveCircuitCount(uint32_t count) {
   }
 }
 
+void ModbusTCPCommunicator::WriteCircuit3BoostingSchedule(
+    const BoostingSchedule& schedule) {
+  WriteBoostingSchedule(addresses::boosting_schedules::kCircuit3, schedule);
+}
+
+void ModbusTCPCommunicator::WriteLowerTankBoostingSchedule(
+    const BoostingSchedule& schedule) {
+  WriteBoostingSchedule(addresses::boosting_schedules::kLowerTank, schedule);
+}
+
 BoostingSchedule ModbusTCPCommunicator::ReadBoostingSchedule(
     const addresses::boosting_schedules::BoostingScheduleAddresses& addresses)
     const {
@@ -146,6 +160,36 @@ BoostingSchedule ModbusTCPCommunicator::ReadBoostingSchedule(
   }
   lock.unlock();
   return utils::ParseBoostingSchedule(addresses, hour_values, delta_values);
+}
+
+void ModbusTCPCommunicator::WriteBoostingSchedule(
+    const addresses::boosting_schedules::BoostingScheduleAddresses& addresses,
+    const BoostingSchedule& schedule) {
+  // 1. Generate a sorted mapping of <address, value>
+  const auto mappings =
+      utils::GenerateSortedScheduleAddressValueMappings(addresses, schedule);
+  // 2. Extract contiguous address ranges
+  const auto contiguous_address_ranges =
+      utils::ExtractContiguousAddressRanges(mappings);
+  // 3. Write each contiguous address range in bulk to limit the amount of round trips.
+  for (const auto& contiguous_address_range : contiguous_address_ranges) {
+    const int32_t kFirst = contiguous_address_range.front().first;
+    const auto kQuantity =
+        static_cast<int32_t>(contiguous_address_range.size());
+
+    std::vector<uint16_t> values{};
+    values.reserve(contiguous_address_range.size());
+    std::ranges::for_each(contiguous_address_range,
+                          [&](const auto& address_value_pair) {
+                            values.emplace_back(address_value_pair.second);
+                          });
+    const int32_t rc =
+        modbus_write_registers(context_, kFirst, kQuantity, values.data());
+    if (rc != kQuantity) {
+      throw std::runtime_error{"Failed to write registers: " +
+                               std::string{modbus_strerror(errno)}};
+    }
+  }
 }
 
 }  // namespace communicator

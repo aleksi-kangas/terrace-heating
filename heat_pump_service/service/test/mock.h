@@ -17,4 +17,6 @@ class MockCommunicator : public communicator::ICommunicator {
   MOCK_METHOD(bool, IsCompressorActive, (), (const, override));
   MOCK_METHOD(bool, IsSchedulingEnabled, (), (const, override));
   MOCK_METHOD(void, WriteActiveCircuitCount, (uint32_t count), (override));
+  MOCK_METHOD(void, WriteCircuit3BoostingSchedule, (const communicator::BoostingSchedule& schedule), (override));
+  MOCK_METHOD(void, WriteLowerTankBoostingSchedule, (const communicator::BoostingSchedule& schedule), (override));
 };

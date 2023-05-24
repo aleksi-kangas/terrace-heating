@@ -1,5 +1,6 @@
 #include "communicator/utils.h"
 
+#include <cassert>
 #include <ranges>
 #include <utility>
 
@@ -90,5 +91,62 @@ BoostingSchedule ParseBoostingSchedule(
       // clang-format on
   };
 }
+
+ScheduleAddressValueMappings GenerateSortedScheduleAddressValueMappings(
+    const addresses::boosting_schedules::BoostingScheduleAddresses& addresses,
+    const BoostingSchedule& schedule) {
+  ScheduleAddressValueMappings mappings{{
+      // clang-format off
+      {addresses.monday.start_hour, static_cast<uint16_t>(schedule.monday.start_hour)},
+      {addresses.monday.end_hour, static_cast<uint16_t>(schedule.monday.end_hour)},
+      {addresses.monday.delta, static_cast<uint16_t>(schedule.monday.temperature_delta)},
+
+      {addresses.tuesday.start_hour, static_cast<uint16_t>(schedule.tuesday.start_hour)},
+      {addresses.tuesday.end_hour, static_cast<uint16_t>(schedule.tuesday.end_hour)},
+      {addresses.tuesday.delta, static_cast<uint16_t>(schedule.tuesday.temperature_delta)},
+
+      {addresses.wednesday.start_hour, static_cast<uint16_t>(schedule.wednesday.start_hour)},
+      {addresses.wednesday.end_hour, static_cast<uint16_t>(schedule.wednesday.end_hour)},
+      {addresses.wednesday.delta, static_cast<uint16_t>(schedule.wednesday.temperature_delta)},
+
+      {addresses.thursday.start_hour, static_cast<uint16_t>(schedule.thursday.start_hour)},
+      {addresses.thursday.end_hour, static_cast<uint16_t>(schedule.thursday.end_hour)},
+      {addresses.thursday.delta, static_cast<uint16_t>(schedule.thursday.temperature_delta)},
+
+      {addresses.friday.start_hour, static_cast<uint16_t>(schedule.friday.start_hour)},
+      {addresses.friday.end_hour, static_cast<uint16_t>(schedule.friday.end_hour)},
+      {addresses.friday.delta, static_cast<uint16_t>(schedule.friday.temperature_delta)},
+
+      {addresses.saturday.start_hour, static_cast<uint16_t>(schedule.saturday.start_hour)},
+      {addresses.saturday.end_hour, static_cast<uint16_t>(schedule.saturday.end_hour)},
+      {addresses.saturday.delta, static_cast<uint16_t>(schedule.saturday.temperature_delta)},
+
+      {addresses.sunday.start_hour, static_cast<uint16_t>(schedule.sunday.start_hour)},
+      {addresses.sunday.end_hour, static_cast<uint16_t>(schedule.sunday.end_hour)},
+      {addresses.sunday.delta, static_cast<uint16_t>(schedule.sunday.temperature_delta)},
+      // clang-format on
+  }};
+  std::ranges::sort(mappings);
+  return mappings;
+}
+
+std::vector<std::vector<ScheduleAddressValueMapping>>
+ExtractContiguousAddressRanges(
+    const ScheduleAddressValueMappings& address_value_mappings) {
+  assert(std::ranges::is_sorted(address_value_mappings));
+  std::vector<std::vector<ScheduleAddressValueMapping>> result{};
+  // Iterate over the sorted addresses and extract contiguous address ranges
+  auto b = address_value_mappings.begin();
+  while (b != address_value_mappings.end()) {
+    auto e = b + 1;
+    while (e != address_value_mappings.end() &&
+           e->first - (e - 1)->first == 1) {
+      ++e;
+    }
+    result.insert(result.end(), {b, e});
+    b = e;
+  }
+  return result;
+};
 
 }  // namespace communicator::utils
