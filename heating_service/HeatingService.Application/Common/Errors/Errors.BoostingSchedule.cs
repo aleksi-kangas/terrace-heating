@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 
-namespace HeatingService.Application.Domain.Common.Errors;
+namespace HeatingService.Application.Common.Errors;
 
 public static partial class Errors {
   public static class BoostingSchedule {

@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using HeatingService.Application.Domain.Common.Errors;
+using HeatingService.Application.Common.Errors;
 using HeatPump;
 using MapsterMapper;
 using BoostingSchedule = HeatingService.Application.Domain.BoostingSchedule;
