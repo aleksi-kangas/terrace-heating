@@ -1,9 +1,16 @@
 .idea
-HeatingGateway.API/bin
-HeatingGateway.API/obj
 
-HeatingGateway.Application/bin
-HeatingGateway.Application/obj
+src/HeatingGateway.API/bin
+src/HeatingGateway.API/obj
 
-HeatingGateway.Contracts/bin
-HeatingGateway.Contracts/obj
+src/HeatingGateway.Application/bin
+src/HeatingGateway.Application/obj
+
+src/HeatingGateway.Contracts/bin
+src/HeatingGateway.Contracts/obj
+
+tests/HeatingGateway.API.Tests/bin
+tests/HeatingGateway.API.Tests/obj
+
+tests/HeatingGateway.Application.Tests/bin
+tests/HeatingGateway.Application.Tests/obj

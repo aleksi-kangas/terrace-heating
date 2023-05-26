@@ -2,8 +2,17 @@
 .gitignore
 .dockerignore
 
-HeatingService.API/bin
-HeatingService.API/obj
+src/HeatingGateway.API/bin
+src/HeatingGateway.API/obj
 
-HeatingService.Contracts/bin
-HeatingService.Contracts/obj
+src/HeatingGateway.Application/bin
+src/HeatingGateway.Application/obj
+
+src/HeatingGateway.Contracts/bin
+src/HeatingGateway.Contracts/obj
+
+tests/HeatingGateway.API.Tests/bin
+tests/HeatingGateway.API.Tests/obj
+
+tests/HeatingGateway.Application.Tests/bin
+tests/HeatingGateway.Application.Tests/obj
