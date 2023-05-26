@@ -1,2 +1,2 @@
-heating_gateway/HeatingGateway.Application/Migrations/** linguist-vendored
+heating_gateway/src/HeatingGateway.Application/Migrations/** linguist-vendored
 
