@@ -1,0 +1,4 @@
+obj/Debug/net7.0/Protos/HeatPumpService.cs \
+obj/Debug/net7.0/Protos/HeatPumpServiceGrpc.cs: /home/aleksi/.nuget/packages/grpc.tools/2.54.0/build/native/include/google/protobuf/empty.proto\
+ /home/aleksi/.nuget/packages/grpc.tools/2.54.0/build/native/include/google/protobuf/wrappers.proto\
+ Protos/heat_pump_service.proto

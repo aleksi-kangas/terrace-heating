@@ -27,10 +27,10 @@ jobs:
         with:
           context: heating_gateway
           file: heating_gateway/Dockerfile
-          target: build  # TODO tests
-          tags: heating-gateway-build  # TODO tests
+          target: tests
+          tags: heating-gateway-tests
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      #- name: Test
-      #  run: docker run --rm heating-service-tests
+      - name: Test
+        run: docker run --rm heating-gateway-tests
