@@ -129,13 +129,15 @@ void ModbusTCPCommunicator::WriteActiveCircuitCount(uint32_t count) {
 
 void ModbusTCPCommunicator::WriteCircuit3BoostingSchedule(
     const BoostingSchedule& schedule) {
-  std::lock_guard<std::mutex> lock{mutex_};
+  if (!schedule.IsValid())
+    throw std::invalid_argument{"Invalid schedule"};
   WriteBoostingSchedule(addresses::boosting_schedules::kCircuit3, schedule);
 }
 
 void ModbusTCPCommunicator::WriteLowerTankBoostingSchedule(
     const BoostingSchedule& schedule) {
-  std::lock_guard<std::mutex> lock{mutex_};
+  if (!schedule.IsValid())
+    throw std::invalid_argument{"Invalid schedule"};
   WriteBoostingSchedule(addresses::boosting_schedules::kLowerTank, schedule);
 }
 
@@ -174,6 +176,7 @@ void ModbusTCPCommunicator::WriteBoostingSchedule(
   const auto contiguous_address_ranges =
       utils::ExtractContiguousAddressRanges(mappings);
   // 3. Write each contiguous address range in bulk to limit the amount of round trips.
+  std::lock_guard<std::mutex> lock{mutex_};
   for (const auto& contiguous_address_range : contiguous_address_ranges) {
     const int32_t kFirst = contiguous_address_range.front().first;
     const auto kQuantity =
