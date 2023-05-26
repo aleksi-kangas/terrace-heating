@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using HeatingService.Application.Common.Mapping;
 using HeatingService.Application.Persistence;
 using HeatingService.Application.Persistence.Repositories;
 using HeatingService.Application.Services.Heating;
@@ -17,7 +18,8 @@ public static class DependencyInjection {
     services
       .AddServices()
       .AddPersistence(configurationManager)
-      .AddTasks(configurationManager);
+      .AddTasks(configurationManager)
+      .AddMappings();
     return services;
   }
 
