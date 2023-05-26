@@ -23,6 +23,6 @@ The overall architecture is illustrated with the following image:
 - A [gRPC](https://grpc.io/) service using [Protocol Buffers](https://developers.google.com/protocol-buffers)
   abstracting away the lower level heat-pump logic
 - An [ASP.NET Core](https://en.wikipedia.org/wiki/ASP.NET_Core) Web API acting both as a browser compatible gateway and
-  a service for storing heat queried pump records into a database as well as serving them
+  a service for storing queried heat pump records into a database as well as serving them
 - The database of choice is [PostgreSQL](https://www.postgresql.org/)
 - All components are built and deployed using [Docker Compose](https://docs.docker.com/compose/)
