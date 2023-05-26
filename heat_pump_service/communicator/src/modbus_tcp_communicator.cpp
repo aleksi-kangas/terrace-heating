@@ -20,7 +20,7 @@ ModbusTCPCommunicator::ModbusTCPCommunicator(const std::string& host,
 
   modbus_set_error_recovery(context_, MODBUS_ERROR_RECOVERY_LINK);
 
-  constexpr int32_t kTimeoutSeconds = 2;
+  constexpr int32_t kTimeoutSeconds = 3;
   modbus_set_response_timeout(context_, kTimeoutSeconds, 0);
   modbus_set_byte_timeout(context_, kTimeoutSeconds, 0);
 
@@ -129,11 +129,13 @@ void ModbusTCPCommunicator::WriteActiveCircuitCount(uint32_t count) {
 
 void ModbusTCPCommunicator::WriteCircuit3BoostingSchedule(
     const BoostingSchedule& schedule) {
+  std::lock_guard<std::mutex> lock{mutex_};
   WriteBoostingSchedule(addresses::boosting_schedules::kCircuit3, schedule);
 }
 
 void ModbusTCPCommunicator::WriteLowerTankBoostingSchedule(
     const BoostingSchedule& schedule) {
+  std::lock_guard<std::mutex> lock{mutex_};
   WriteBoostingSchedule(addresses::boosting_schedules::kLowerTank, schedule);
 }
 
