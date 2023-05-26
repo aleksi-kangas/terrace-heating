@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../buildMultiTargeting/HeatingGateway.API.props" />
-</Project>
