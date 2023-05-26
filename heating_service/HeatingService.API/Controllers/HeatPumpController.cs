@@ -1,4 +1,5 @@
-using HeatingService.Application.Services.HeatPump;
+using HeatingService.Application.Domain;
+using HeatingService.Application.Services.HeatPumpService;
 using HeatingService.Contracts.HeatPump;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,12 @@ namespace HeatingService.API.Controllers;
 public class HeatPumpController : ApiController {
   private readonly IMapper _mapper;
   private readonly IHeatPumpService _heatPumpService;
+  private readonly ILogger<HeatPumpController> _logger;
 
-  public HeatPumpController(IMapper mapper, IHeatPumpService heatPumpService) {
+  public HeatPumpController(IMapper mapper, IHeatPumpService heatPumpService, ILogger<HeatPumpController> logger) {
     _mapper = mapper;
     _heatPumpService = heatPumpService;
+    _logger = logger;
   }
 
   [HttpGet("active-circuits")]
@@ -48,12 +51,35 @@ public class HeatPumpController : ApiController {
       onError: Problem);
   }
 
+  [HttpPut("schedules/circuit3")]
+  public async Task<IActionResult> PutCircuit3BoostingSchedule(
+    [FromBody] PutBoostingScheduleRequest request) {
+    _logger.LogError(request.Monday.TemperatureDelta.ToString());
+    var result =
+      await _heatPumpService.SetCircuit3BoostingScheduleAsync(
+        _mapper.Map<BoostingSchedule>(request));
+    return result.Match(
+      onValue: _ => NoContent(),
+      onError: Problem);
+  }
+
   [HttpGet("schedules/lower-tank")]
   public async Task<IActionResult> GetLowerTankBoostingSchedule() {
     var result = await _heatPumpService.GetLowerTankBoostingScheduleAsync();
     return result.Match(
       onValue: lowerTankBoostingSchedule =>
         Ok(_mapper.Map<BoostingScheduleResponse>(lowerTankBoostingSchedule)),
+      onError: Problem);
+  }
+  
+  [HttpPut("schedules/lower-tank")]
+  public async Task<IActionResult> PutLowerTankBoostingSchedule(
+    [FromBody] PutBoostingScheduleRequest request) {
+    var result =
+      await _heatPumpService.SetLowerTankBoostingScheduleAsync(
+        _mapper.Map<BoostingSchedule>(request));
+    return result.Match(
+      onValue: _ => NoContent(),
       onError: Problem);
   }
 

@@ -1,13 +1,14 @@
 ﻿using ErrorOr;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using HeatingService.Application.Domain.Common.Errors;
 using HeatPump;
 using MapsterMapper;
 using BoostingSchedule = HeatingService.Application.Domain.BoostingSchedule;
 using TankLimits = HeatingService.Application.Domain.TankLimits;
 using Temperatures = HeatingService.Application.Domain.Temperatures;
 
-namespace HeatingService.Application.Services.HeatPump;
+namespace HeatingService.Application.Services.HeatPumpService;
 
 public class HeatPumpService : IHeatPumpService {
   private readonly IMapper _mapper;
@@ -35,7 +36,7 @@ public class HeatPumpService : IHeatPumpService {
       return Error.Failure(e.Message);
     }
   }
-  
+
   public async Task<ErrorOr<BoostingSchedule>> GetLowerTankBoostingScheduleAsync() {
     try {
       var boostingSchedule = await _client.GetLowerTankBoostingScheduleAsync(new Empty());
@@ -67,7 +68,6 @@ public class HeatPumpService : IHeatPumpService {
     try {
       var isCompressorActive = await _client.IsCompressorActiveAsync(new Empty());
       return isCompressorActive.Value;
-
     } catch (RpcException e) {
       return Error.Failure(e.Message);
     }
@@ -80,5 +80,53 @@ public class HeatPumpService : IHeatPumpService {
     } catch (RpcException e) {
       return Error.Failure(e.Message);
     }
+  }
+
+  public async Task<ErrorOr<Success>> SetCircuit3BoostingScheduleAsync(
+    BoostingSchedule boostingSchedule) {
+    try {
+      var validationResult = ValidateBoostingSchedule(boostingSchedule);
+      if (validationResult.IsError)
+        return validationResult;
+      var request = _mapper.Map<HeatPump.BoostingSchedule>(boostingSchedule);
+      await _client.SetCircuit3BoostingScheduleAsync(request);
+      return Result.Success;
+    } catch (RpcException e) {
+      return Error.Failure(e.Message);
+    }
+  }
+
+  public async Task<ErrorOr<Success>> SetLowerTankBoostingScheduleAsync(
+    BoostingSchedule boostingSchedule) {
+    try {
+      var validationResult = ValidateBoostingSchedule(boostingSchedule);
+      if (validationResult.IsError)
+        return validationResult;
+      var request = _mapper.Map<HeatPump.BoostingSchedule>(boostingSchedule);
+      await _client.SetLowerTankBoostingScheduleAsync(request);
+      return Result.Success;
+    } catch (RpcException e) {
+      return Error.Failure(e.Message);
+    }
+  }
+
+  private static ErrorOr<Success> ValidateBoostingSchedule(BoostingSchedule schedule) {
+    if (schedule.Monday.StartHour > 24 || schedule.Monday.EndHour > 24 ||
+        schedule.Tuesday.StartHour > 24 || schedule.Tuesday.EndHour > 24 ||
+        schedule.Wednesday.StartHour > 24 || schedule.Wednesday.EndHour > 24 ||
+        schedule.Thursday.StartHour > 24 || schedule.Thursday.EndHour > 24 ||
+        schedule.Friday.StartHour > 24 || schedule.Friday.EndHour > 24 ||
+        schedule.Saturday.StartHour > 24 || schedule.Saturday.EndHour > 24 ||
+        schedule.Sunday.StartHour > 24 || schedule.Sunday.EndHour > 24)
+      return Errors.BoostingSchedule.OutOfRangeHour;
+    if (schedule.Monday.TemperatureDelta < -10 || 10 < schedule.Monday.TemperatureDelta ||
+        schedule.Tuesday.TemperatureDelta < -10 || 10 < schedule.Tuesday.TemperatureDelta ||
+        schedule.Wednesday.TemperatureDelta < -10 || 10 < schedule.Wednesday.TemperatureDelta ||
+        schedule.Thursday.TemperatureDelta < -10 || 10 < schedule.Thursday.TemperatureDelta ||
+        schedule.Friday.TemperatureDelta < -10 || 10 < schedule.Friday.TemperatureDelta ||
+        schedule.Saturday.TemperatureDelta < -10 || 10 < schedule.Saturday.TemperatureDelta ||
+        schedule.Sunday.TemperatureDelta < -10 || 10 < schedule.Sunday.TemperatureDelta)
+      return Errors.BoostingSchedule.OutOfRangeTemperatureDelta;
+    return Result.Success;
   }
 }

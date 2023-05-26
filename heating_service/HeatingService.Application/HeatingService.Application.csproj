@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\heat_pump_service.proto">
+    <Protobuf Include="Protos/heat_pump_service.proto" GrpcServices="Client">
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
