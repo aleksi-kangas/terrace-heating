@@ -1,0 +1,9 @@
+.idea
+HeatingGateway.API/bin
+HeatingGateway.API/obj
+
+HeatingGateway.Application/bin
+HeatingGateway.Application/obj
+
+HeatingGateway.Contracts/bin
+HeatingGateway.Contracts/obj

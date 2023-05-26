@@ -30,12 +30,12 @@ services:
     volumes:
       - ./certs:/usr/src/app/certs
 
-  heating-service:
+  heating-gateway:
     build:
-      context: ./heating_service
+      context: ./heating_gateway
       dockerfile: Dockerfile
       target: runtime
-    container_name: heating-service
+    container_name: heating-gateway
     environment:
      - ASPNETCORE_ENVIRONMENT=Development
      - ASPNETCORE_URLS=http://+
