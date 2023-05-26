@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0.103 AS build
 WORKDIR /app
 
 # Copy all .csproj files while preserving directory structure
