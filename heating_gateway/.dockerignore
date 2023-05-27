@@ -11,8 +11,8 @@ src/HeatingGateway.Application/obj
 src/HeatingGateway.Contracts/bin
 src/HeatingGateway.Contracts/obj
 
-tests/HeatingGateway.API.Tests/bin
-tests/HeatingGateway.API.Tests/obj
+tests/HeatingGateway.API.Test/bin
+tests/HeatingGateway.API.Test/obj
 
-tests/HeatingGateway.Application.Tests/bin
-tests/HeatingGateway.Application.Tests/obj
+tests/HeatingGateway.Application.Test/bin
+tests/HeatingGateway.Application.Test/obj
