@@ -1,4 +1,5 @@
 using ErrorOr;
+using HeatingGateway.Application.Common.Errors;
 using HeatingGateway.Application.Domain;
 using HeatingGateway.Application.Persistence.Repositories;
 
@@ -14,15 +15,13 @@ public class HeatingService : IHeatingService {
   public async Task<ErrorOr<IEnumerable<HeatPumpRecord>>> GetHeatPumpRecordsDateTimeRangeAsync(
     DateTime from,
     DateTime to) {
-    if (from.Kind != DateTimeKind.Utc)
-      return Error.Validation(description: "'From' must be a valid UTC timestamp, e.g. 1970-01-01T00:00:00Z");
-    if (to.Kind != DateTimeKind.Utc)
-      return Error.Validation(description: "'To' must be a valid UTC timestamp, e.g. 1970-01-01T00:00:00Z");
+    if (from.Kind != DateTimeKind.Utc || to.Kind != DateTimeKind.Utc)
+      return Errors.HeatPumpRecord.DatetimeNotUTC;
     if (to < from)
-      return Error.Validation(description: "'To' must be greater than 'From'");
+      return Errors.HeatPumpRecord.FromIsAfterTo;
     try {
       var records = await _heatPumpRecordRepository.FindByDateTimeRangeAsync(from, to);
-      return ErrorOr.ErrorOr.From(records);
+      return ErrorOrFactory.From(records);
     }
     catch (Exception e) {
       return Error.Failure(description: e.Message);
