@@ -1,5 +1,6 @@
 import {HeatPumpRecord} from '@/app/api/types';
 import {DateTime} from 'luxon';
+import {URLSearchParams} from 'url';
 
 const baseUrl = 'http://192.168.221.148:8000/heating';
 
