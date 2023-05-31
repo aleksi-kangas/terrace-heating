@@ -11,7 +11,7 @@ export interface BoostingSchedule {
 export interface HeatPumpRecord {
   tankLimits: TankLimits;
   temperatures: Temperatures;
-  time: Date;
+  time: string;
 }
 
 export interface TankLimits {
