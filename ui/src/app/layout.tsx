@@ -28,7 +28,7 @@ const RootLayout = ({children}: {children: React.ReactNode}) => {
                 <div className="flex-shrink-0">
                   <FontAwesomeIcon
                     icon={faTemperatureHalf}
-                    className="h-8 w-8"
+                    className="h-8 w-8 text-gray-200"
                   />
                 </div>
                 <nav>
