@@ -1,11 +1,11 @@
 export interface BoostingSchedule {
-  monday: WeekdayBoostingSchedule,
-  tuesday: WeekdayBoostingSchedule,
-  wednesday: WeekdayBoostingSchedule,
-  thursday: WeekdayBoostingSchedule,
-  friday: WeekdayBoostingSchedule,
-  saturday: WeekdayBoostingSchedule,
-  sunday: WeekdayBoostingSchedule,
+  monday: WeekdayBoostingSchedule;
+  tuesday: WeekdayBoostingSchedule;
+  wednesday: WeekdayBoostingSchedule;
+  thursday: WeekdayBoostingSchedule;
+  friday: WeekdayBoostingSchedule;
+  saturday: WeekdayBoostingSchedule;
+  sunday: WeekdayBoostingSchedule;
 }
 
 export interface HeatPumpRecord {
