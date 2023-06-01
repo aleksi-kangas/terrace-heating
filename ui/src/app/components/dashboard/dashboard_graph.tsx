@@ -7,9 +7,10 @@ import {
   registerables,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import {Line} from 'react-chartjs-2';
 import {DateTime, Duration} from 'luxon';
+import Spinner from '../spinner';
 
 ChartJS.register(...registerables);
 
@@ -26,8 +27,11 @@ const DashboardGraph = ({
   values,
   label,
 }: DashboardGraphProps): React.JSX.Element => {
-  const styles = 'm-4';
+  const styles = 'p-8';
   className = className ? styles.concat(' ', className) : styles;
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const data: ChartData<'line'> = useMemo(
     () => ({
       labels: dateTimes.map(dt => DateTime.fromISO(dt).toLocal()),
@@ -48,6 +52,13 @@ const DashboardGraph = ({
   );
   const options: ChartOptions<'line'> = useMemo(
     () => ({
+      animation: {
+        onProgress: context => {
+          if (context.initial) {
+            setIsLoading(false);
+          }
+        },
+      },
       maintainAspectRatio: false,
       plugins: {
         legend: {
@@ -76,7 +87,11 @@ const DashboardGraph = ({
     }),
     []
   );
-  return <Line className={className} data={data} options={options} />;
+  return (
+    <div className={className}>
+      <Line data={data} options={options} />
+      {isLoading && <Spinner className="static" />}
+    </div>
+  );
 };
-
 export default DashboardGraph;
