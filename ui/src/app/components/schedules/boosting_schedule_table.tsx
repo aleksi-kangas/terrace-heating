@@ -1,7 +1,6 @@
 'use client';
 
 import {BoostingSchedule} from '../../api/types';
-import {getKeyValue} from 'get-key-value';
 import {useState} from 'react';
 
 interface BoostingScheduleTableProps {
@@ -9,22 +8,33 @@ interface BoostingScheduleTableProps {
   title: string;
 }
 
-const weekdays = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
+enum Weekday {
+  Monday = 'Monday',
+  Tuesday = 'Tuesday',
+  Wednesday = 'Wednesday',
+  Thursday = 'Thursday',
+  Friday = 'Friday',
+  Saturday = 'Saturday',
+  Sunday = 'Sunday',
+}
 
-const getWeekday = (boostingSchedule: BoostingSchedule, weekday: string) => {
-  return getKeyValue<keyof BoostingSchedule, BoostingSchedule>(
-    // @ts-ignore
-    weekday,
-    boostingSchedule
-  );
+const getWeekday = (boostingSchedule: BoostingSchedule, weekday: Weekday) => {
+  switch (weekday) {
+    case Weekday.Monday:
+      return boostingSchedule.monday;
+    case Weekday.Tuesday:
+      return boostingSchedule.tuesday;
+    case Weekday.Wednesday:
+      return boostingSchedule.wednesday;
+    case Weekday.Thursday:
+      return boostingSchedule.thursday;
+    case Weekday.Friday:
+      return boostingSchedule.friday;
+    case Weekday.Saturday:
+      return boostingSchedule.saturday;
+    case Weekday.Sunday:
+      return boostingSchedule.sunday;
+  }
 };
 
 const BoostingScheduleTable = ({
@@ -54,7 +64,7 @@ const BoostingScheduleTable = ({
           </tr>
         </thead>
         <tbody>
-          {weekdays.map((weekday: string) => {
+          {(Object.keys(Weekday) as Array<Weekday>).map((weekday: Weekday) => {
             return (
               <tr key={weekday} className="bg-white border-b">
                 <th
@@ -69,10 +79,7 @@ const BoostingScheduleTable = ({
                     min="0"
                     max="24"
                     className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    value={
-                      getWeekday(boostingSchedule, weekday.toLowerCase())
-                        .startHour
-                    }
+                    value={getWeekday(boostingSchedule, weekday).startHour}
                     disabled={!editing}
                   />
                 </td>
@@ -82,10 +89,7 @@ const BoostingScheduleTable = ({
                     min="0"
                     max="24"
                     className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    value={
-                      getWeekday(boostingSchedule, weekday.toLowerCase())
-                        .startHour
-                    }
+                    value={getWeekday(boostingSchedule, weekday).startHour}
                     disabled={!editing}
                   />
                 </td>
@@ -95,10 +99,7 @@ const BoostingScheduleTable = ({
                     min="0"
                     max="24"
                     className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    value={
-                      getWeekday(boostingSchedule, weekday.toLowerCase())
-                        .startHour
-                    }
+                    value={getWeekday(boostingSchedule, weekday).startHour}
                     disabled={!editing}
                   />
                 </td>
