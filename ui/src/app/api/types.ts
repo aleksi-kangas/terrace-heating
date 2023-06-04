@@ -1,3 +1,8 @@
+export enum BoostingScheduleVariable {
+  Circuit3 = 'circuit3',
+  LowerTank = 'lowerTank',
+}
+
 export interface BoostingSchedule {
   monday: WeekdayBoostingSchedule;
   tuesday: WeekdayBoostingSchedule;
