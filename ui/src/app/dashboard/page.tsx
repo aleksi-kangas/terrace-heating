@@ -1,5 +1,6 @@
 import Card from '../components/card';
 import OutsideTemperatureGraph from '../components/dashboard/outside_temperature_graph';
+import HorizontalDivider from "../components/horizontal_divider";
 
 const Dashboard = () => {
   return (
@@ -8,6 +9,7 @@ const Dashboard = () => {
         <Card className="col-span-full md:col-span-2 flex flex-col justify-between items-center">
           {/* @ts-expect-error Async Server Component */}
           <OutsideTemperatureGraph />
+          <HorizontalDivider />
           {/* @ts-expect-error Async Server Component */}
           <OutsideTemperatureGraph />
         </Card>
