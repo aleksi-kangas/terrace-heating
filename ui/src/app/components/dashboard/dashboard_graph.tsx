@@ -27,7 +27,7 @@ const DashboardGraph = ({
   values,
   label,
 }: DashboardGraphProps): React.JSX.Element => {
-  const styles = 'p-8';
+  const styles = 'p-8 flex justify-center items-center';
   className = className ? styles.concat(' ', className) : styles;
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -89,8 +89,8 @@ const DashboardGraph = ({
   );
   return (
     <div className={className}>
+      {isLoading && <Spinner className="absolute" />}
       <Line data={data} options={options} />
-      {isLoading && <Spinner className="static" />}
     </div>
   );
 };
