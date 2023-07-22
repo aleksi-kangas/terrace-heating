@@ -13,6 +13,12 @@ export interface BoostingSchedule {
   sunday: WeekdayBoostingSchedule;
 }
 
+export interface CompressorRecord {
+  active: boolean;
+  time: string;
+  usage?: number;
+}
+
 export interface HeatPumpRecord {
   tankLimits: TankLimits;
   temperatures: Temperatures;

@@ -1,6 +1,8 @@
 import Card from '../components/card';
+import CompressorUsageGraph from '../components/dashboard/compressor_usage_graph';
 import OutsideTemperatureGraph from '../components/dashboard/outside_temperature_graph';
 import HorizontalDivider from '../components/horizontal_divider';
+import React from 'react';
 
 const Dashboard = () => {
   return (
@@ -10,7 +12,7 @@ const Dashboard = () => {
         <OutsideTemperatureGraph />
         <HorizontalDivider />
         {/* @ts-expect-error Async Server Component */}
-        <OutsideTemperatureGraph />
+        <CompressorUsageGraph />
       </Card>
       <Card className="col-span-full md:col-span-1 flex-col justify-evenly items-center">
         TODO...

@@ -19,6 +19,8 @@ interface DashboardGraphProps {
   dateTimes: string[];
   values: number[];
   label: string;
+  xLimits?: string[];
+  yLimits?: number[];
 }
 
 const DashboardGraph = ({
@@ -26,6 +28,8 @@ const DashboardGraph = ({
   dateTimes,
   values,
   label,
+  xLimits,
+  yLimits,
 }: DashboardGraphProps): React.JSX.Element => {
   const styles = 'p-8 flex justify-center items-center';
   className = className ? styles.concat(' ', className) : styles;
@@ -70,10 +74,10 @@ const DashboardGraph = ({
       responsive: true,
       scales: {
         x: {
-          min: DateTime.now()
-            .minus(Duration.fromObject({days: 2}))
-            .toMillis(),
-          max: DateTime.now().toMillis(),
+          ...(xLimits && {
+            min: DateTime.fromISO(xLimits[0]).toMillis(),
+            max: DateTime.fromISO(xLimits[1]).toMillis(),
+          }),
           ticks: {
             major: {enabled: true},
           },
@@ -82,6 +86,13 @@ const DashboardGraph = ({
             tooltipFormat: 'yyyy-MM-dd EEE HH:mm',
           },
           type: 'time',
+        },
+        y: {
+          ...(yLimits && {
+            min: yLimits[0],
+            max: yLimits[1],
+          }),
+          type: 'linear',
         },
       },
     }),

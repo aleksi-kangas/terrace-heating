@@ -1,13 +1,13 @@
 import Spinner from '../../components/spinner';
 import React, {Suspense} from 'react';
 import {DateTime, Duration} from 'luxon';
-import {fetchRecords} from '../../api/heating';
+import {fetchHeatPumpRecords} from '../../api/heating';
 import Graph from '../../components/graphs/graph';
 
 const ExternalGraphsPage = async () => {
   const from = DateTime.utc().minus(Duration.fromObject({days: 2}));
   const to = DateTime.utc();
-  const records = await fetchRecords(from, to);
+  const records = await fetchHeatPumpRecords(from, to);
   return (
     <Suspense fallback={<Spinner className="flex-1 h-full w-full" />}>
       <Graph
