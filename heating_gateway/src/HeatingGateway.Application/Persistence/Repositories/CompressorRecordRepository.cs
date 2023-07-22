@@ -8,7 +8,8 @@ public class CompressorRecordRepository : RepositoryBase<CompressorRecord>,
 
   public async Task<IEnumerable<CompressorRecord>> FindByDateTimeRangeAsync(DateTime from,
     DateTime to, bool trackChanges) {
-    return await FindByConditionAsync(r => from <= r.Time && r.Time <= to, trackChanges);
+    return await FindByConditionAsync(r => from <= r.Time && r.Time <= to && 0 <= r.Usage,
+      trackChanges);
   }
 
   public Task<CompressorRecord?> FindLatestBeforeAsync(DateTime beforeThis,

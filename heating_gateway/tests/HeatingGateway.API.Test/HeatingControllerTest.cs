@@ -13,6 +13,53 @@ namespace HeatingGateway.API.Test;
 
 public class HeatingControllerTest {
   [Fact]
+  public async void GetCompressorRecords_WhenRequestValid_ShouldReturn200() {
+    // Arrange
+    var mockMapper = new Mock<IMapper>();
+    var mockHeatingService = new Mock<IHeatingService>();
+    mockHeatingService.Setup(x =>
+        x.GetCompressorRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+      .ReturnsAsync(ErrorOrFactory.From(Enumerable.Empty<CompressorRecord>()));
+    var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
+
+    // Act
+    var request =
+      new GetCompressorRecordsRequest(DateTime.Now - TimeSpan.FromDays(1), DateTime.Now);
+    var result = await controller.GetCompressorRecords(request);
+
+    // Assert
+    var okResult = Assert.IsType<OkObjectResult>(result);
+    Assert.Equal(200, okResult.StatusCode);
+  }
+
+  [Fact]
+  public async void GetCompressorRecords_WhenRecordsFound_ShouldReturnRecords() {
+    // Arrange
+    var utcNow = DateTime.UtcNow;
+    IEnumerable<CompressorRecord> compressorRecords = new List<CompressorRecord> {
+      new() { Active = true, Time = utcNow, Usage = 0.2, }
+    };
+    var mockMapper = new Mock<IMapper>();
+    mockMapper.Setup(x => x.Map<List<CompressorRecordResponse>>(compressorRecords))
+      .Returns(new List<CompressorRecordResponse> { new(Active: true, Time: utcNow, Usage: 0.2) });
+    var mockHeatingService = new Mock<IHeatingService>();
+    mockHeatingService.Setup(x =>
+        x.GetCompressorRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+      .ReturnsAsync(ErrorOrFactory.From(compressorRecords));
+    var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
+
+    // Act
+    var request =
+      new GetCompressorRecordsRequest(DateTime.Now - TimeSpan.FromDays(1), DateTime.Now);
+    var result = await controller.GetCompressorRecords(request);
+
+    // Assert
+    var okObjectResult = Assert.IsType<OkObjectResult>(result);
+    var response = Assert.IsType<List<CompressorRecordResponse>>(okObjectResult.Value);
+    Assert.Single(response);
+  }
+
+  [Fact]
   public async void GetHeatPumpRecords_WhenRequestValid_ShouldReturn200() {
     // Arrange
     var mockMapper = new Mock<IMapper>();
