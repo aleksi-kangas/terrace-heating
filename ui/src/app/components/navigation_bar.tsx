@@ -6,9 +6,9 @@ import Link from "next/link";
 import {usePathname} from "next/navigation";
 
 const navigation = [
-  {label: 'Dashboard', href: '/dashboard'},
-  {label: 'Graphs', href: '/graphs/external'},
-  {label: 'Schedules', href: '/schedules'},
+  {label: 'Dashboard', href: '/dashboard', hrefMatch: '/dashboard'},
+  {label: 'Graphs', href: '/graphs/external', hrefMatch: '/graphs'},
+  {label: 'Schedules', href: '/schedules', hrefMatch: '/schedules'},
 ];
 
 interface NavigationBarItemProps {
@@ -52,7 +52,7 @@ const NavigationBar = () => {
                 {navigation.map(item => (
                   <NavigationBarItem
                     key={item.label}
-                    active={item.href === activeUrl}
+                    active={activeUrl.startsWith(item.hrefMatch)}
                     href={item.href}
                     label={item.label}
                   />
