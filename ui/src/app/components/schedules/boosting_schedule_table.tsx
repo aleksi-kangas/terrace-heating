@@ -65,6 +65,8 @@ const BoostingScheduleTable = ({
         </thead>
         <tbody>
           {(Object.keys(Weekday) as Array<Weekday>).map((weekday: Weekday) => {
+            console.log(weekday);
+            console.log(getWeekday(boostingSchedule, weekday));
             return (
               <tr key={weekday} className="bg-white border-b">
                 <th
@@ -89,7 +91,7 @@ const BoostingScheduleTable = ({
                     min="0"
                     max="24"
                     className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    value={getWeekday(boostingSchedule, weekday).startHour}
+                    value={getWeekday(boostingSchedule, weekday).endHour}
                     disabled={!editing}
                   />
                 </td>
@@ -99,7 +101,9 @@ const BoostingScheduleTable = ({
                     min="0"
                     max="24"
                     className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    value={getWeekday(boostingSchedule, weekday).startHour}
+                    value={
+                      getWeekday(boostingSchedule, weekday).temperatureDelta
+                    }
                     disabled={!editing}
                   />
                 </td>
