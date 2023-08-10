@@ -1,9 +1,9 @@
 'use client';
 
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTemperatureHalf} from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
-import {usePathname} from "next/navigation";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTemperatureHalf} from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
+import {usePathname} from 'next/navigation';
 
 const navigation = [
   {label: 'Dashboard', href: '/dashboard', hrefMatch: '/dashboard'},
@@ -30,15 +30,15 @@ const NavigationBarItem = ({active, href, label}: NavigationBarItemProps) => {
     >
       {label}
     </Link>
-  )
-}
+  );
+};
 
 const NavigationBar = () => {
   const activeUrl = usePathname();
   console.log(activeUrl);
   return (
     <header className="bg-gray-800">
-      <div className="mx-auto max-w-7xl px-4 sm:px6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <div className="flex-shrink-0">
@@ -63,7 +63,7 @@ const NavigationBar = () => {
         </div>
       </div>
     </header>
-  )
-}
+  );
+};
 
 export default NavigationBar;

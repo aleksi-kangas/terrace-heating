@@ -1,6 +1,6 @@
 import './globals.css';
 import {Inter} from 'next/font/google';
-import NavigationBar from "./components/navigation_bar";
+import NavigationBar from './components/navigation_bar';
 
 const inter = Inter({subsets: ['latin']});
 
@@ -9,13 +9,15 @@ export const metadata = {
   description: 'Terrace Heating',
 };
 
-const RootLayout = ({children}: { children: React.ReactNode }) => {
+const RootLayout = ({children}: {children: React.ReactNode}) => {
   return (
     <html lang="en">
-    <body className={`${inter.className} flex flex-col min-h-screen`}>
-    <NavigationBar/>
-    <div className="flex flex-1 justify-center p-4">{children}</div>
-    </body>
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
+        <NavigationBar />
+        <div className="flex flex-1 justify-center p-1 sm:p-2 lg:p-8">
+          {children}
+        </div>
+      </body>
     </html>
   );
 };
