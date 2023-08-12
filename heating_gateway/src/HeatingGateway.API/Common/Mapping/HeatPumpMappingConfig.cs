@@ -13,6 +13,7 @@ public class HeatPumpMappingConfig : IRegister {
     config.NewConfig<BoostingSchedule, BoostingScheduleResponse>();
     config.NewConfig<WeekdayBoostingSchedule, WeekdayBoostingScheduleResponse>();
 
+    config.NewConfig<Compressor, CompressorResponse>();
     config.NewConfig<TankLimits, TankLimitsResponse>();
 
     config.NewConfig<Temperatures, TemperaturesResponse>();

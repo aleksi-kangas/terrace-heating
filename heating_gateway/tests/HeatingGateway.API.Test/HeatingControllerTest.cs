@@ -19,7 +19,7 @@ public class HeatingControllerTest {
     var mockHeatingService = new Mock<IHeatingService>();
     mockHeatingService.Setup(x =>
         x.GetCompressorRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-      .ReturnsAsync(ErrorOrFactory.From(Enumerable.Empty<CompressorRecord>()));
+      .ReturnsAsync(ErrorOrFactory.From(new List<Compressor>()));
     var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
 
     // Act
@@ -36,16 +36,21 @@ public class HeatingControllerTest {
   public async void GetCompressorRecords_WhenRecordsFound_ShouldReturnRecords() {
     // Arrange
     var utcNow = DateTime.UtcNow;
-    IEnumerable<CompressorRecord> compressorRecords = new List<CompressorRecord> {
-      new() { Active = true, Time = utcNow, Usage = 0.2, }
+    List<HeatPumpRecord> heatPumpRecords = new List<HeatPumpRecord>() {
+      new HeatPumpRecord() {
+        Compressor = new Compressor(true, 0.2),
+        TankLimits = new TankLimits(1, 2, 3, 4, 5, 6, 7, 8),
+        Temperatures = new Temperatures(9, 10, 11, 12, 13, 14, 15, 16, 17, 18),
+        Time = utcNow
+      }
     };
     var mockMapper = new Mock<IMapper>();
-    mockMapper.Setup(x => x.Map<List<CompressorRecordResponse>>(compressorRecords))
+    mockMapper.Setup(x => x.Map<List<CompressorRecordResponse>>(heatPumpRecords))
       .Returns(new List<CompressorRecordResponse> { new(Active: true, Time: utcNow, Usage: 0.2) });
     var mockHeatingService = new Mock<IHeatingService>();
     mockHeatingService.Setup(x =>
-        x.GetCompressorRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-      .ReturnsAsync(ErrorOrFactory.From(compressorRecords));
+        x.GetHeatPumpRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+      .ReturnsAsync(ErrorOrFactory.From(heatPumpRecords));
     var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
 
     // Act
@@ -66,7 +71,7 @@ public class HeatingControllerTest {
     var mockHeatingService = new Mock<IHeatingService>();
     mockHeatingService.Setup(x =>
         x.GetHeatPumpRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-      .ReturnsAsync(ErrorOrFactory.From(Enumerable.Empty<HeatPumpRecord>()));
+      .ReturnsAsync(ErrorOrFactory.From(new List<HeatPumpRecord>()));
     var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
 
     // Act
@@ -82,7 +87,7 @@ public class HeatingControllerTest {
   public async void GetHeatPumpRecords_WhenRecordsFound_ShouldReturnRecords() {
     // Arrange
     var utcNow = DateTime.UtcNow;
-    IEnumerable<HeatPumpRecord> heatPumpRecords = new List<HeatPumpRecord> {
+    List<HeatPumpRecord> heatPumpRecords = new List<HeatPumpRecord> {
       new() {
         TankLimits = new TankLimits(1, 2, 3, 4, 5, 6, 7, 8),
         Temperatures = new Temperatures(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
@@ -92,7 +97,8 @@ public class HeatingControllerTest {
     var mockMapper = new Mock<IMapper>();
     mockMapper.Setup(x => x.Map<List<HeatPumpRecordResponse>>(heatPumpRecords))
       .Returns(new List<HeatPumpRecordResponse>() {
-        new(new TankLimitsResponse(1, 2, 3, 4, 5, 6, 7, 8),
+        new(new CompressorResponse(true, 0.2),
+          new TankLimitsResponse(1, 2, 3, 4, 5, 6, 7, 8),
           new TemperaturesResponse(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
           utcNow)
       });

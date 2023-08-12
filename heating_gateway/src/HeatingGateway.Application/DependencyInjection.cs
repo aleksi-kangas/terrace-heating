@@ -49,7 +49,6 @@ public static class DependencyInjection {
     ConfigurationManager configurationManager) {
     services.AddDbContext<HeatingDbContext>(options =>
       options.UseNpgsql(configurationManager.GetConnectionString("HeatingContext")));
-    services.AddScoped<ICompressorRecordRepository, CompressorRecordRepository>();
     services.AddScoped<IHeatPumpRecordRepository, HeatPumpRecordRepository>();
     return services;
   }
@@ -57,9 +56,7 @@ public static class DependencyInjection {
   private static IServiceCollection AddTasks(this IServiceCollection services) {
     services.AddScheduler(builder => {
       builder.Services.AddScoped<HeatPumpService>();
-      builder.Services.AddScoped<CompressorRecordRepository>();
       builder.Services.AddScoped<HeatPumpRecordRepository>();
-      builder.AddJob<ComputeCompressorUsageJob, ComputeCompressorUsageJobOptions>();
       builder.AddJob<QueryHeatPumpRecordJob, QueryHeatPumpRecordJobOptions>();
     });
     return services;

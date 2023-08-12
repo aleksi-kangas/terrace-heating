@@ -5,8 +5,6 @@ namespace HeatingGateway.Application.Persistence;
 
 public class HeatingDbContext : DbContext {
   public HeatingDbContext(DbContextOptions<HeatingDbContext> options) : base(options) {}
-
-  public DbSet<CompressorRecord> CompressorRecords { get; set; } = null!;
   public DbSet<HeatPumpRecord> HeatPumpRecords { get; set; } = null!;
 
   protected override void OnModelCreating(ModelBuilder modelBuilder) {

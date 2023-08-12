@@ -15,7 +15,7 @@ public class HeatingController : ApiController {
     _heatingService = heatingService;
   }
 
-  [HttpGet("records/heat-pump")]
+  [HttpGet("records")]
   public async Task<IActionResult>
     GetHeatPumpRecords([FromQuery] GetHeatPumpRecordsRequest request) {
     var result =
@@ -29,7 +29,7 @@ public class HeatingController : ApiController {
   public async Task<IActionResult> GetCompressorRecords(
     [FromQuery] GetCompressorRecordsRequest request) {
     var result =
-      await _heatingService.GetCompressorRecordsDateTimeRangeAsync(request.From, request.To);
+      await _heatingService.GetHeatPumpRecordsDateTimeRangeAsync(request.From, request.To);
     return result.Match(
       onValue: records => Ok(_mapper.Map<List<CompressorRecordResponse>>(records)),
       onError: Problem);

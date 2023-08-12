@@ -10,6 +10,7 @@ public class HeatPumpRecordConfiguration : IEntityTypeConfiguration<HeatPumpReco
     builder.ToTable("HeatPumpRecords");
     builder.HasKey(r => r.Time);
     builder.HasIndex(r => r.Time).IsUnique();
+    builder.OwnsOne(r => r.Compressor);
     builder.OwnsOne(r => r.TankLimits);
     builder.OwnsOne(r => r.Temperatures);
   }
