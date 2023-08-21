@@ -5,7 +5,7 @@ using Temperatures = HeatingGateway.Application.Domain.Temperatures;
 
 namespace HeatingGateway.Application.Services;
 
-public interface IHeatPumpService {
+public interface IHeatPumpService : IDisposable {
   Task<ErrorOr<UInt32>> GetActiveCircuitCountAsync();
   Task<ErrorOr<BoostingSchedule>> GetCircuit3BoostingScheduleAsync();
   Task<ErrorOr<BoostingSchedule>> GetLowerTankBoostingScheduleAsync();

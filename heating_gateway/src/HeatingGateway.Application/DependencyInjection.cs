@@ -1,6 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
 using HeatingGateway.Application.Common.Mapping;
-using HeatingGateway.Application.Domain;
 using HeatingGateway.Application.Persistence;
 using HeatingGateway.Application.Persistence.Repositories;
 using HeatingGateway.Application.Services;
@@ -41,6 +40,7 @@ public static class DependencyInjection {
         return handler;
       });
     services.AddScoped<IHeatingService, HeatingService>();
+    services.AddSingleton<IHeatingStateService, HeatingStateService>();
     services.AddScoped<IHeatPumpService, HeatPumpService>();
     return services;
   }
@@ -56,7 +56,9 @@ public static class DependencyInjection {
   private static IServiceCollection AddTasks(this IServiceCollection services) {
     services.AddScheduler(builder => {
       builder.Services.AddScoped<HeatPumpService>();
+      builder.Services.AddSingleton<HeatingStateService>();
       builder.Services.AddScoped<HeatPumpRecordRepository>();
+      builder.AddJob<ComputeHeatingStateJob, ComputeHeatingStateJobOptions>();
       builder.AddJob<QueryHeatPumpRecordJob, QueryHeatPumpRecordJobOptions>();
     });
     return services;

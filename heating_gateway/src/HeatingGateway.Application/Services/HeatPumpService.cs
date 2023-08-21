@@ -10,7 +10,7 @@ using Temperatures = HeatingGateway.Application.Domain.Temperatures;
 
 namespace HeatingGateway.Application.Services;
 
-public class HeatPumpService : IHeatPumpService {
+public class HeatPumpService : IHeatPumpService, IDisposable {
   private readonly IMapper _mapper;
   private readonly HeatPumpSvc.HeatPumpSvcClient _client;
 
@@ -128,5 +128,9 @@ public class HeatPumpService : IHeatPumpService {
         schedule.Sunday.TemperatureDelta < -10 || 10 < schedule.Sunday.TemperatureDelta)
       return Errors.BoostingSchedule.OutOfRangeTemperatureDelta;
     return Result.Success;
+  }
+
+  public void Dispose() {
+    // Nothing to dispose
   }
 }
