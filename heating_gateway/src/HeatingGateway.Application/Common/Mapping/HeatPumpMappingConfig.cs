@@ -5,12 +5,12 @@ namespace HeatingGateway.Application.Common.Mapping;
 
 public class HeatPumpMappingConfig : IRegister {
   public void Register(TypeAdapterConfig config) {
-    config.NewConfig<HeatPump.BoostingSchedule, BoostingSchedule>();
-    config.NewConfig<HeatPump.WeekdayBoostingSchedule, WeekdayBoostingSchedule>();
-    config.NewConfig<HeatPump.TankLimits, TankLimits>();
-    config.NewConfig<HeatPump.Temperatures, Temperatures>();
+    config.NewConfig<HeatPumpProto.BoostingSchedule, BoostingSchedule>();
+    config.NewConfig<HeatPumpProto.WeekdayBoostingSchedule, WeekdayBoostingSchedule>();
+    config.NewConfig<HeatPumpProto.TankLimits, TankLimits>();
+    config.NewConfig<HeatPumpProto.Temperatures, Temperatures>();
 
-    config.NewConfig<BoostingSchedule, HeatPump.BoostingSchedule>();
-    config.NewConfig<WeekdayBoostingSchedule, HeatPump.WeekdayBoostingSchedule>();
+    config.NewConfig<BoostingSchedule, HeatPumpProto.BoostingSchedule>();
+    config.NewConfig<WeekdayBoostingSchedule, HeatPumpProto.WeekdayBoostingSchedule>();
   }
 }

@@ -1,5 +1,5 @@
 using HeatingGateway.Application.Domain;
-using HeatingGateway.Application.Services;
+using HeatingGateway.Application.Services.HeatPump;
 using HeatingGateway.Contracts.HeatPump;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;

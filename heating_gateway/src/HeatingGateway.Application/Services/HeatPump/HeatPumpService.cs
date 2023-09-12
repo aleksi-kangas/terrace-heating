@@ -2,19 +2,16 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using HeatingGateway.Application.Common.Errors;
-using HeatPump;
+using HeatingGateway.Application.Domain;
 using MapsterMapper;
-using BoostingSchedule = HeatingGateway.Application.Domain.BoostingSchedule;
-using TankLimits = HeatingGateway.Application.Domain.TankLimits;
-using Temperatures = HeatingGateway.Application.Domain.Temperatures;
 
-namespace HeatingGateway.Application.Services;
+namespace HeatingGateway.Application.Services.HeatPump;
 
 public class HeatPumpService : IHeatPumpService, IDisposable {
   private readonly IMapper _mapper;
-  private readonly HeatPumpSvc.HeatPumpSvcClient _client;
+  private readonly HeatPumpProto.HeatPumpSvc.HeatPumpSvcClient _client;
 
-  public HeatPumpService(IMapper mapper, HeatPumpSvc.HeatPumpSvcClient client) {
+  public HeatPumpService(IMapper mapper, HeatPumpProto.HeatPumpSvc.HeatPumpSvcClient client) {
     _mapper = mapper;
     _client = client;
   }
@@ -88,7 +85,7 @@ public class HeatPumpService : IHeatPumpService, IDisposable {
       var validationResult = ValidateBoostingSchedule(boostingSchedule);
       if (validationResult.IsError)
         return validationResult;
-      var request = _mapper.Map<HeatPump.BoostingSchedule>(boostingSchedule);
+      var request = _mapper.Map<HeatPumpProto.BoostingSchedule>(boostingSchedule);
       await _client.SetCircuit3BoostingScheduleAsync(request);
       return Result.Success;
     } catch (RpcException e) {
@@ -102,7 +99,7 @@ public class HeatPumpService : IHeatPumpService, IDisposable {
       var validationResult = ValidateBoostingSchedule(boostingSchedule);
       if (validationResult.IsError)
         return validationResult;
-      var request = _mapper.Map<HeatPump.BoostingSchedule>(boostingSchedule);
+      var request = _mapper.Map<HeatPumpProto.BoostingSchedule>(boostingSchedule);
       await _client.SetLowerTankBoostingScheduleAsync(request);
       return Result.Success;
     } catch (RpcException e) {

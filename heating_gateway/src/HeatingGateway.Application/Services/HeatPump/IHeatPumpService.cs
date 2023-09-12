@@ -3,7 +3,7 @@ using BoostingSchedule = HeatingGateway.Application.Domain.BoostingSchedule;
 using TankLimits = HeatingGateway.Application.Domain.TankLimits;
 using Temperatures = HeatingGateway.Application.Domain.Temperatures;
 
-namespace HeatingGateway.Application.Services;
+namespace HeatingGateway.Application.Services.HeatPump;
 
 public interface IHeatPumpService : IDisposable {
   Task<ErrorOr<UInt32>> GetActiveCircuitCountAsync();

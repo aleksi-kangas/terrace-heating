@@ -2,7 +2,7 @@ using System.Security.Cryptography.X509Certificates;
 using HeatingGateway.Application.Common.Mapping;
 using HeatingGateway.Application.Persistence;
 using HeatingGateway.Application.Persistence.Repositories;
-using HeatingGateway.Application.Services;
+using HeatingGateway.Application.Services.HeatPump;
 using HeatingGateway.Application.Tasks;
 using HeatPump;
 using Microsoft.EntityFrameworkCore;
