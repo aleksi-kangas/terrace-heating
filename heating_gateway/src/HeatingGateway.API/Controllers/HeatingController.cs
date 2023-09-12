@@ -1,4 +1,4 @@
-using HeatingGateway.Application.Services;
+using HeatingGateway.Application.Services.Heating;
 using HeatingGateway.Contracts.Heating;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ public class HeatingController : ApiController {
     _heatingService = heatingService;
   }
 
-  [HttpGet("records")]
+  [HttpGet("history")]
   public async Task<IActionResult>
     GetHeatPumpRecords([FromQuery] GetHeatPumpRecordsRequest request) {
     var result =
@@ -25,7 +25,7 @@ public class HeatingController : ApiController {
       onError: Problem);
   }
 
-  [HttpGet("records/compressor")]
+  [HttpGet("history/compressor")]
   public async Task<IActionResult> GetCompressorRecords(
     [FromQuery] GetCompressorRecordsRequest request) {
     var result =
@@ -33,5 +33,11 @@ public class HeatingController : ApiController {
     return result.Match(
       onValue: records => Ok(_mapper.Map<List<CompressorRecordResponse>>(records)),
       onError: Problem);
+  }
+
+  [HttpGet("state")]
+  public async Task<IActionResult> GetState() {
+    var result = await _heatingService.GetHeatingStateAsync();
+    return Ok(result);
   }
 }

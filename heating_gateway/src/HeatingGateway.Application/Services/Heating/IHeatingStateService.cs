@@ -1,10 +1,10 @@
 ﻿using ErrorOr;
 using HeatingGateway.Application.Domain;
 
-namespace HeatingGateway.Application.Services; 
+namespace HeatingGateway.Application.Services.Heating; 
 
 public interface IHeatingStateService {
-  HeatingState GetHeatingState();
+  Task<HeatingState> GetHeatingStateAsync();
   
   Task<ErrorOr<HeatingState>> ComputeHeatingStateAsync();
 }

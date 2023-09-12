@@ -1,12 +1,8 @@
 using CronScheduler.Extensions.Scheduler;
-using HeatingGateway.Application.Domain;
-using HeatingGateway.Application.Persistence.Repositories;
-using HeatingGateway.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ErrorOr;
-using HeatingGateway.Application.Common.Errors;
+using HeatingGateway.Application.Services.Heating;
 
 namespace HeatingGateway.Application.Tasks;
 

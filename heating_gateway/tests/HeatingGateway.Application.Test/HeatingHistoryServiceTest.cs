@@ -1,12 +1,12 @@
 using HeatingGateway.Application.Common.Errors;
 using HeatingGateway.Application.Domain;
 using HeatingGateway.Application.Persistence.Repositories;
-using HeatingGateway.Application.Services;
+using HeatingGateway.Application.Services.Heating;
 using Moq;
 
 namespace HeatingGateway.Application.Test;
 
-public class HeatingServiceTest {
+public class HeatingHistoryServiceTest {
   [Fact]
   public async void GetCompressorRecordDateTimeRangeAsync_WhenFromToValid_ReturnsRecordsInRange() {
     // Arrange
@@ -33,7 +33,7 @@ public class HeatingServiceTest {
       .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime, It.IsAny<bool>()))
       .ReturnsAsync(heatPumpRecords);
 
-    var service = new HeatingService(mockHeatPumpRecordRepository.Object);
+    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
 
     // Act
     var result = await service.GetCompressorRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
@@ -52,7 +52,7 @@ public class HeatingServiceTest {
     Assert.NotEqual(DateTimeKind.Utc, fromDatetime.Kind);
     Assert.NotEqual(DateTimeKind.Utc, toDatetime.Kind);
     var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    var service = new HeatingService(mockHeatPumpRecordRepository.Object);
+    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
 
     // Act
     var result = await service.GetCompressorRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
@@ -67,7 +67,7 @@ public class HeatingServiceTest {
     var fromDatetime = DateTime.UtcNow;
     var toDatetime = DateTime.UtcNow - TimeSpan.FromDays(1);
     var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    var service = new HeatingService(mockHeatPumpRecordRepository.Object);
+    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
 
     // Act
     var result = await service.GetCompressorRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
@@ -93,7 +93,7 @@ public class HeatingServiceTest {
     mockHeatPumpRecordRepository
       .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime, false))
       .ReturnsAsync(heatPumpRecords);
-    var service = new HeatingService(mockHeatPumpRecordRepository.Object);
+    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
 
     // Act
     var result = await service.GetHeatPumpRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
@@ -110,7 +110,7 @@ public class HeatingServiceTest {
     Assert.NotEqual(DateTimeKind.Utc, fromDatetime.Kind);
     Assert.NotEqual(DateTimeKind.Utc, toDatetime.Kind);
     var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    var service = new HeatingService(mockHeatPumpRecordRepository.Object);
+    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
 
     // Act
     var result = await service.GetHeatPumpRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
@@ -125,7 +125,7 @@ public class HeatingServiceTest {
     var fromDatetime = DateTime.UtcNow;
     var toDatetime = DateTime.UtcNow - TimeSpan.FromDays(1);
     var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    var service = new HeatingService(mockHeatPumpRecordRepository.Object);
+    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
 
     // Act
     var result = await service.GetHeatPumpRecordsDateTimeRangeAsync(fromDatetime, toDatetime);

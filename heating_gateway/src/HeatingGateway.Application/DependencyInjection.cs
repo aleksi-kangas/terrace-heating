@@ -2,9 +2,9 @@ using System.Security.Cryptography.X509Certificates;
 using HeatingGateway.Application.Common.Mapping;
 using HeatingGateway.Application.Persistence;
 using HeatingGateway.Application.Persistence.Repositories;
+using HeatingGateway.Application.Services.Heating;
 using HeatingGateway.Application.Services.HeatPump;
 using HeatingGateway.Application.Tasks;
-using HeatPump;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +24,7 @@ public static class DependencyInjection {
 
   private static IServiceCollection AddServices(this IServiceCollection services) {
     services
-      .AddGrpcClient<HeatPumpSvc.HeatPumpSvcClient>(o => {
+      .AddGrpcClient<HeatPumpProto.HeatPumpSvc.HeatPumpSvcClient>(o => {
         o.Address = new Uri("https://host.docker.internal:50051");
       })
       .ConfigurePrimaryHttpMessageHandler(() => {
@@ -39,8 +39,9 @@ public static class DependencyInjection {
           HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
         return handler;
       });
-    services.AddScoped<IHeatingService, HeatingService>();
+    services.AddScoped<IHeatingHistoryService, HeatingHistoryService>();
     services.AddSingleton<IHeatingStateService, HeatingStateService>();
+    services.AddScoped<IHeatingService, HeatingService>();
     services.AddScoped<IHeatPumpService, HeatPumpService>();
     return services;
   }

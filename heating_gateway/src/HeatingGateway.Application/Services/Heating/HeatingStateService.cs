@@ -1,23 +1,25 @@
 ﻿using ErrorOr;
 using HeatingGateway.Application.Domain;
+using HeatingGateway.Application.Services.HeatPump;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace HeatingGateway.Application.Services;
+namespace HeatingGateway.Application.Services.Heating;
 
 public class HeatingStateService : IHeatingStateService, IDisposable {
-  private HeatingState _heatingState = HeatingState.Inactive;
   private readonly IServiceScope _serviceScope;
+  private HeatingState _heatingState = HeatingState.Inactive;
 
   public HeatingStateService(IServiceProvider serviceProvider) {
     _serviceScope = serviceProvider.CreateScope();
   }
 
-  public HeatingState GetHeatingState() {
-    return _heatingState;
+  public Task<HeatingState> GetHeatingStateAsync() {
+    return Task.FromResult(_heatingState);
   }
 
   public async Task<ErrorOr<HeatingState>> ComputeHeatingStateAsync() {
-    using var heatPumpService = _serviceScope.ServiceProvider.GetRequiredService<IHeatPumpService>();
+    using var heatPumpService =
+      _serviceScope.ServiceProvider.GetRequiredService<IHeatPumpService>();
     var activeCircuitCount = await heatPumpService.GetActiveCircuitCountAsync();
     if (activeCircuitCount.IsError)
       return activeCircuitCount.FirstError;
@@ -27,7 +29,7 @@ public class HeatingStateService : IHeatingStateService, IDisposable {
       _heatingState = HeatingState.Inactive;
       return _heatingState;
     }
-    
+
     // TODO Soft-Starting?
 
     var isSchedulingEnabled = await heatPumpService.IsSchedulingEnabledAsync();
@@ -50,7 +52,8 @@ public class HeatingStateService : IHeatingStateService, IDisposable {
     return _heatingState;
   }
 
-  private static bool IsTimeWithinBoostingSchedule(DateTime dateTime, BoostingSchedule boostingSchedule) {
+  private static bool IsTimeWithinBoostingSchedule(DateTime dateTime,
+    BoostingSchedule boostingSchedule) {
     var weekdayBoostingSchedule = dateTime.DayOfWeek switch {
       DayOfWeek.Monday => boostingSchedule.Monday,
       DayOfWeek.Tuesday => boostingSchedule.Tuesday,

@@ -1,8 +1,7 @@
 using ErrorOr;
 using HeatingGateway.API.Controllers;
-using HeatingGateway.Application.Common.Errors;
 using HeatingGateway.Application.Domain;
-using HeatingGateway.Application.Services;
+using HeatingGateway.Application.Services.Heating;
 using HeatingGateway.Contracts.Heating;
 using HeatingGateway.Contracts.HeatPump;
 using MapsterMapper;

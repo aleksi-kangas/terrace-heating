@@ -1,9 +1,9 @@
-using ErrorOr;
+﻿using ErrorOr;
 using HeatingGateway.Application.Domain;
 
-namespace HeatingGateway.Application.Services;
+namespace HeatingGateway.Application.Services.Heating;
 
-public interface IHeatingService {
+public interface IHeatingHistoryService {
   Task<ErrorOr<List<Compressor>>> GetCompressorRecordsDateTimeRangeAsync(DateTime from,
     DateTime to);
 

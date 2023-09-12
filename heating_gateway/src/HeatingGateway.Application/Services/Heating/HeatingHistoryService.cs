@@ -1,15 +1,14 @@
 using ErrorOr;
-using HeatingGateway.Application.Common.Errors;
 using HeatingGateway.Application.Domain;
 using HeatingGateway.Application.Persistence.Repositories;
 using static HeatingGateway.Application.Common.Errors.Errors.DateTimeRange;
 
-namespace HeatingGateway.Application.Services;
+namespace HeatingGateway.Application.Services.Heating;
 
-public class HeatingService : IHeatingService {
+public class HeatingHistoryService : IHeatingHistoryService {
   private readonly IHeatPumpRecordRepository _heatPumpRecordRepository;
 
-  public HeatingService(IHeatPumpRecordRepository heatPumpRecordRepository) {
+  public HeatingHistoryService(IHeatPumpRecordRepository heatPumpRecordRepository) {
     _heatPumpRecordRepository = heatPumpRecordRepository;
   }
 
