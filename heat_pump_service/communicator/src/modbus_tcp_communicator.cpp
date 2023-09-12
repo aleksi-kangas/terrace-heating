@@ -64,8 +64,8 @@ bool ModbusTCPCommunicator::IsCompressorActive() const {
 
 bool ModbusTCPCommunicator::IsSchedulingEnabled() const {
   std::lock_guard<std::mutex> lock{mutex_};
-  uint16_t is_scheduling_enabled{0};
-  const int32_t rc = modbus_read_registers(
+  uint8_t is_scheduling_enabled{0};
+  const int32_t rc = modbus_read_bits(
       context_, addresses::miscellaneous::kSchedulingEnabled, 1,
       &is_scheduling_enabled);
   if (rc != 1) {
