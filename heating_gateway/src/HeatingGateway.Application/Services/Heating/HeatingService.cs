@@ -22,11 +22,19 @@ public class HeatingService : IHeatingService {
     return _historyService.GetHeatPumpRecordsDateTimeRangeAsync(from, to);
   }
 
-  public Task<HeatingState> GetHeatingStateAsync() {
-    return _stateService.GetHeatingStateAsync();
+  public HeatingState GetHeatingState() {
+    return _stateService.GetHeatingState();
   }
 
-  public Task<ErrorOr<HeatingState>> ComputeHeatingStateAsync() {
-    return _stateService.ComputeHeatingStateAsync();
+  public ErrorOr<HeatingState> ComputeHeatingState() {
+    return _stateService.ComputeHeatingState();
+  }
+
+  public ErrorOr<HeatingState> Start(bool softStart) {
+    return _stateService.Start(softStart);
+  }
+
+  public ErrorOr<HeatingState> Stop() {
+    return _stateService.Stop();
   }
 }

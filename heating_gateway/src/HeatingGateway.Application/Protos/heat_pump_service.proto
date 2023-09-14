@@ -17,6 +17,7 @@ service HeatPumpSvc {
   rpc SetActiveCircuitCount(google.protobuf.UInt32Value) returns (google.protobuf.Empty) {}
   rpc SetCircuit3BoostingSchedule(BoostingSchedule) returns (google.protobuf.Empty) {}
   rpc SetLowerTankBoostingSchedule(BoostingSchedule) returns (google.protobuf.Empty) {}
+  rpc SetSchedulingEnabled(google.protobuf.BoolValue) returns (google.protobuf.Empty) {}
 }
 
 message WeekdayBoostingSchedule {

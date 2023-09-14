@@ -79,6 +79,18 @@ public class HeatPumpService : IHeatPumpService, IDisposable {
     }
   }
 
+  public async Task<ErrorOr<Success>> SetActiveCircuitCountAsync(UInt32 activeCircuitCount) {
+    try {
+      if (activeCircuitCount >= 4)
+        return Errors.HeatDistributionCircuit.InvalidActiveCircuitCount;
+      var request = new UInt32Value { Value = activeCircuitCount };
+      await _client.SetActiveCircuitCountAsync(request);
+      return Result.Success;
+    } catch (RpcException e) {
+      return Error.Failure(e.Message);
+    }
+  }
+
   public async Task<ErrorOr<Success>> SetCircuit3BoostingScheduleAsync(
     BoostingSchedule boostingSchedule) {
     try {
@@ -101,6 +113,16 @@ public class HeatPumpService : IHeatPumpService, IDisposable {
         return validationResult;
       var request = _mapper.Map<HeatPumpProto.BoostingSchedule>(boostingSchedule);
       await _client.SetLowerTankBoostingScheduleAsync(request);
+      return Result.Success;
+    } catch (RpcException e) {
+      return Error.Failure(e.Message);
+    }
+  }
+
+  public async Task<ErrorOr<Success>> SetSchedulingEnabledAsync(bool enabled) {
+    try {
+      var request = new BoolValue { Value = enabled };
+      await _client.SetSchedulingEnabledAsync(request);
       return Result.Success;
     } catch (RpcException e) {
       return Error.Failure(e.Message);

@@ -4,7 +4,8 @@ using HeatingGateway.Application.Domain;
 namespace HeatingGateway.Application.Services.Heating; 
 
 public interface IHeatingStateService {
-  Task<HeatingState> GetHeatingStateAsync();
-  
-  Task<ErrorOr<HeatingState>> ComputeHeatingStateAsync();
+  HeatingState GetHeatingState();
+  ErrorOr<HeatingState> ComputeHeatingState();
+  ErrorOr<HeatingState> Start(bool softStart);
+  ErrorOr<HeatingState> Stop();
 }

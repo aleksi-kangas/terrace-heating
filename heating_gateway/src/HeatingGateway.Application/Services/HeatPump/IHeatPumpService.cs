@@ -13,6 +13,8 @@ public interface IHeatPumpService : IDisposable {
   Task<ErrorOr<TankLimits>> GetTankLimitsAsync();
   Task<ErrorOr<Boolean>> IsCompressorActiveAsync();
   Task<ErrorOr<Boolean>> IsSchedulingEnabledAsync();
+  Task<ErrorOr<Success>> SetActiveCircuitCountAsync(UInt32 activeCircuitCount);
   Task<ErrorOr<Success>> SetCircuit3BoostingScheduleAsync(BoostingSchedule boostingSchedule);
   Task<ErrorOr<Success>> SetLowerTankBoostingScheduleAsync(BoostingSchedule boostingSchedule);
+  Task<ErrorOr<Success>> SetSchedulingEnabledAsync(bool enabled);
 }

@@ -22,11 +22,11 @@ public class ComputeHeatingStateJob : IScheduledJob {
 
   public string Name { get; } = nameof(ComputeHeatingStateJob);
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken) {
+  public Task ExecuteAsync(CancellationToken cancellationToken) {
     using var scope = _provider.CreateScope();
     try {
       var heatingStateService = scope.ServiceProvider.GetRequiredService<IHeatingStateService>();
-      var heatingState = await heatingStateService.ComputeHeatingStateAsync();
+      var heatingState = heatingStateService.ComputeHeatingState();
       if (heatingState.IsError) {
         _logger.LogError(heatingState.FirstError.Description);
       } else {
@@ -35,5 +35,7 @@ public class ComputeHeatingStateJob : IScheduledJob {
     } catch (Exception e) {
       _logger.LogError(e.Message);
     }
+
+    return Task.CompletedTask;
   }
 }

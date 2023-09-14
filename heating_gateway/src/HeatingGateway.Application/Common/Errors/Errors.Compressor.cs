@@ -9,3 +9,4 @@ public static partial class Errors {
       description: "Unable to compute compressor usage due to the lack of information");
   }
 }
+

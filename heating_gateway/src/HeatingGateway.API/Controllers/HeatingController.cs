@@ -36,8 +36,24 @@ public class HeatingController : ApiController {
   }
 
   [HttpGet("state")]
-  public async Task<IActionResult> GetState() {
-    var result = await _heatingService.GetHeatingStateAsync();
+  public IActionResult GetState() {
+    var result = _heatingService.GetHeatingState();
     return Ok(result);
+  }
+
+  [HttpGet("start")]
+  public IActionResult Start([FromQuery] StartRequest request) {
+    var result = _heatingService.Start(request.SoftStart);
+    return result.Match(
+      onValue: heatingState => Ok(heatingState),
+      onError: Problem);
+  }
+
+  [HttpGet("stop")]
+  public IActionResult Stop() {
+    var result = _heatingService.Stop();
+    return result.Match(
+      onValue: heatingState => Ok(heatingState),
+      onError: Problem);
   }
 }
