@@ -407,3 +407,30 @@ TEST_F(HeatPumpServiceTest, SetCircuit3BoostingScheduleArgument) {
   EXPECT_FALSE(status.ok());
   EXPECT_EQ(status.error_code(), grpc::StatusCode::INVALID_ARGUMENT);
 }
+
+TEST_F(HeatPumpServiceTest, SetSchedulingEnabled) {
+  EXPECT_CALL(*mockCommunicator_, WriteSchedulingEnabled(true)).Times(1);
+
+  google::protobuf::BoolValue request{};
+  request.set_value(true);
+  google::protobuf::Empty response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->SetSchedulingEnabled(&context, &request, &response);
+  EXPECT_TRUE(status.ok());
+}
+
+TEST_F(HeatPumpServiceTest, SetSchedulingEnabledFailure) {
+  EXPECT_CALL(*mockCommunicator_, WriteSchedulingEnabled(true))
+      .Times(1)
+      .WillOnce(Throw(std::runtime_error{"test"}));
+
+  google::protobuf::BoolValue request{};
+  request.set_value(true);
+  google::protobuf::Empty response{};
+  grpc::ServerContext context{};
+  const auto status =
+      service_->SetSchedulingEnabled(&context, &request, &response);
+  EXPECT_FALSE(status.ok());
+  EXPECT_EQ(status.error_code(), grpc::StatusCode::INTERNAL);
+}

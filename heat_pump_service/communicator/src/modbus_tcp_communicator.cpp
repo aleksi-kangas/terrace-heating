@@ -65,9 +65,9 @@ bool ModbusTCPCommunicator::IsCompressorActive() const {
 bool ModbusTCPCommunicator::IsSchedulingEnabled() const {
   std::lock_guard<std::mutex> lock{mutex_};
   uint8_t is_scheduling_enabled{0};
-  const int32_t rc = modbus_read_bits(
-      context_, addresses::miscellaneous::kSchedulingEnabled, 1,
-      &is_scheduling_enabled);
+  const int32_t rc =
+      modbus_read_bits(context_, addresses::miscellaneous::kSchedulingEnabled,
+                       1, &is_scheduling_enabled);
   if (rc != 1) {
     throw std::runtime_error{"Failed to read registers: " +
                              std::string{modbus_strerror(errno)}};
@@ -194,6 +194,18 @@ void ModbusTCPCommunicator::WriteBoostingSchedule(
       throw std::runtime_error{"Failed to write registers: " +
                                std::string{modbus_strerror(errno)}};
     }
+  }
+}
+
+void ModbusTCPCommunicator::WriteSchedulingEnabled(bool scheduling_enabled) {
+  std::lock_guard<std::mutex> lock{mutex_};
+  const uint8_t scheduling_enabled_bit{scheduling_enabled};
+  const int32_t rc =
+      modbus_write_bits(context_, addresses::miscellaneous::kSchedulingEnabled,
+                        1, &scheduling_enabled_bit);
+  if (rc != 1) {
+    throw std::runtime_error{"Failed to write registers: " +
+                             std::string{modbus_strerror(errno)}};
   }
 }
 

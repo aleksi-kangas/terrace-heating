@@ -236,4 +236,16 @@ grpc::Status HeatPumpService::SetLowerTankBoostingSchedule(
   }
 }
 
+grpc::Status HeatPumpService::SetSchedulingEnabled(
+    grpc::ServerContext* /* context */,
+    const google::protobuf::BoolValue* request,
+    google::protobuf::Empty* /* response */) {
+  try {
+    communicator_->WriteSchedulingEnabled(request->value());
+    return grpc::Status::OK;
+  } catch (const std::exception& e) {
+    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+  }
+}
+
 }  // namespace service

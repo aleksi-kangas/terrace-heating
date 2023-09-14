@@ -23,5 +23,6 @@ class ICommunicator {
       const BoostingSchedule& schedule) = 0;
   virtual void WriteLowerTankBoostingSchedule(
       const BoostingSchedule& schedule) = 0;
+  virtual void WriteSchedulingEnabled(bool scheduling_enabled) = 0;
 };
 }  // namespace communicator

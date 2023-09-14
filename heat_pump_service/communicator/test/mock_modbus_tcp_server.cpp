@@ -11,10 +11,11 @@ MockModbusTCPServer::MockModbusTCPServer(std::atomic<bool>& stop)
   context_ = modbus_new_tcp(nullptr, MODBUS_TCP_DEFAULT_PORT);
   if (context_ == nullptr)
     throw std::runtime_error{"Failed to create modbus context"};
+  constexpr int32_t kLastBit =
+      std::max({addresses::miscellaneous::kSchedulingEnabled});
   constexpr int32_t kLastAddress = std::max({
       addresses::miscellaneous::kActiveCircuitCount,
       addresses::miscellaneous::kCompressorActive,
-      addresses::miscellaneous::kSchedulingEnabled,
       addresses::tank_limits::kLast,
       addresses::temperatures::kLast,
       addresses::boosting_schedules::kCircuit3.LastHour(),
@@ -22,7 +23,7 @@ MockModbusTCPServer::MockModbusTCPServer(std::atomic<bool>& stop)
       addresses::boosting_schedules::kLowerTank.LastHour(),
       addresses::boosting_schedules::kLowerTank.LastDelta(),
   });
-  mapping_ = modbus_mapping_new(0, 0, kLastAddress + 1, 0);
+  mapping_ = modbus_mapping_new(kLastBit + 1, 0, kLastAddress + 1, 0);
   if (mapping_ == nullptr)
     throw std::runtime_error{"Failed to create modbus mapping"};
   InitializeMapping();
@@ -68,8 +69,9 @@ void MockModbusTCPServer::InitializeMapping() {
       static_cast<uint16_t>(kActiveCircuitCount);
   mapping_->tab_registers[addresses::miscellaneous::kCompressorActive] =
       static_cast<uint16_t>(kIsCompressorActive);
-  mapping_->tab_registers[addresses::miscellaneous::kSchedulingEnabled] =
-      static_cast<uint16_t>(kIsSchedulingEnabled);
+
+  mapping_->tab_bits[addresses::miscellaneous::kSchedulingEnabled] =
+      static_cast<uint8_t>(kIsSchedulingEnabled);
 
   auto InitializeBoostingSchedule =
       [this](const addresses::boosting_schedules::BoostingScheduleAddresses&

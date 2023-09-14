@@ -26,6 +26,7 @@ class ModbusTCPCommunicator final : public ICommunicator {
   void WriteCircuit3BoostingSchedule(const BoostingSchedule& schedule) override;
   void WriteLowerTankBoostingSchedule(
       const BoostingSchedule& schedule) override;
+  void WriteSchedulingEnabled(bool scheduling_enabled) override;
 
  private:
   modbus_t* context_{nullptr};
