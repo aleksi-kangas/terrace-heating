@@ -8,8 +8,7 @@ export const fetchCompressorRecords = async (
   from: DateTime,
   to: DateTime
 ): Promise<CompressorRecord[]> => {
-  const url =
-    `${baseUrl}/records/compressor?` +
+  const url = `${baseUrl}/history/compressor?` +
     new URLSearchParams({
       from: from.toISO()!,
       to: to.toISO()!,
@@ -25,8 +24,7 @@ export const fetchHeatPumpRecords = async (
   from: DateTime,
   to: DateTime
 ): Promise<HeatPumpRecord[]> => {
-  const url =
-    `${baseUrl}/records/heat-pump?` +
+  const url = `${baseUrl}/history?` +
     new URLSearchParams({
       from: from.toISO()!,
       to: to.toISO()!,
