@@ -36,14 +36,22 @@ services:
       dockerfile: Dockerfile
       target: runtime
     container_name: heating-gateway
+    depends_on:
+      - database
+      - heat-pump-service
+    env_file:
+      - .env
     environment:
-     - ASPNETCORE_ENVIRONMENT=Development
-     - ASPNETCORE_URLS=http://+
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=${ASPNETCORE_URLS}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "8000:80"
     volumes:
       - ./certs:/usr/src/app/certs
-      - ~/.microsoft/usersecrets/:/root/.microsoft/usersecrets
 
   pgadmin:
     container_name: pgadmin

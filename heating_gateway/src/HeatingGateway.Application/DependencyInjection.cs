@@ -48,8 +48,12 @@ public static class DependencyInjection {
 
   private static IServiceCollection AddPersistence(this IServiceCollection services,
     ConfigurationManager configurationManager) {
+    var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+    var database = Environment.GetEnvironmentVariable("POSTGRES_DATABASE");
+    var username = Environment.GetEnvironmentVariable("POSTGRES_USER");
+    var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
     services.AddDbContext<HeatingDbContext>(options =>
-      options.UseNpgsql(configurationManager.GetConnectionString("HeatingContext")));
+      options.UseNpgsql($"host={host};database={database};username={username};password={password}"));
     services.AddScoped<IHeatPumpRecordRepository, HeatPumpRecordRepository>();
     return services;
   }

@@ -17,7 +17,7 @@ RUN dotnet publish -c Release --property PublishDir=/app/out
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out ./
-ENTRYPOINT ["dotnet", "HeatingGateway.API.dll"]
+ENTRYPOINT ["dotnet", "HeatingGateway.API.dll", "--server.urls", "http://+:80"]
 
 FROM build as tests
 WORKDIR /app
