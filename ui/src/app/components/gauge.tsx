@@ -1,14 +1,19 @@
 export const Gauge = ({
   value,
+  className,
   size = 'small',
   showValue = true,
   textColor = 'text-gray-100',
 }: {
   value: number;
+  className: string;
   size: 'small' | 'medium' | 'large';
   showValue: boolean;
   textColor: string;
 }) => {
+  const styles = 'flex flex-col items-center justify-center relative';
+  className = className ? styles.concat(' ', className) : styles;
+
   const circumference = 332; //2 * Math.PI * 53; // 2 * pi * radius
   const valueInCircumference = (value / 100) * circumference;
   const strokeDasharray = `${circumference} ${circumference}`;
@@ -34,7 +39,7 @@ export const Gauge = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center relative">
+    <div className={styles}>
       <svg
         fill="none"
         shapeRendering="crispEdges"
