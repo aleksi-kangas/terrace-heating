@@ -4,8 +4,18 @@ import React, {Suspense} from 'react';
 import Spinner from '../../components/spinner';
 import Graph from '../../components/graphs/graph';
 
-const TankGraphsPage = async () => {
-  const from = DateTime.utc().minus(Duration.fromObject({days: 2}));
+interface SearchParams {
+  days?: number;
+}
+
+interface TankGraphsPageProps {
+  searchParams: SearchParams;
+}
+
+const TankGraphsPage = async ({searchParams}: TankGraphsPageProps) => {
+  const days = searchParams.days ?? 2;
+  if (days < 1 || days > 365) throw new Error('Invalid days');
+  const from = DateTime.utc().minus(Duration.fromObject({days: days}));
   const to = DateTime.utc();
   const records = await fetchHeatPumpRecords(from, to);
   return (

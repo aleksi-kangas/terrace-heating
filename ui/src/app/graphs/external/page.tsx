@@ -4,8 +4,18 @@ import {DateTime, Duration} from 'luxon';
 import {fetchHeatPumpRecords} from '../../api/heating';
 import Graph from '../../components/graphs/graph';
 
-const ExternalGraphsPage = async () => {
-  const from = DateTime.utc().minus(Duration.fromObject({days: 2}));
+interface SearchParams {
+  days?: number;
+}
+
+interface ExternalGraphsPageProps {
+  searchParams: SearchParams;
+}
+
+const ExternalGraphsPage = async ({searchParams}: ExternalGraphsPageProps) => {
+  const days = searchParams.days ?? 2;
+  if (days < 1 || days > 365) throw new Error('Invalid days');
+  const from = DateTime.utc().minus(Duration.fromObject({days: days}));
   const to = DateTime.utc();
   const records = await fetchHeatPumpRecords(from, to);
   return (
