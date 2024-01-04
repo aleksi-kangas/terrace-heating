@@ -3,6 +3,8 @@ import CompressorUsageGraph from '../components/dashboard/compressor_usage_graph
 import OutsideTemperatureGraph from '../components/dashboard/outside_temperature_graph';
 import HorizontalDivider from '../components/horizontal_divider';
 import React from 'react';
+import CompressorUsageGauge from '../components/dashboard/compressor_usage_gauge';
+import HeatingControl from '../components/dashboard/heating_control';
 
 const Dashboard = () => {
   return (
@@ -14,8 +16,12 @@ const Dashboard = () => {
         {/* @ts-expect-error Async Server Component */}
         <CompressorUsageGraph />
       </Card>
-      <Card className="col-span-full md:col-span-1 flex-col justify-evenly items-center">
-        TODO...
+      <Card className="col-span-full md:col-span-1 flex flex-col justify-evenly items-center">
+        {/* @ts-expect-error Async Server Component */}
+        <HeatingControl />
+        <HorizontalDivider />
+        {/* @ts-expect-error Async Server Component */}
+        <CompressorUsageGauge />
       </Card>
     </div>
   );
