@@ -41,3 +41,4 @@ const CircuitGraphsPage = async () => {
 };
 
 export default CircuitGraphsPage;
+export const dynamic = 'force-dynamic';

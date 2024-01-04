@@ -36,3 +36,4 @@ const TankGraphsPage = async () => {
 };
 
 export default TankGraphsPage;
+export const dynamic = 'force-dynamic';

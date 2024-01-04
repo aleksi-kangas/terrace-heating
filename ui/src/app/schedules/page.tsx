@@ -31,3 +31,4 @@ const SchedulesPage = async () => {
 };
 
 export default SchedulesPage;
+export const dynamic = 'force-dynamic';

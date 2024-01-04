@@ -36,3 +36,4 @@ const ExternalGraphsPage = async () => {
 };
 
 export default ExternalGraphsPage;
+export const dynamic = 'force-dynamic';

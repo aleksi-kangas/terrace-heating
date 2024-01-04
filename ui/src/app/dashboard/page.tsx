@@ -22,3 +22,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+export const dynamic = 'force-dynamic';
