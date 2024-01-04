@@ -25,6 +25,13 @@ export interface HeatPumpRecord {
   time: string;
 }
 
+export enum HeatingState {
+  Inactive = 0,
+  SoftStarting = 1,
+  Active = 2,
+  Boosting = 3,
+}
+
 export interface TankLimits {
   lowerTankMinimum: number;
   lowerTankMinimumAdjusted: number;

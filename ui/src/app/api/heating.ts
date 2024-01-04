@@ -1,4 +1,4 @@
-import {CompressorRecord, HeatPumpRecord} from '@/app/api/types';
+import {CompressorRecord, HeatingState, HeatPumpRecord} from '@/app/api/types';
 import {DateTime} from 'luxon';
 import {URLSearchParams} from 'url';
 
@@ -36,4 +36,25 @@ export const fetchHeatPumpRecords = async (
     throw new Error();
   }
   return response.json();
+};
+
+export const fetchHeatingState = async (): Promise<HeatingState> => {
+  const url = `${baseUrl}/state`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error();
+  }
+  const state = await response.json();
+  switch (state) {
+    case HeatingState.Inactive:
+      return HeatingState.Inactive;
+    case HeatingState.SoftStarting:
+      return HeatingState.SoftStarting;
+    case HeatingState.Active:
+      return HeatingState.Active;
+    case HeatingState.Boosting:
+      return HeatingState.Boosting;
+    default:
+      throw new Error('Unknown heating state');
+  }
 };
