@@ -1,6 +1,6 @@
 import {BoostingSchedule, BoostingScheduleVariable} from '@/app/api/types';
 
-const baseUrl = 'http://localhost:8000/heat-pump';
+const baseUrl = 'http://host.docker.internal:8000/heat-pump';
 
 export const fetchBoostingSchedule = async (
   boostingScheduleVariable: BoostingScheduleVariable

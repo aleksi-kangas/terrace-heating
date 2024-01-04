@@ -55,7 +55,22 @@ services:
     image: dpage/pgadmin4
     ports:
       - "5050:80"
-      
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: ui
+    depends_on:
+      - heating-gateway
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    ports:
+      - "3000:3000"
+
 volumes:
   database-data:
     driver: local
