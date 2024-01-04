@@ -23,7 +23,6 @@ const CircuitGraphsPage = async ({
   return (
     <Suspense fallback={<Spinner className="flex-1 h-full w-full" />}>
       <Graph
-        className="flex-1 h-full w-full"
         dateTimes={records.map(r => r.time)}
         series={[
           {

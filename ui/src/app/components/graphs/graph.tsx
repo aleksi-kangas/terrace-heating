@@ -11,6 +11,7 @@ import {useMemo, useState} from 'react';
 import {Line} from 'react-chartjs-2';
 import {DateTime, Duration} from 'luxon';
 import Spinner from '../spinner';
+import Card from '../card';
 
 ChartJS.register(...registerables);
 
@@ -86,10 +87,10 @@ const Graph = ({
     []
   );
   return (
-    <div className={className}>
+    <Card className="flex-1 h-full w-full p-8 flex justify-evenly items-center bg-amber-100">
       {isLoading && <Spinner className="absolute" />}
       <Line data={data} options={options} />
-    </div>
+    </Card>
   );
 };
 export default Graph;

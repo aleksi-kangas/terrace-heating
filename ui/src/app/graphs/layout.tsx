@@ -14,9 +14,7 @@ const GraphsLayout = ({children}: {children: React.ReactNode}) => {
           {href: '/graphs/circuits', label: 'Heat Distribution Circuits'},
         ]}
       />
-      <Card className="flex-1 h-full flex justify-evenly items-center">
         {children}
-      </Card>
     </div>
   );
 };
