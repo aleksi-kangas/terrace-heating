@@ -6,9 +6,12 @@
 
 namespace {
 float TemperatureUInt16ToFloat(uint16_t value) {
-  // Temperature are represented with one decimal place,
-  // i.e. 123 means 12.3 degrees.
-  return static_cast<float>(value) / 10.0f;
+  // Temperatures obtained from the heat-pump are represented with a 16bit unsigned integer.
+  // Values within range [0, 32767] represent positive temperatures.
+  // Values within range [32768, 65535] represent negative temperatures.
+  // Temperature are represented with one decimal place, i.e. 123 means 12.3 degrees.
+  // Examples: (123 -> 12.3) and (65513 -> -2.3)
+  return static_cast<float>(static_cast<int16_t>(value)) / 10.0f;
 }
 }  // namespace
 
