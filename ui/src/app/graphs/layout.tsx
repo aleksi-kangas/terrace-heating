@@ -1,5 +1,4 @@
 import Tabs from '../components/tabs';
-import Card from '../components/card';
 
 const GraphsLayout = ({children}: {children: React.ReactNode}) => {
   return (
@@ -14,7 +13,7 @@ const GraphsLayout = ({children}: {children: React.ReactNode}) => {
           {href: '/graphs/circuits', label: 'Heat Distribution Circuits'},
         ]}
       />
-        {children}
+      {children}
     </div>
   );
 };

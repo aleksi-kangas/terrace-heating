@@ -2,5 +2,11 @@
   "extends": [
     "./node_modules/gts/",
     "next/core-web-vitals"
-  ]
+  ],
+  "rules": {
+    "node/no-unsupported-features/es-syntax": [
+      "error",
+      { "ignores": ["modules"] }
+    ]
+  }
 }
