@@ -1,20 +1,20 @@
 import React from 'react';
-import Tabs from '@/app/components/tabs';
+import Card from '@/app/components/card';
+import GraphSelector from '../components/graphs/graph_selector';
 
 const GraphsLayout = ({children}: {children: React.ReactNode}) => {
   return (
-    <div className="flex flex-1 w-full h-full max-w-7xl flex-col gap-4">
-      <Tabs
+    <div className="flex flex-1 max-w-7xl flex-col gap-4">
+      <GraphSelector
         tabItems={[
           {href: '/graphs/external', label: 'External'},
-          {
-            href: '/graphs/tanks',
-            label: 'Tanks',
-          },
+          {href: '/graphs/tanks', label: 'Tanks'},
           {href: '/graphs/circuits', label: 'Heat Distribution Circuits'},
         ]}
       />
-      {children}
+      <Card className="flex-1 h-44 w-full p-8 flex justify-center items-center">
+        {children}
+      </Card>
     </div>
   );
 };

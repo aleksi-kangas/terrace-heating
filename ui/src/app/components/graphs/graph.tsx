@@ -86,10 +86,10 @@ const Graph = ({
     []
   );
   return (
-    <Card className="flex-1 h-full w-full p-8 flex justify-evenly items-center bg-amber-100">
+    <>
       {isLoading && <Spinner className="absolute" />}
       <Line data={data} options={options} />
-    </Card>
+    </>
   );
 };
 export default Graph;
