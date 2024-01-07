@@ -1,4 +1,5 @@
-import Tabs from '../components/tabs';
+import React from 'react';
+import Tabs from '@/app/components/tabs';
 
 const GraphsLayout = ({children}: {children: React.ReactNode}) => {
   return (

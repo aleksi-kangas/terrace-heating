@@ -1,5 +1,5 @@
 'use client';
-
+import React, {useMemo, useState} from 'react';
 import {
   Chart as ChartJS,
   ChartData,
@@ -7,11 +7,10 @@ import {
   registerables,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
-import {useMemo, useState} from 'react';
 import {Line} from 'react-chartjs-2';
-import {DateTime, Duration} from 'luxon';
-import Spinner from '../spinner';
-import Card from '../card';
+import {DateTime} from 'luxon';
+import Card from '@/app/components/card';
+import Spinner from '@/app/components/spinner';
 
 ChartJS.register(...registerables);
 

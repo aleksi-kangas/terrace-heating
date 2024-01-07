@@ -1,6 +1,7 @@
-import Card from '../components/card';
-import Spinner from '../components/spinner';
-import HorizontalDivider from '../components/horizontal_divider';
+import React from 'react';
+import Card from '@/app/components/card';
+import Spinner from '@/app/components/spinner';
+import HorizontalDivider from '@/app/components/horizontal_divider';
 
 const DashboardLoading = () => {
   return (

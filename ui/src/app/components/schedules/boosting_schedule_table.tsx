@@ -1,7 +1,6 @@
 'use client';
-
-import {BoostingSchedule} from '../../api/types';
-import {useState} from 'react';
+import React, {useState} from 'react';
+import {BoostingSchedule} from '@/app/api/types';
 
 interface BoostingScheduleTableProps {
   boostingSchedule: BoostingSchedule;

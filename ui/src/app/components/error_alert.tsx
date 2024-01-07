@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface ErrorAlertProps {
   message: string;
   className?: string;

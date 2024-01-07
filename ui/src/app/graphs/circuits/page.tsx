@@ -1,7 +1,7 @@
-import {fetchHeatPumpRecordsDays} from '../../api/heating';
 import React, {Suspense} from 'react';
-import Spinner from '../../components/spinner';
-import Graph from '../../components/graphs/graph';
+import {fetchHeatPumpRecordsDays} from '@/app/api/heating';
+import Spinner from '@/app/components/spinner';
+import Graph from '@/app/components/graphs/graph';
 
 interface SearchParams {
   days?: number;

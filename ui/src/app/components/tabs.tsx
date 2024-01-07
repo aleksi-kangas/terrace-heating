@@ -1,5 +1,6 @@
-import Card from './card';
+import React from 'react';
 import Link from 'next/link';
+import Card from '@/app/components/card';
 
 interface TabProps {
   label: string;

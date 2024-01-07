@@ -1,7 +1,7 @@
-import {fetchCompressorRecordsDays} from '../../api/heating';
-import DashboardGraph from './dashboard_graph';
-import {Suspense} from 'react';
-import Spinner from '../spinner';
+import React, {Suspense} from 'react';
+import {fetchCompressorRecordsDays} from '@/app/api/heating';
+import Graph from '@/app/components/dashboard/graph';
+import Spinner from '@/app/components/spinner';
 
 const CompressorUsageGraph = async () => {
   const records = await fetchCompressorRecordsDays(2);
@@ -13,7 +13,7 @@ const CompressorUsageGraph = async () => {
 
   return (
     <Suspense fallback={<Spinner className="flex-1 max-h-[45%] w-full" />}>
-      <DashboardGraph
+      <Graph
         className="flex-1 max-h-[45%] w-full"
         dateTimes={records.map(r => r.time)}
         values={records

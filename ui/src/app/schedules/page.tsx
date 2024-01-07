@@ -1,7 +1,8 @@
-import Card from '../components/card';
-import BoostingScheduleTable from '../components/schedules/boosting_schedule_table';
-import {BoostingScheduleVariable} from '../api/types';
-import {fetchBoostingSchedule} from '../api/heat_pump';
+import React from 'react';
+import {fetchBoostingSchedule} from '@/app/api/heat_pump';
+import {BoostingScheduleVariable} from '@/app/api/types';
+import Card from '@/app/components/card';
+import BoostingScheduleTable from '@/app/components/schedules/boosting_schedule_table';
 
 const SchedulesPage = async () => {
   const circuit3BoostingSchedule = await fetchBoostingSchedule(

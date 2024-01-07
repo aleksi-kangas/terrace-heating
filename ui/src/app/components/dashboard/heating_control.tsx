@@ -1,7 +1,7 @@
 import React, {Suspense} from 'react';
-import Spinner from '../spinner';
-import {fetchHeatingState} from '../../api/heating';
+import {fetchHeatingState} from '@/app/api/heating';
 import {HeatingState} from '@/app/api/types';
+import Spinner from '@/app/components/spinner';
 import Toggle from '@/app/components/toggle';
 
 const HeatingControl = async () => {

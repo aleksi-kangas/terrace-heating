@@ -1,3 +1,5 @@
+import React from 'react';
+
 const HorizontalDivider = () => {
   return (
     <div className="relative flex py-5 items-center w-11/12">

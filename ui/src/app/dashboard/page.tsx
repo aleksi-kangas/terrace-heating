@@ -1,10 +1,10 @@
-import Card from '../components/card';
-import CompressorUsageGraph from '../components/dashboard/compressor_usage_graph';
-import OutsideTemperatureGraph from '../components/dashboard/outside_temperature_graph';
-import HorizontalDivider from '../components/horizontal_divider';
 import React from 'react';
-import CompressorUsageGauge from '../components/dashboard/compressor_usage_gauge';
-import HeatingControl from '../components/dashboard/heating_control';
+import Card from '@/app/components/card';
+import HorizontalDivider from '@/app/components/horizontal_divider';
+import CompressorUsageGauge from '@/app/components/dashboard/compressor_usage_gauge';
+import CompressorUsageGraph from '@/app/components/dashboard/compressor_usage_graph';
+import HeatingControl from '@/app/components/dashboard/heating_control';
+import OutsideTemperatureGraph from '@/app/components/dashboard/outside_temperature_graph';
 
 const Dashboard = () => {
   return (

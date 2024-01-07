@@ -1,8 +1,8 @@
 import React, {Suspense} from 'react';
-import Spinner from '../spinner';
-import {Gauge} from '../gauge';
-import {fetchCompressorRecordsDays} from '../../api/heating';
-import {CompressorRecord} from '../../api/types';
+import {fetchCompressorRecordsDays} from '@/app/api/heating';
+import {CompressorRecord} from '@/app/api/types';
+import {Gauge} from '@/app/components/gauge';
+import Spinner from '@/app/components/spinner';
 
 const CompressorUsageGauge = async () => {
   const records = await fetchCompressorRecordsDays(2);

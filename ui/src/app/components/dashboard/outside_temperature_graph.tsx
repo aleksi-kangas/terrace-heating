@@ -1,7 +1,7 @@
-import {fetchHeatPumpRecordsDays} from '../../api/heating';
-import DashboardGraph from './dashboard_graph';
-import {Suspense} from 'react';
-import Spinner from '../spinner';
+import React, {Suspense} from 'react';
+import {fetchHeatPumpRecordsDays} from '@/app/api/heating';
+import Spinner from '@/app/components/spinner';
+import Graph from '@/app/components/dashboard/graph';
 
 const OutsideTemperatureGraph = async () => {
   const records = await fetchHeatPumpRecordsDays(2);
@@ -12,7 +12,7 @@ const OutsideTemperatureGraph = async () => {
 
   return (
     <Suspense fallback={<Spinner className="flex-1 max-h-[45%] w-full" />}>
-      <DashboardGraph
+      <Graph
         className="flex-1 max-h-[45%] w-full"
         dateTimes={records.map(r => r.time)}
         values={records.map(r => r.temperatures.outside)}
