@@ -1,14 +1,11 @@
 import React, {Suspense} from 'react';
 import Spinner from '../spinner';
 import {Gauge} from '../gauge';
-import {DateTime, Duration} from 'luxon';
-import {fetchCompressorRecords} from '../../api/heating';
+import {fetchCompressorRecordsDays} from '../../api/heating';
 import {CompressorRecord} from '../../api/types';
 
 const CompressorUsageGauge = async () => {
-  const from = DateTime.utc().minus(Duration.fromObject({days: 2}));
-  const to = DateTime.utc();
-  const records = await fetchCompressorRecords(from, to);
+  const records = await fetchCompressorRecordsDays(2);
 
   let currentUsage: number | undefined = undefined;
   const lastWithUsage = records

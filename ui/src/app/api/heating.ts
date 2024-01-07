@@ -4,7 +4,7 @@ import {URLSearchParams} from 'url';
 
 const baseUrl = 'http://host.docker.internal:8000/heating';
 
-export const fetchCompressorRecords = async (
+export const fetchCompressorRecordsRange = async (
   from: DateTime,
   to: DateTime
 ): Promise<CompressorRecord[]> => {
@@ -21,7 +21,15 @@ export const fetchCompressorRecords = async (
   return response.json();
 };
 
-export const fetchHeatPumpRecords = async (
+export const fetchCompressorRecordsDays = async (
+  days: number
+): Promise<CompressorRecord[]> => {
+  const to = DateTime.utc().set({second: 0});
+  const from = to.minus({days: days});
+  return fetchCompressorRecordsRange(from, to);
+};
+
+export const fetchHeatPumpRecordsRange = async (
   from: DateTime,
   to: DateTime
 ): Promise<HeatPumpRecord[]> => {
@@ -37,6 +45,14 @@ export const fetchHeatPumpRecords = async (
   }
   return response.json();
 };
+
+export const fetchHeatPumpRecordsDays = async (
+    days: number
+): Promise<HeatPumpRecord[]> => {
+    const to = DateTime.utc().set({second: 0});
+  const from = to.minus({days: days});
+  return fetchHeatPumpRecordsRange(from, to);
+}
 
 export const fetchHeatingState = async (): Promise<HeatingState> => {
   const url = `${baseUrl}/state`;

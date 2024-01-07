@@ -1,13 +1,15 @@
-import {DateTime, Duration} from 'luxon';
-import {fetchCompressorRecords} from '../../api/heating';
+import {fetchCompressorRecordsDays} from '../../api/heating';
 import DashboardGraph from './dashboard_graph';
 import {Suspense} from 'react';
 import Spinner from '../spinner';
 
 const CompressorUsageGraph = async () => {
-  const from = DateTime.utc().minus(Duration.fromObject({days: 2}));
-  const to = DateTime.utc();
-  const records = await fetchCompressorRecords(from, to);
+  const records = await fetchCompressorRecordsDays(2);
+  const xLimits =
+    records.length > 0
+      ? [records[0].time, records[records.length - 1].time]
+      : undefined;
+  const yLimits = [0, 100];
 
   return (
     <Suspense fallback={<Spinner className="flex-1 max-h-[45%] w-full" />}>
@@ -18,8 +20,8 @@ const CompressorUsageGraph = async () => {
           .filter(r => r.usage !== undefined)
           .map(r => r.usage! * 100)}
         label="Compressor Usage %"
-        xLimits={[from.toISO()!, to.toISO()!]}
-        yLimits={[0, 100]}
+        xLimits={xLimits}
+        yLimits={yLimits}
       />
     </Suspense>
   );
