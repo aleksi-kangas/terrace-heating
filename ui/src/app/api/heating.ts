@@ -24,7 +24,7 @@ export const fetchCompressorRecordsRange = async (
 export const fetchCompressorRecordsDays = async (
   days: number
 ): Promise<CompressorRecord[]> => {
-  const to = DateTime.utc().set({second: 0});
+  const to = DateTime.utc().set({second: 0, millisecond: 0});
   const from = to.minus({days: days});
   return fetchCompressorRecordsRange(from, to);
 };
@@ -49,10 +49,11 @@ export const fetchHeatPumpRecordsRange = async (
 export const fetchHeatPumpRecordsDays = async (
     days: number
 ): Promise<HeatPumpRecord[]> => {
-    const to = DateTime.utc().set({second: 0});
+  const to = DateTime.utc().set({second: 0, millisecond: 0});
   const from = to.minus({days: days});
+  console.log(from.toISO(), to.toISO());
   return fetchHeatPumpRecordsRange(from, to);
-}
+};
 
 export const fetchHeatingState = async (): Promise<HeatingState> => {
   const url = `${baseUrl}/state`;
