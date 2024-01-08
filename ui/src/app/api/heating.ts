@@ -1,6 +1,13 @@
-import {CompressorRecord, HeatingState, HeatPumpRecord} from '@/app/api/types';
+'use server';
 import {DateTime} from 'luxon';
+import {revalidateTag} from 'next/cache';
 import {URLSearchParams} from 'url';
+import {
+  CacheTags,
+  CompressorRecord,
+  HeatingState,
+  HeatPumpRecord,
+} from '@/app/api/types';
 
 const baseUrl = 'http://host.docker.internal:8000/heating';
 
@@ -55,13 +62,7 @@ export const fetchHeatPumpRecordsDays = async (
   return fetchHeatPumpRecordsRange(from, to);
 };
 
-export const fetchHeatingState = async (): Promise<HeatingState> => {
-  const url = `${baseUrl}/state`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error();
-  }
-  const state = await response.json();
+const parseHeatingState = (state: number): HeatingState => {
   switch (state) {
     case HeatingState.Inactive:
       return HeatingState.Inactive;
@@ -74,4 +75,36 @@ export const fetchHeatingState = async (): Promise<HeatingState> => {
     default:
       throw new Error('Unknown heating state');
   }
+};
+
+export const fetchHeatingState = async (): Promise<HeatingState> => {
+  const url = `${baseUrl}/state`;
+  const response = await fetch(url, {next: {tags: [CacheTags.HeatinState]}});
+  if (!response.ok) {
+    throw new Error();
+  }
+  const state = await response.json();
+  return parseHeatingState(state);
+};
+
+export const startHeating = async (): Promise<HeatingState> => {
+  const url = `${baseUrl}/start`;
+  const response = await fetch(url, {method: 'POST'});
+  if (!response.ok) {
+    throw new Error();
+  }
+  const state = await response.json();
+  revalidateTag(CacheTags.HeatinState);
+  return parseHeatingState(state);
+};
+
+export const stopHeating = async (): Promise<HeatingState> => {
+  const url = `${baseUrl}/stop`;
+  const response = await fetch(url, {method: 'POST'});
+  if (!response.ok) {
+    throw new Error();
+  }
+  const state = await response.json();
+  revalidateTag(CacheTags.HeatinState);
+  return parseHeatingState(state);
 };

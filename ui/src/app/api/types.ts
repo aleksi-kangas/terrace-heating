@@ -13,6 +13,10 @@ export interface BoostingSchedule {
   sunday: WeekdayBoostingSchedule;
 }
 
+export enum CacheTags {
+  HeatinState = 'heatingState',
+}
+
 export interface CompressorRecord {
   active: boolean;
   time: string;

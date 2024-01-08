@@ -1,8 +1,8 @@
 import React, {Suspense} from 'react';
-import {fetchHeatingState} from '@/app/api/heating';
+import {fetchHeatingState, startHeating, stopHeating} from '@/app/api/heating';
 import {HeatingState} from '@/app/api/types';
 import Spinner from '@/app/components/spinner';
-import Toggle from '@/app/components/toggle';
+import HeatingToggle from '@/app/components/dashboard/heating_toggle';
 
 const HeatingControl = async () => {
   const heatingState = await fetchHeatingState();
@@ -42,7 +42,7 @@ const HeatingControl = async () => {
       <div className="flex-1 max-h-[45%] w-full p-8 flex flex-col items-center justify-center">
         <div className="text-lg font-semibold p-4 pb-1">{statusText}</div>
         <div className="text-sm font-semibold p-4 pt-1">{extraStatusText}</div>
-        <Toggle />
+        <HeatingToggle heatingState={heatingState} />
         {heatingState === HeatingState.SoftStarting && (
           <button
             type="button"
