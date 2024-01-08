@@ -41,7 +41,7 @@ public class HeatingController : ApiController {
     return Ok(result);
   }
 
-  [HttpGet("start")]
+  [HttpPost("start")]
   public IActionResult Start([FromQuery] StartRequest request) {
     var result = _heatingService.Start(request.SoftStart);
     return result.Match(
@@ -49,7 +49,7 @@ public class HeatingController : ApiController {
       onError: Problem);
   }
 
-  [HttpGet("stop")]
+  [HttpPost("stop")]
   public IActionResult Stop() {
     var result = _heatingService.Stop();
     return result.Match(
