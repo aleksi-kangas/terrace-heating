@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from '@/app/components/card';
-import GraphSelector from '../components/graphs/graph_selector';
+import DaysSelector from '@/app/components/graphs/days_selector';
+import GraphSelector from '@/app/components/graphs/graph_selector';
 
 const GraphsLayout = ({children}: {children: React.ReactNode}) => {
   return (
@@ -15,6 +16,13 @@ const GraphsLayout = ({children}: {children: React.ReactNode}) => {
       <Card className="flex-1 h-44 w-full p-8 flex justify-center items-center">
         {children}
       </Card>
+      <DaysSelector
+        tabItems={[
+          {href: '?days=7', label: '7 Days'},
+          {href: '?days=2', label: '2 Days'},
+          {href: '?days=1', label: '1 Day'},
+        ]}
+      />
     </div>
   );
 };
