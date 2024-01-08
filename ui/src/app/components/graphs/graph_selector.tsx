@@ -13,8 +13,8 @@ const Tab = ({active, label, href}: TabProps) => {
   let styles =
     'flex items-center justify-center gap-2 rounded-lg px-3 py-2 font-semibold';
   const inactiveStyles =
-    ' text-gray-400 hover:shadow hover:bg-gray-600 hover:text-white';
-  const activeStyles = ' text-white bg-gray-600';
+    ' text-gray-400 hover:shadow hover:bg-gray-700 hover:text-white';
+  const activeStyles = ' text-white bg-gray-900';
   styles = active ? styles.concat(activeStyles) : styles.concat(inactiveStyles);
   return (
     <li className="flex-1">
