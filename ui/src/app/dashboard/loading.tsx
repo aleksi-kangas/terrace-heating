@@ -11,8 +11,10 @@ const DashboardLoading = () => {
         <HorizontalDivider />
         <Spinner className="flex-1 max-h-96" />
       </Card>
-      <Card className="col-span-full md:col-span-1 flex-col justify-evenly items-center">
-        TODO...
+      <Card className="col-span-full md:col-span-1 flex flex-col justify-evenly items-center">
+        <Spinner className="flex-1 max-h-96" />
+        <HorizontalDivider />
+        <Spinner className="flex-1 max-h-96" />
       </Card>
     </div>
   );
