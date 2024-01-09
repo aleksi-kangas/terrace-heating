@@ -5,14 +5,19 @@ import {HeatingState} from '@/app/api/types';
 
 interface HeatingToggleProps {
   heatingState: HeatingState;
+  outsideTemperature: number;
 }
 
-const HeatingToggle = ({heatingState}: HeatingToggleProps) => {
+const HeatingToggle = ({
+  heatingState,
+  outsideTemperature,
+}: HeatingToggleProps) => {
   const toggleHeating = async () => {
     switch (heatingState) {
       case HeatingState.Inactive:
         {
-          await startHeating();
+          const softStart = outsideTemperature < 10.0;
+          await startHeating(softStart);
         }
         break;
       case HeatingState.SoftStarting:
@@ -27,16 +32,12 @@ const HeatingToggle = ({heatingState}: HeatingToggleProps) => {
     }
   };
 
-  const handleCheckboxChange = () => {
-    toggleHeating();
-  };
-
   return (
     <label className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center">
       <input
         type="checkbox"
         checked={heatingState !== HeatingState.Inactive}
-        onChange={handleCheckboxChange}
+        onChange={toggleHeating}
         className="sr-only"
       />
       <span
