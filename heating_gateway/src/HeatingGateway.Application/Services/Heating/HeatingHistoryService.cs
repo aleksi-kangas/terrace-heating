@@ -38,7 +38,7 @@ public class HeatingHistoryService : IHeatingHistoryService {
       return FromIsAfterTo;
     try {
       var records = await _heatPumpRecordRepository.FindByDateTimeRangeAsync(from, to);
-      return ErrorOrFactory.From(records.ToList());
+      return ErrorOrFactory.From(records);
     } catch (Exception e) {
       return Error.Failure(description: e.Message);
     }

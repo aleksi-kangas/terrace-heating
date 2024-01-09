@@ -30,7 +30,7 @@ public class HeatingHistoryServiceTest {
     var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
 
     mockHeatPumpRecordRepository
-      .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime, It.IsAny<bool>()))
+      .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime))
       .ReturnsAsync(heatPumpRecords);
 
     var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
@@ -91,7 +91,7 @@ public class HeatingHistoryServiceTest {
     };
     var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
     mockHeatPumpRecordRepository
-      .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime, false))
+      .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime))
       .ReturnsAsync(heatPumpRecords);
     var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
 
