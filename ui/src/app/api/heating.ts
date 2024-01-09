@@ -87,8 +87,10 @@ export const fetchHeatingState = async (): Promise<HeatingState> => {
   return parseHeatingState(state);
 };
 
-export const startHeating = async (): Promise<HeatingState> => {
-  const url = `${baseUrl}/start`;
+export const startHeating = async (
+  softStart: boolean
+): Promise<HeatingState> => {
+  const url = `${baseUrl}/start?soft-start=${softStart}`;
   const response = await fetch(url, {method: 'POST'});
   if (!response.ok) {
     throw new Error();
