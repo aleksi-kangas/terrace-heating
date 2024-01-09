@@ -23,10 +23,7 @@ public class HeatingHistoryService : IHeatingHistoryService {
         return FromIsAfterTo;
       return Error.Failure(description: heatPumpRecords.FirstError.Description);
     }
-
-    var compressorRecords = heatPumpRecords.Value
-      .Select(r => r.Compressor).Where(c => c.Usage.HasValue);
-    return ErrorOrFactory.From(compressorRecords.ToList());
+    return ErrorOrFactory.From(heatPumpRecords.Value.Select(r => r.Compressor).ToList());
   }
 
   public async Task<ErrorOr<List<HeatPumpRecord>>> GetHeatPumpRecordsDateTimeRangeAsync(
