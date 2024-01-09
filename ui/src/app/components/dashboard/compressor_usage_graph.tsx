@@ -17,11 +17,16 @@ const CompressorUsageGraph = async () => {
         className="flex-1 max-h-[45%] w-full"
         dateTimes={records.map(r => r.time)}
         values={records
-          .filter(r => r.usage !== undefined)
+          .filter(r => r.usage !== null)
           .map(r => r.usage! * 100)}
         label="Compressor Usage %"
         xLimits={xLimits}
         yLimits={yLimits}
+        fill={{
+          target: 'origin',
+          above: 'rgba(110, 160, 176, 0.4)',
+        }}
+        stepped="after"
       />
     </Suspense>
   );

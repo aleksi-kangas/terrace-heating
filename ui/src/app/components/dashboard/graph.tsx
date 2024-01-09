@@ -20,6 +20,11 @@ interface GraphProps {
   label: string;
   xLimits?: string[];
   yLimits?: number[];
+  fill?: {
+    target: string;
+    above: string;
+  },
+  stepped?: "before" | "after" | "middle" | boolean;
 }
 
 const Graph = ({
@@ -29,6 +34,8 @@ const Graph = ({
   label,
   xLimits,
   yLimits,
+  fill,
+  stepped,
 }: GraphProps): React.JSX.Element => {
   const styles = 'p-8 flex justify-center items-center';
   className = className ? styles.concat(' ', className) : styles;
@@ -48,6 +55,8 @@ const Graph = ({
           pointRadius: 2,
           showLine: true,
           spanGaps: false,
+          fill: fill ? fill : false,
+          stepped: stepped ? stepped : false,
         },
       ],
     }),
@@ -91,12 +100,14 @@ const Graph = ({
             min: yLimits[0],
             max: yLimits[1],
           }),
+          grace: '2%',
           type: 'linear',
         },
       },
     }),
     [xLimits, yLimits]
   );
+
   return (
     <div className={className}>
       {isLoading && <Spinner className="absolute" />}
