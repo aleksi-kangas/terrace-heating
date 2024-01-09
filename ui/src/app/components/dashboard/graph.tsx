@@ -95,7 +95,7 @@ const Graph = ({
         },
       },
     }),
-    []
+    [xLimits, yLimits]
   );
   return (
     <div className={className}>

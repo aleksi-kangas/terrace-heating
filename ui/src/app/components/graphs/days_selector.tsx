@@ -3,13 +3,6 @@ import React from 'react';
 import Link from 'next/link';
 import {usePathname, useSearchParams} from 'next/navigation';
 
-interface DaysSelectorProps {
-  tabItems: {
-    href: string;
-    label: string;
-  }[];
-}
-
 const commonStyles = 'px-4 py-2 text-sm border-gray-200 shadow-md';
 const inactiveStyles = ' font-medium text-gray-900 bg-white hover:bg-gray-100';
 const activeStyles = ' font-semibold text-white bg-[rgb(31,41,55)]';
@@ -18,7 +11,7 @@ const isActive = (daysQuery: string | null, days: number) => {
   return daysQuery !== null ? daysQuery === days.toString() : days === 2;
 };
 
-const DaysSelector = ({tabItems}: DaysSelectorProps) => {
+const DaysSelector = () => {
   const activeUrl = usePathname();
   const searchParams = useSearchParams();
   const daysQuery = searchParams.get('days');

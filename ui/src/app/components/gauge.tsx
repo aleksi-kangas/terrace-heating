@@ -41,7 +41,7 @@ export const Gauge = ({
   };
 
   return (
-    <div className={styles}>
+    <div className={className}>
       <svg
         fill="none"
         shapeRendering="crispEdges"

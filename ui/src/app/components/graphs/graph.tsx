@@ -9,13 +9,11 @@ import {
 import 'chartjs-adapter-luxon';
 import {Line} from 'react-chartjs-2';
 import {DateTime} from 'luxon';
-import Card from '@/app/components/card';
 import Spinner from '@/app/components/spinner';
 
 ChartJS.register(...registerables);
 
 interface DashboardGraphProps {
-  className?: string;
   dateTimes: string[];
   series: {
     color: string;
@@ -24,14 +22,7 @@ interface DashboardGraphProps {
   }[];
 }
 
-const Graph = ({
-  className,
-  dateTimes,
-  series,
-}: DashboardGraphProps): React.JSX.Element => {
-  const styles = 'p-8 flex justify-center items-center';
-  className = className ? styles.concat(' ', className) : styles;
-
+const Graph = ({dateTimes, series}: DashboardGraphProps): React.JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const data: ChartData<'line'> = useMemo(
