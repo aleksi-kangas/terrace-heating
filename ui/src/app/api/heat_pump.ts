@@ -1,4 +1,8 @@
-import {BoostingSchedule, BoostingScheduleVariable} from '@/app/api/types';
+import {
+  BoostingSchedule,
+  BoostingScheduleVariable,
+  Temperatures,
+} from '@/app/api/types';
 
 const baseUrl = 'http://host.docker.internal:8000/heat-pump';
 
@@ -21,3 +25,13 @@ export const fetchBoostingSchedule = async (
   }
   return response.json();
 };
+
+export const fetchCurrentHeatPumpTemperatures =
+  async (): Promise<Temperatures> => {
+    const url = `${baseUrl}/temperatures`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error();
+    }
+    return response.json();
+  };
