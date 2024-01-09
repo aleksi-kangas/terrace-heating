@@ -44,31 +44,38 @@ public class QueryHeatPumpRecordJob : IScheduledJob {
       var heatPumpService = scope.ServiceProvider.GetRequiredService<HeatPumpService>();
 
       var compressorActive = await heatPumpService.IsCompressorActiveAsync();
-      if (compressorActive.IsError) {
+      if (compressorActive.IsError)
         throw new Exception(compressorActive.FirstError.Description);
-      }
 
       var now = DateTime.UtcNow;
       var time = RoundToNearestMinute(now);
-      _logger.LogCritical("PARSING TIME: {time}", time);
 
       var previous = await heatPumpRecordRepository.FindLatestBeforeAsync(time);
       if (previous is null)
         return new Compressor(compressorActive.Value, null);
-
+      
       if (previous.Compressor.Active == compressorActive.Value)
-        return Errors.Compressor.UnableToComputeUsage;
-
-      var b = await heatPumpRecordRepository.FindLatestBeforeAsync(time, !compressorActive.Value);
+        return new Compressor(compressorActive.Value, null);
+      
+      // At this point, the compressor has gone 0 -> 1 or 1 -> 0, i.e. the (approximate) state has changed
+      // Compute usage as follows:
+      // Let C be the current moment, let B be the previous state change (0 -> 1 or 1 -> 0) and, let A be the state change before B.
+      // e.g.       A           B       C
+      //      0 0 0 1 1 1 1 1 1 0 0 0 0 1
+      // We shall compute the proportion p = [A, B] / [A, C].
+      // Then, the usage is either p or (1.0 - p) depending on the current state C. 
+      
+      var b = await heatPumpRecordRepository.FindLatestBeforeAsync(time, !compressorActive.Value, hasUsage: true);
       if (b is null)
-        return new Compressor(compressorActive.Value, null);
-
-      var a = await heatPumpRecordRepository.FindLatestBeforeAsync(b.Time, compressorActive.Value);
+        return new Compressor(compressorActive.Value, compressorActive.Value ? 0.0 : 1.0);
+      
+      var a = await heatPumpRecordRepository.FindLatestBeforeAsync(b.Time, compressorActive.Value, hasUsage: true);
       if (a is null)
-        return new Compressor(compressorActive.Value, null);
-
+        return new Compressor(compressorActive.Value, compressorActive.Value ? 1.0 : 0.0);
+      
       var ab = (b.Time - a.Time).TotalMinutes;
       var ac = (time - a.Time).TotalMinutes;
+      
       return new Compressor(compressorActive.Value,
         compressorActive.Value
           ? ab / ac
