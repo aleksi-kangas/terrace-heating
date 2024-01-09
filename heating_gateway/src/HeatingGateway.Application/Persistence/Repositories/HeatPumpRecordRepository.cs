@@ -8,7 +8,7 @@ public class HeatPumpRecordRepository : RepositoryBase<HeatPumpRecord>, IHeatPum
   public Task<List<HeatPumpRecord>> FindByDateTimeRangeAsync(DateTime from, DateTime to) {
     return Task.FromResult(Context.HeatPumpRecords
       .Where(r => from <= r.Time && r.Time <= to)
-      .OrderByDescending(r => r.Time).ToList());
+      .OrderBy(r => r.Time).ToList());
   }
 
   public Task<HeatPumpRecord?>
