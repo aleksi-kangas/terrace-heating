@@ -14,6 +14,7 @@ export interface BoostingSchedule {
 }
 
 export enum CacheTags {
+  BoostingSchedules = 'boostingSchedules',
   HeatingState = 'heatingState',
 }
 

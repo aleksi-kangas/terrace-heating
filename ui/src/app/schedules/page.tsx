@@ -16,14 +16,14 @@ const SchedulesPage = async () => {
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="col-span-full md:col-span-1 flex flex-col justify-center items-center">
           <BoostingScheduleTable
+            boostingScheduleVariable={BoostingScheduleVariable.Circuit3}
             boostingSchedule={circuit3BoostingSchedule}
-            title="Circuit 3"
           />
         </Card>
         <Card className="col-span-full md:col-span-1 flex flex-col justify-center items-center">
           <BoostingScheduleTable
+            boostingScheduleVariable={BoostingScheduleVariable.LowerTank}
             boostingSchedule={lowerTankBoostingSchedule}
-            title="Lower Tank"
           />
         </Card>
       </div>
