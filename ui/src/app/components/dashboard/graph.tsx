@@ -60,7 +60,7 @@ const Graph = ({
         },
       ],
     }),
-    [dateTimes, values, label]
+    [dateTimes, values, label, fill, stepped]
   );
   const options: ChartOptions<'line'> = useMemo(
     () => ({

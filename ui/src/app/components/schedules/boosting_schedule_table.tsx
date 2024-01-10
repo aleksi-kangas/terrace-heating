@@ -2,7 +2,7 @@
 import React, {FormEvent, useMemo, useState} from 'react';
 import {BoostingSchedule, BoostingScheduleVariable} from '@/app/api/types';
 import {updateBoostingSchedule} from '../../api/heat_pump';
-import Spinner from "../spinner";
+import Spinner from '../spinner';
 
 interface FormElements extends HTMLFormControlsCollection {
   mondayStartHour: HTMLInputElement;
@@ -221,7 +221,11 @@ const BoostingScheduleTable = ({
       </table>
       <div className="flex justify-start items-center p-2 pb-0">
         <span>Edit</span>
-        <label className={"relative inline-flex cursor-pointer select-none items-center".concat(updating ? " opacity-50 cursor-not-allowed" : "")}>
+        <label
+          className={'relative inline-flex cursor-pointer select-none items-center'.concat(
+            updating ? ' opacity-50 cursor-not-allowed' : ''
+          )}
+        >
           <input
             type="checkbox"
             checked={editing}
@@ -243,14 +247,14 @@ const BoostingScheduleTable = ({
         {editing && (
           <button
             type="submit"
-            className={"bg-[rgb(31,41,55)] text-white font-bold py-1 px-3 rounded".concat(updating ? " opacity-50 cursor-not-allowed" : "")}
+            className={'bg-[rgb(31,41,55)] text-white font-bold py-1 px-3 rounded'.concat(
+              updating ? ' opacity-50 cursor-not-allowed' : ''
+            )}
           >
             Save
           </button>
         )}
-        {updating && (
-          <Spinner className="px-3" />
-        )}
+        {updating && <Spinner className="px-3" />}
       </div>
     </form>
   );
