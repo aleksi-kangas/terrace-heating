@@ -54,11 +54,10 @@ export const fetchHeatPumpRecordsRange = async (
 };
 
 export const fetchHeatPumpRecordsDays = async (
-    days: number
+  days: number
 ): Promise<HeatPumpRecord[]> => {
   const to = DateTime.utc().set({second: 0, millisecond: 0});
   const from = to.minus({days: days});
-  console.log(from.toISO(), to.toISO());
   return fetchHeatPumpRecordsRange(from, to);
 };
 
@@ -79,7 +78,7 @@ const parseHeatingState = (state: number): HeatingState => {
 
 export const fetchHeatingState = async (): Promise<HeatingState> => {
   const url = `${baseUrl}/state`;
-  const response = await fetch(url, {next: {tags: [CacheTags.HeatinState]}});
+  const response = await fetch(url, {next: {tags: [CacheTags.HeatingState]}});
   if (!response.ok) {
     throw new Error();
   }
@@ -96,7 +95,7 @@ export const startHeating = async (
     throw new Error();
   }
   const state = await response.json();
-  revalidateTag(CacheTags.HeatinState);
+  revalidateTag(CacheTags.HeatingState);
   return parseHeatingState(state);
 };
 
@@ -107,6 +106,6 @@ export const stopHeating = async (): Promise<HeatingState> => {
     throw new Error();
   }
   const state = await response.json();
-  revalidateTag(CacheTags.HeatinState);
+  revalidateTag(CacheTags.HeatingState);
   return parseHeatingState(state);
 };

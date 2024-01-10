@@ -16,9 +16,7 @@ const CompressorUsageGraph = async () => {
       <Graph
         className="flex-1 max-h-[45%] w-full"
         dateTimes={records.map(r => r.time)}
-        values={records
-          .filter(r => r.usage !== null)
-          .map(r => r.usage! * 100)}
+        values={records.filter(r => r.usage !== null).map(r => r.usage! * 100)}
         label="Compressor Usage %"
         xLimits={xLimits}
         yLimits={yLimits}

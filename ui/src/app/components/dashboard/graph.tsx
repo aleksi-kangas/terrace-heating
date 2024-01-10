@@ -23,8 +23,8 @@ interface GraphProps {
   fill?: {
     target: string;
     above: string;
-  },
-  stepped?: "before" | "after" | "middle" | boolean;
+  };
+  stepped?: 'before' | 'after' | 'middle' | boolean;
 }
 
 const Graph = ({
