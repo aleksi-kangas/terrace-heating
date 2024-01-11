@@ -7,6 +7,12 @@ import {
 } from '@/app/api/types';
 import {revalidateTag} from 'next/cache';
 
+interface NextRequestInit extends RequestInit {
+  next: {
+    tags: string[];
+  };
+}
+
 const baseUrl = 'http://host.docker.internal:8000/heat-pump';
 
 export const fetchBoostingSchedule = async (
@@ -28,9 +34,10 @@ export const fetchBoostingSchedule = async (
       throw new Error('Unknown boosting schedule variable');
   }
   const url = `${baseUrl}/schedules/${boostingScheduleVariableUrl}`;
-  const response = await fetch(url, {
+  const options: NextRequestInit = {
     next: {tags: [CacheTags.BoostingSchedules]},
-  });
+  };
+  const response = await fetch(url, options);
   if (!response.ok) {
     throw new Error();
   }

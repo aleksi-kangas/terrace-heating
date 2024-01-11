@@ -9,6 +9,12 @@ import {
   HeatPumpRecord,
 } from '@/app/api/types';
 
+interface NextRequestInit extends RequestInit {
+  next: {
+    tags: string[];
+  };
+}
+
 const baseUrl = 'http://host.docker.internal:8000/heating';
 
 export const fetchCompressorRecordsRange = async (
@@ -78,7 +84,10 @@ const parseHeatingState = (state: number): HeatingState => {
 
 export const fetchHeatingState = async (): Promise<HeatingState> => {
   const url = `${baseUrl}/state`;
-  const response = await fetch(url, {next: {tags: [CacheTags.HeatingState]}});
+  const options: NextRequestInit = {
+    next: {tags: [CacheTags.HeatingState]},
+  };
+  const response = await fetch(url, options);
   if (!response.ok) {
     throw new Error();
   }
