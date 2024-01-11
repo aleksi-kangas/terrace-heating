@@ -29,7 +29,7 @@ constexpr communicator::BoostingSchedule kLowerTankBoostingSchedule{
     .sunday = {14, 21, 7}};
 
 class HeatPumpServiceTest : public Test {
- protected:ø
+ protected:
   HeatPumpServiceTest() {
     auto mockCommunicator = std::make_unique<MockCommunicator>();
     mockCommunicator_ = mockCommunicator.get();
