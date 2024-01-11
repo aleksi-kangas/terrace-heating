@@ -1,4 +1,6 @@
+.dockerignore
 .idea
 .next
 build
+Dockerfile
 node_modules
