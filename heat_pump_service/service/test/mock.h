@@ -7,12 +7,9 @@
 class MockCommunicator : public communicator::ICommunicator {
  public:
   MOCK_METHOD(uint32_t, ActiveCircuitCount, (), (const, override));
-  MOCK_METHOD(communicator::BoostingSchedule, ReadCircuit3BoostingSchedule, (),
-              (const, override));
-  MOCK_METHOD(communicator::BoostingSchedule, ReadLowerTankBoostingSchedule, (),
-              (const, override));
-  MOCK_METHOD(communicator::Temperatures, ReadTemperatures, (),
-              (const, override));
+  MOCK_METHOD(communicator::BoostingSchedule, ReadCircuit3BoostingSchedule, (), (const, override));
+  MOCK_METHOD(communicator::BoostingSchedule, ReadLowerTankBoostingSchedule, (), (const, override));
+  MOCK_METHOD(communicator::Temperatures, ReadTemperatures, (), (const, override));
   MOCK_METHOD(communicator::TankLimits, ReadTankLimits, (), (const, override));
   MOCK_METHOD(bool, IsCompressorActive, (), (const, override));
   MOCK_METHOD(bool, IsSchedulingEnabled, (), (const, override));

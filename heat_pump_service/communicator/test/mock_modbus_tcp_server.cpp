@@ -6,13 +6,11 @@
 
 using namespace communicator;
 
-MockModbusTCPServer::MockModbusTCPServer(std::atomic<bool>& stop)
-    : stop_{stop} {
+MockModbusTCPServer::MockModbusTCPServer(std::atomic<bool>& stop) : stop_{stop} {
   context_ = modbus_new_tcp(nullptr, MODBUS_TCP_DEFAULT_PORT);
   if (context_ == nullptr)
     throw std::runtime_error{"Failed to create modbus context"};
-  constexpr int32_t kLastBit =
-      std::max({addresses::miscellaneous::kSchedulingEnabled});
+  constexpr int32_t kLastBit = std::max({addresses::miscellaneous::kSchedulingEnabled});
   constexpr int32_t kLastAddress = std::max({
       addresses::miscellaneous::kActiveCircuitCount,
       addresses::miscellaneous::kCompressorActive,
@@ -65,71 +63,43 @@ std::thread MockModbusTCPServer::Run() {
 void MockModbusTCPServer::InitializeMapping() {
   std::lock_guard<std::mutex> lock{mutex_};
 
-  mapping_->tab_registers[addresses::miscellaneous::kActiveCircuitCount] =
-      static_cast<uint16_t>(kActiveCircuitCount);
-  mapping_->tab_registers[addresses::miscellaneous::kCompressorActive] =
-      static_cast<uint16_t>(kIsCompressorActive);
+  mapping_->tab_registers[addresses::miscellaneous::kActiveCircuitCount] = static_cast<uint16_t>(kActiveCircuitCount);
+  mapping_->tab_registers[addresses::miscellaneous::kCompressorActive] = static_cast<uint16_t>(kIsCompressorActive);
 
-  mapping_->tab_bits[addresses::miscellaneous::kSchedulingEnabled] =
-      static_cast<uint8_t>(kIsSchedulingEnabled);
+  mapping_->tab_bits[addresses::miscellaneous::kSchedulingEnabled] = static_cast<uint8_t>(kIsSchedulingEnabled);
 
-  auto InitializeBoostingSchedule =
-      [this](const addresses::boosting_schedules::BoostingScheduleAddresses&
-                 addresses,
-             const BoostingSchedule& schedule) {
-        mapping_->tab_registers[addresses.monday.start_hour] =
-            static_cast<uint16_t>(schedule.monday.start_hour);
-        mapping_->tab_registers[addresses.monday.end_hour] =
-            static_cast<uint16_t>(schedule.monday.end_hour);
-        mapping_->tab_registers[addresses.monday.delta] =
-            static_cast<uint16_t>(schedule.monday.temperature_delta);
+  auto InitializeBoostingSchedule = [this](const addresses::boosting_schedules::BoostingScheduleAddresses& addresses,
+                                           const BoostingSchedule& schedule) {
+    mapping_->tab_registers[addresses.monday.start_hour] = static_cast<uint16_t>(schedule.monday.start_hour);
+    mapping_->tab_registers[addresses.monday.end_hour] = static_cast<uint16_t>(schedule.monday.end_hour);
+    mapping_->tab_registers[addresses.monday.delta] = static_cast<uint16_t>(schedule.monday.temperature_delta);
 
-        mapping_->tab_registers[addresses.tuesday.start_hour] =
-            static_cast<uint16_t>(schedule.tuesday.start_hour);
-        mapping_->tab_registers[addresses.tuesday.end_hour] =
-            static_cast<uint16_t>(schedule.tuesday.end_hour);
-        mapping_->tab_registers[addresses.tuesday.delta] =
-            static_cast<uint16_t>(schedule.tuesday.temperature_delta);
+    mapping_->tab_registers[addresses.tuesday.start_hour] = static_cast<uint16_t>(schedule.tuesday.start_hour);
+    mapping_->tab_registers[addresses.tuesday.end_hour] = static_cast<uint16_t>(schedule.tuesday.end_hour);
+    mapping_->tab_registers[addresses.tuesday.delta] = static_cast<uint16_t>(schedule.tuesday.temperature_delta);
 
-        mapping_->tab_registers[addresses.wednesday.start_hour] =
-            static_cast<uint16_t>(schedule.wednesday.start_hour);
-        mapping_->tab_registers[addresses.wednesday.end_hour] =
-            static_cast<uint16_t>(schedule.wednesday.end_hour);
-        mapping_->tab_registers[addresses.wednesday.delta] =
-            static_cast<uint16_t>(schedule.wednesday.temperature_delta);
+    mapping_->tab_registers[addresses.wednesday.start_hour] = static_cast<uint16_t>(schedule.wednesday.start_hour);
+    mapping_->tab_registers[addresses.wednesday.end_hour] = static_cast<uint16_t>(schedule.wednesday.end_hour);
+    mapping_->tab_registers[addresses.wednesday.delta] = static_cast<uint16_t>(schedule.wednesday.temperature_delta);
 
-        mapping_->tab_registers[addresses.thursday.start_hour] =
-            static_cast<uint16_t>(schedule.thursday.start_hour);
-        mapping_->tab_registers[addresses.thursday.end_hour] =
-            static_cast<uint16_t>(schedule.thursday.end_hour);
-        mapping_->tab_registers[addresses.thursday.delta] =
-            static_cast<uint16_t>(schedule.thursday.temperature_delta);
+    mapping_->tab_registers[addresses.thursday.start_hour] = static_cast<uint16_t>(schedule.thursday.start_hour);
+    mapping_->tab_registers[addresses.thursday.end_hour] = static_cast<uint16_t>(schedule.thursday.end_hour);
+    mapping_->tab_registers[addresses.thursday.delta] = static_cast<uint16_t>(schedule.thursday.temperature_delta);
 
-        mapping_->tab_registers[addresses.friday.start_hour] =
-            static_cast<uint16_t>(schedule.friday.start_hour);
-        mapping_->tab_registers[addresses.friday.end_hour] =
-            static_cast<uint16_t>(schedule.friday.end_hour);
-        mapping_->tab_registers[addresses.friday.delta] =
-            static_cast<uint16_t>(schedule.friday.temperature_delta);
+    mapping_->tab_registers[addresses.friday.start_hour] = static_cast<uint16_t>(schedule.friday.start_hour);
+    mapping_->tab_registers[addresses.friday.end_hour] = static_cast<uint16_t>(schedule.friday.end_hour);
+    mapping_->tab_registers[addresses.friday.delta] = static_cast<uint16_t>(schedule.friday.temperature_delta);
 
-        mapping_->tab_registers[addresses.saturday.start_hour] =
-            static_cast<uint16_t>(schedule.saturday.start_hour);
-        mapping_->tab_registers[addresses.saturday.end_hour] =
-            static_cast<uint16_t>(schedule.saturday.end_hour);
-        mapping_->tab_registers[addresses.saturday.delta] =
-            static_cast<uint16_t>(schedule.saturday.temperature_delta);
+    mapping_->tab_registers[addresses.saturday.start_hour] = static_cast<uint16_t>(schedule.saturday.start_hour);
+    mapping_->tab_registers[addresses.saturday.end_hour] = static_cast<uint16_t>(schedule.saturday.end_hour);
+    mapping_->tab_registers[addresses.saturday.delta] = static_cast<uint16_t>(schedule.saturday.temperature_delta);
 
-        mapping_->tab_registers[addresses.sunday.start_hour] =
-            static_cast<uint16_t>(schedule.sunday.start_hour);
-        mapping_->tab_registers[addresses.sunday.end_hour] =
-            static_cast<uint16_t>(schedule.sunday.end_hour);
-        mapping_->tab_registers[addresses.sunday.delta] =
-            static_cast<uint16_t>(schedule.sunday.temperature_delta);
-      };
-  InitializeBoostingSchedule(addresses::boosting_schedules::kCircuit3,
-                             kCircuit3BoostingSchedule);
-  InitializeBoostingSchedule(addresses::boosting_schedules::kLowerTank,
-                             kLowerTankBoostingSchedule);
+    mapping_->tab_registers[addresses.sunday.start_hour] = static_cast<uint16_t>(schedule.sunday.start_hour);
+    mapping_->tab_registers[addresses.sunday.end_hour] = static_cast<uint16_t>(schedule.sunday.end_hour);
+    mapping_->tab_registers[addresses.sunday.delta] = static_cast<uint16_t>(schedule.sunday.temperature_delta);
+  };
+  InitializeBoostingSchedule(addresses::boosting_schedules::kCircuit3, kCircuit3BoostingSchedule);
+  InitializeBoostingSchedule(addresses::boosting_schedules::kLowerTank, kLowerTankBoostingSchedule);
 
   auto InitializeTankLimits = [this](const TankLimits& limits) {
     mapping_->tab_registers[addresses::tank_limits::kLowerTankMinimum] =
@@ -155,24 +125,14 @@ void MockModbusTCPServer::InitializeMapping() {
     return static_cast<uint16_t>(temperature * 10);
   };
 
-  mapping_->tab_registers[addresses::temperatures::kCircuit1] =
-      TemperatureFloatToUInt16(kCircuit1Temperature);
-  mapping_->tab_registers[addresses::temperatures::kCircuit2] =
-      TemperatureFloatToUInt16(kCircuit2Temperature);
-  mapping_->tab_registers[addresses::temperatures::kCircuit3] =
-      TemperatureFloatToUInt16(kCircuit3Temperature);
-  mapping_->tab_registers[addresses::temperatures::kGroundInput] =
-      TemperatureFloatToUInt16(kGroundInputTemperature);
-  mapping_->tab_registers[addresses::temperatures::kGroundOutput] =
-      TemperatureFloatToUInt16(kGroundOutputTemperature);
-  mapping_->tab_registers[addresses::temperatures::kHotGas] =
-      TemperatureFloatToUInt16(kHotGasTemperature);
-  mapping_->tab_registers[addresses::temperatures::kInside] =
-      TemperatureFloatToUInt16(kInsideTemperature);
-  mapping_->tab_registers[addresses::temperatures::kLowerTank] =
-      TemperatureFloatToUInt16(kLowerTankTemperature);
-  mapping_->tab_registers[addresses::temperatures::kOutside] =
-      TemperatureFloatToUInt16(kOutsideTemperature);
-  mapping_->tab_registers[addresses::temperatures::kUpperTank] =
-      TemperatureFloatToUInt16(kUpperTankTemperature);
+  mapping_->tab_registers[addresses::temperatures::kCircuit1] = TemperatureFloatToUInt16(kCircuit1Temperature);
+  mapping_->tab_registers[addresses::temperatures::kCircuit2] = TemperatureFloatToUInt16(kCircuit2Temperature);
+  mapping_->tab_registers[addresses::temperatures::kCircuit3] = TemperatureFloatToUInt16(kCircuit3Temperature);
+  mapping_->tab_registers[addresses::temperatures::kGroundInput] = TemperatureFloatToUInt16(kGroundInputTemperature);
+  mapping_->tab_registers[addresses::temperatures::kGroundOutput] = TemperatureFloatToUInt16(kGroundOutputTemperature);
+  mapping_->tab_registers[addresses::temperatures::kHotGas] = TemperatureFloatToUInt16(kHotGasTemperature);
+  mapping_->tab_registers[addresses::temperatures::kInside] = TemperatureFloatToUInt16(kInsideTemperature);
+  mapping_->tab_registers[addresses::temperatures::kLowerTank] = TemperatureFloatToUInt16(kLowerTankTemperature);
+  mapping_->tab_registers[addresses::temperatures::kOutside] = TemperatureFloatToUInt16(kOutsideTemperature);
+  mapping_->tab_registers[addresses::temperatures::kUpperTank] = TemperatureFloatToUInt16(kUpperTankTemperature);
 }

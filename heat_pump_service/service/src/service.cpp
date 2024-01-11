@@ -3,46 +3,37 @@
 #include <utility>
 
 namespace {
-void MapBoostingScheduleToProto(const communicator::BoostingSchedule& schedule,
-                                heat_pump::BoostingSchedule* proto) {
+void MapBoostingScheduleToProto(const communicator::BoostingSchedule& schedule, heat_pump::BoostingSchedule* proto) {
   proto->mutable_monday()->set_start_hour(schedule.monday.start_hour);
   proto->mutable_monday()->set_end_hour(schedule.monday.end_hour);
-  proto->mutable_monday()->set_temperature_delta(
-      schedule.monday.temperature_delta);
+  proto->mutable_monday()->set_temperature_delta(schedule.monday.temperature_delta);
 
   proto->mutable_tuesday()->set_start_hour(schedule.tuesday.start_hour);
   proto->mutable_tuesday()->set_end_hour(schedule.tuesday.end_hour);
-  proto->mutable_tuesday()->set_temperature_delta(
-      schedule.tuesday.temperature_delta);
+  proto->mutable_tuesday()->set_temperature_delta(schedule.tuesday.temperature_delta);
 
   proto->mutable_wednesday()->set_start_hour(schedule.wednesday.start_hour);
   proto->mutable_wednesday()->set_end_hour(schedule.wednesday.end_hour);
-  proto->mutable_wednesday()->set_temperature_delta(
-      schedule.wednesday.temperature_delta);
+  proto->mutable_wednesday()->set_temperature_delta(schedule.wednesday.temperature_delta);
 
   proto->mutable_thursday()->set_start_hour(schedule.thursday.start_hour);
   proto->mutable_thursday()->set_end_hour(schedule.thursday.end_hour);
-  proto->mutable_thursday()->set_temperature_delta(
-      schedule.thursday.temperature_delta);
+  proto->mutable_thursday()->set_temperature_delta(schedule.thursday.temperature_delta);
 
   proto->mutable_friday()->set_start_hour(schedule.friday.start_hour);
   proto->mutable_friday()->set_end_hour(schedule.friday.end_hour);
-  proto->mutable_friday()->set_temperature_delta(
-      schedule.friday.temperature_delta);
+  proto->mutable_friday()->set_temperature_delta(schedule.friday.temperature_delta);
 
   proto->mutable_saturday()->set_start_hour(schedule.saturday.start_hour);
   proto->mutable_saturday()->set_end_hour(schedule.saturday.end_hour);
-  proto->mutable_saturday()->set_temperature_delta(
-      schedule.saturday.temperature_delta);
+  proto->mutable_saturday()->set_temperature_delta(schedule.saturday.temperature_delta);
 
   proto->mutable_sunday()->set_start_hour(schedule.sunday.start_hour);
   proto->mutable_sunday()->set_end_hour(schedule.sunday.end_hour);
-  proto->mutable_sunday()->set_temperature_delta(
-      schedule.sunday.temperature_delta);
+  proto->mutable_sunday()->set_temperature_delta(schedule.sunday.temperature_delta);
 }
 
-communicator::BoostingSchedule MapProtoToBoostingSchedule(
-    const heat_pump::BoostingSchedule& proto) {
+communicator::BoostingSchedule MapProtoToBoostingSchedule(const heat_pump::BoostingSchedule& proto) {
   communicator::BoostingSchedule schedule{};
 
   schedule.monday.start_hour = proto.monday().start_hour();
@@ -79,14 +70,12 @@ communicator::BoostingSchedule MapProtoToBoostingSchedule(
 }  // namespace
 
 namespace service {
-HeatPumpService::HeatPumpService(
-    std::unique_ptr<communicator::ICommunicator> communicator)
+HeatPumpService::HeatPumpService(std::unique_ptr<communicator::ICommunicator> communicator)
     : communicator_{std::move(communicator)} {}
 
-grpc::Status HeatPumpService::GetActiveCircuitCount(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */,
-    google::protobuf::UInt32Value* response) {
+grpc::Status HeatPumpService::GetActiveCircuitCount(grpc::ServerContext* /* context */,
+                                                    const google::protobuf::Empty* /* request */,
+                                                    google::protobuf::UInt32Value* response) {
   try {
     response->set_value(communicator_->ActiveCircuitCount());
     return grpc::Status::OK;
@@ -95,10 +84,9 @@ grpc::Status HeatPumpService::GetActiveCircuitCount(
   }
 }
 
-grpc::Status HeatPumpService::GetCircuit3BoostingSchedule(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */,
-    heat_pump::BoostingSchedule* response) {
+grpc::Status HeatPumpService::GetCircuit3BoostingSchedule(grpc::ServerContext* /* context */,
+                                                          const google::protobuf::Empty* /* request */,
+                                                          heat_pump::BoostingSchedule* response) {
   try {
     const auto schedule = communicator_->ReadCircuit3BoostingSchedule();
     MapBoostingScheduleToProto(schedule, response);
@@ -108,10 +96,9 @@ grpc::Status HeatPumpService::GetCircuit3BoostingSchedule(
   }
 }
 
-grpc::Status HeatPumpService::GetLowerTankBoostingSchedule(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */,
-    heat_pump::BoostingSchedule* response) {
+grpc::Status HeatPumpService::GetLowerTankBoostingSchedule(grpc::ServerContext* /* context */,
+                                                           const google::protobuf::Empty* /* request */,
+                                                           heat_pump::BoostingSchedule* response) {
   try {
     const auto schedule = communicator_->ReadLowerTankBoostingSchedule();
     MapBoostingScheduleToProto(schedule, response);
@@ -121,10 +108,9 @@ grpc::Status HeatPumpService::GetLowerTankBoostingSchedule(
   }
 }
 
-grpc::Status HeatPumpService::GetTemperatures(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */,
-    heat_pump::Temperatures* response) {
+grpc::Status HeatPumpService::GetTemperatures(grpc::ServerContext* /* context */,
+                                              const google::protobuf::Empty* /* request */,
+                                              heat_pump::Temperatures* response) {
   try {
     const auto temperatures = communicator_->ReadTemperatures();
     response->set_circuit1(temperatures.circuit1);
@@ -143,34 +129,28 @@ grpc::Status HeatPumpService::GetTemperatures(
   }
 }
 
-grpc::Status HeatPumpService::GetTankLimits(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */,
-    heat_pump::TankLimits* response) {
+grpc::Status HeatPumpService::GetTankLimits(grpc::ServerContext* /* context */,
+                                            const google::protobuf::Empty* /* request */,
+                                            heat_pump::TankLimits* response) {
   try {
     const auto tank_limits = communicator_->ReadTankLimits();
     response->set_lower_tank_minimum(tank_limits.lower_tank_minimum);
-    response->set_lower_tank_minimum_adjusted(
-        tank_limits.lower_tank_minimum_adjusted);
+    response->set_lower_tank_minimum_adjusted(tank_limits.lower_tank_minimum_adjusted);
     response->set_lower_tank_maximum(tank_limits.lower_tank_maximum);
-    response->set_lower_tank_maximum_adjusted(
-        tank_limits.lower_tank_maximum_adjusted);
+    response->set_lower_tank_maximum_adjusted(tank_limits.lower_tank_maximum_adjusted);
     response->set_upper_tank_minimum(tank_limits.upper_tank_minimum);
-    response->set_upper_tank_minimum_adjusted(
-        tank_limits.upper_tank_minimum_adjusted);
+    response->set_upper_tank_minimum_adjusted(tank_limits.upper_tank_minimum_adjusted);
     response->set_upper_tank_maximum(tank_limits.upper_tank_maximum);
-    response->set_upper_tank_maximum_adjusted(
-        tank_limits.upper_tank_maximum_adjusted);
+    response->set_upper_tank_maximum_adjusted(tank_limits.upper_tank_maximum_adjusted);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
     return {grpc::StatusCode::INTERNAL, "Internal server error."};
   }
 }
 
-grpc::Status HeatPumpService::IsCompressorActive(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */,
-    google::protobuf::BoolValue* response) {
+grpc::Status HeatPumpService::IsCompressorActive(grpc::ServerContext* /* context */,
+                                                 const google::protobuf::Empty* /* request */,
+                                                 google::protobuf::BoolValue* response) {
   try {
     response->set_value(communicator_->IsCompressorActive());
     return grpc::Status::OK;
@@ -179,10 +159,9 @@ grpc::Status HeatPumpService::IsCompressorActive(
   }
 }
 
-grpc::Status HeatPumpService::IsSchedulingEnabled(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::Empty* /* request */,
-    google::protobuf::BoolValue* response) {
+grpc::Status HeatPumpService::IsSchedulingEnabled(grpc::ServerContext* /* context */,
+                                                  const google::protobuf::Empty* /* request */,
+                                                  google::protobuf::BoolValue* response) {
   try {
     response->set_value(communicator_->IsSchedulingEnabled());
     return grpc::Status::OK;
@@ -191,14 +170,12 @@ grpc::Status HeatPumpService::IsSchedulingEnabled(
   }
 }
 
-grpc::Status HeatPumpService::SetActiveCircuitCount(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::UInt32Value* request,
-    google::protobuf::Empty* /* response */) {
+grpc::Status HeatPumpService::SetActiveCircuitCount(grpc::ServerContext* /* context */,
+                                                    const google::protobuf::UInt32Value* request,
+                                                    google::protobuf::Empty* /* response */) {
   try {
     if (request->value() > 3)
-      return {grpc::StatusCode::INVALID_ARGUMENT,
-              "Active circuit count must be in [0, 3]."};
+      return {grpc::StatusCode::INVALID_ARGUMENT, "Active circuit count must be in [0, 3]."};
     communicator_->WriteActiveCircuitCount(request->value());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
@@ -206,10 +183,9 @@ grpc::Status HeatPumpService::SetActiveCircuitCount(
   }
 }
 
-grpc::Status HeatPumpService::SetCircuit3BoostingSchedule(
-    grpc::ServerContext* /* context */,
-    const heat_pump::BoostingSchedule* request,
-    google::protobuf::Empty* /* response */) {
+grpc::Status HeatPumpService::SetCircuit3BoostingSchedule(grpc::ServerContext* /* context */,
+                                                          const heat_pump::BoostingSchedule* request,
+                                                          google::protobuf::Empty* /* response */) {
   try {
     const auto boosting_schedule = MapProtoToBoostingSchedule(*request);
     if (!boosting_schedule.IsValid())
@@ -221,10 +197,9 @@ grpc::Status HeatPumpService::SetCircuit3BoostingSchedule(
   }
 }
 
-grpc::Status HeatPumpService::SetLowerTankBoostingSchedule(
-    grpc::ServerContext* /* context */,
-    const heat_pump::BoostingSchedule* request,
-    google::protobuf::Empty* /* response */) {
+grpc::Status HeatPumpService::SetLowerTankBoostingSchedule(grpc::ServerContext* /* context */,
+                                                           const heat_pump::BoostingSchedule* request,
+                                                           google::protobuf::Empty* /* response */) {
   try {
     const auto boosting_schedule = MapProtoToBoostingSchedule(*request);
     if (!boosting_schedule.IsValid())
@@ -236,10 +211,9 @@ grpc::Status HeatPumpService::SetLowerTankBoostingSchedule(
   }
 }
 
-grpc::Status HeatPumpService::SetSchedulingEnabled(
-    grpc::ServerContext* /* context */,
-    const google::protobuf::BoolValue* request,
-    google::protobuf::Empty* /* response */) {
+grpc::Status HeatPumpService::SetSchedulingEnabled(grpc::ServerContext* /* context */,
+                                                   const google::protobuf::BoolValue* request,
+                                                   google::protobuf::Empty* /* response */) {
   try {
     communicator_->WriteSchedulingEnabled(request->value());
     return grpc::Status::OK;

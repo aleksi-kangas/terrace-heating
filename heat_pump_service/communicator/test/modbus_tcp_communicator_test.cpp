@@ -39,53 +39,46 @@ std::thread ModbusTCPCommunicatorTest::mock_server_thread;
 
 TEST_F(ModbusTCPCommunicatorTest, ActiveCircuitCount) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   EXPECT_EQ(communicator.ActiveCircuitCount(), kActiveCircuitCount);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, IsCompressorActive) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   EXPECT_EQ(communicator.IsCompressorActive(), kIsCompressorActive);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, IsSchedulingEnabled) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   EXPECT_EQ(communicator.IsSchedulingEnabled(), kIsSchedulingEnabled);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, ReadCircuit3BoostingSchedule) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   const auto schedule = communicator.ReadCircuit3BoostingSchedule();
   EXPECT_EQ(schedule, kCircuit3BoostingSchedule);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, ReadLowerTankBoostingSchedule) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   const auto schedule = communicator.ReadLowerTankBoostingSchedule();
   EXPECT_EQ(schedule, kLowerTankBoostingSchedule);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, ReadTankLimitsAdjusted) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   const auto tank_limits = communicator.ReadTankLimits();
   EXPECT_EQ(tank_limits, kTankLimits);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, ReadTemperatures) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   const auto temperatures = communicator.ReadTemperatures();
   EXPECT_EQ(temperatures.circuit1, kCircuit1Temperature);
   EXPECT_EQ(temperatures.circuit2, kCircuit2Temperature);
@@ -101,8 +94,7 @@ TEST_F(ModbusTCPCommunicatorTest, ReadTemperatures) {
 
 TEST_F(ModbusTCPCommunicatorTest, WriteActiveCircuitCount) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   EXPECT_EQ(communicator.ActiveCircuitCount(), kActiveCircuitCount);
   const uint32_t new_active_circuit_count = kActiveCircuitCount - 1;
   communicator.WriteActiveCircuitCount(new_active_circuit_count);
@@ -111,44 +103,37 @@ TEST_F(ModbusTCPCommunicatorTest, WriteActiveCircuitCount) {
 
 TEST_F(ModbusTCPCommunicatorTest, WriteCircuit3BoostingSchedule) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
-  EXPECT_EQ(communicator.ReadCircuit3BoostingSchedule(),
-            kCircuit3BoostingSchedule);
-  constexpr communicator::BoostingSchedule new_schedule{
-      .monday = {0, 7, -8},
-      .tuesday = {1, 8, -9},
-      .wednesday = {2, 9, -10},
-      .thursday = {3, 10, -7},
-      .friday = {4, 11, -6},
-      .saturday = {5, 12, -5},
-      .sunday = {6, 13, -4}};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
+  EXPECT_EQ(communicator.ReadCircuit3BoostingSchedule(), kCircuit3BoostingSchedule);
+  constexpr communicator::BoostingSchedule new_schedule{.monday = {0, 7, -8},
+                                                        .tuesday = {1, 8, -9},
+                                                        .wednesday = {2, 9, -10},
+                                                        .thursday = {3, 10, -7},
+                                                        .friday = {4, 11, -6},
+                                                        .saturday = {5, 12, -5},
+                                                        .sunday = {6, 13, -4}};
   communicator.WriteCircuit3BoostingSchedule(new_schedule);
   EXPECT_EQ(communicator.ReadCircuit3BoostingSchedule(), new_schedule);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, WriteLowerTankBoostingSchedule) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
-  EXPECT_EQ(communicator.ReadLowerTankBoostingSchedule(),
-            kLowerTankBoostingSchedule);
-  constexpr communicator::BoostingSchedule new_schedule{
-      .monday = {1, 8, -1},
-      .tuesday = {2, 9, -2},
-      .wednesday = {3, 10, -3},
-      .thursday = {4, 11, -4},
-      .friday = {5, 12, -5},
-      .saturday = {6, 13, -6},
-      .sunday = {7, 14, -7}};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
+  EXPECT_EQ(communicator.ReadLowerTankBoostingSchedule(), kLowerTankBoostingSchedule);
+  constexpr communicator::BoostingSchedule new_schedule{.monday = {1, 8, -1},
+                                                        .tuesday = {2, 9, -2},
+                                                        .wednesday = {3, 10, -3},
+                                                        .thursday = {4, 11, -4},
+                                                        .friday = {5, 12, -5},
+                                                        .saturday = {6, 13, -6},
+                                                        .sunday = {7, 14, -7}};
   communicator.WriteLowerTankBoostingSchedule(new_schedule);
   EXPECT_EQ(communicator.ReadLowerTankBoostingSchedule(), new_schedule);
 }
 
 TEST_F(ModbusTCPCommunicatorTest, WriteSchedulingEnabled) {
   ASSERT_NE(ModbusTCPCommunicatorTest::mock_server, nullptr);
-  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(),
-                                     MockModbusTCPServer::Port()};
+  ModbusTCPCommunicator communicator{MockModbusTCPServer::Host(), MockModbusTCPServer::Port()};
   EXPECT_EQ(communicator.IsSchedulingEnabled(), kIsSchedulingEnabled);
   const bool new_scheduling_enabled = !kIsSchedulingEnabled;
   communicator.WriteSchedulingEnabled(new_scheduling_enabled);
