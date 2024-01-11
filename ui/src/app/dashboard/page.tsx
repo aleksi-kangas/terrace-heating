@@ -10,17 +10,13 @@ const Dashboard = () => {
   return (
     <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card className="col-span-full md:col-span-2 flex flex-col justify-evenly items-center">
-        {/* @ts-expect-error Async Server Component */}
         <OutsideTemperatureGraph />
         <HorizontalDivider />
-        {/* @ts-expect-error Async Server Component */}
         <CompressorUsageGraph />
       </Card>
       <Card className="col-span-full md:col-span-1 flex flex-col justify-evenly items-center">
-        {/* @ts-expect-error Async Server Component */}
         <HeatingControl />
         <HorizontalDivider />
-        {/* @ts-expect-error Async Server Component */}
         <CompressorUsageGauge />
       </Card>
     </div>
