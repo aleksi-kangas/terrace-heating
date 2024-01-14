@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from '@/app/components/card';
-import DaysSelector from '@/app/components/graphs/days_selector';
-import GraphSelector from '@/app/components/graphs/graph_selector';
+import DaysSelector from '@/app/graphs/days_selector';
+import GraphSelector from '@/app/graphs/graph_selector';
 
 const GraphsLayout = ({children}: {children: React.ReactNode}) => {
   return (

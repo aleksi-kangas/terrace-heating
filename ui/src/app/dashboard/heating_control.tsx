@@ -3,7 +3,7 @@ import {fetchCurrentHeatPumpTemperatures} from '@/app/api/heat_pump';
 import {fetchHeatingState} from '@/app/api/heating';
 import {HeatingState} from '@/app/api/types';
 import Spinner from '@/app/components/spinner';
-import HeatingToggle from '@/app/components/dashboard/heating_toggle';
+import HeatingToggle from '@/app/dashboard/heating_toggle';
 
 const HeatingControl = async () => {
   const temperatures = await fetchCurrentHeatPumpTemperatures();

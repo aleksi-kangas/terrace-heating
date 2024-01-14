@@ -35,7 +35,6 @@ const NavigationBarItem = ({active, href, label}: NavigationBarItemProps) => {
 
 const NavigationBar = () => {
   const activeUrl = usePathname();
-  console.log(activeUrl);
   return (
     <header className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

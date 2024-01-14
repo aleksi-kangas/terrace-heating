@@ -1,6 +1,6 @@
 import React, {Suspense} from 'react';
 import {fetchCompressorRecordsDays} from '@/app/api/heating';
-import Graph from '@/app/components/dashboard/graph';
+import Graph from '@/app/dashboard/graph';
 import Spinner from '@/app/components/spinner';
 
 const CompressorUsageGraph = async () => {

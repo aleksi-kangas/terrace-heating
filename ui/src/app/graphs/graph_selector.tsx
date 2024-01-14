@@ -34,7 +34,6 @@ interface GraphSelectorProps {
 
 const GraphSelector = ({tabItems}: GraphSelectorProps) => {
   const activeUrl = usePathname();
-  console.log(activeUrl);
   return (
     <div className="overflow-hidden rounded-xl border border-gray-100 bg-[rgb(31,41,55)] p-1.5">
       <ul className="flex items-center gap-2">

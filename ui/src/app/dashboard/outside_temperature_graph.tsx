@@ -1,7 +1,7 @@
 import React, {Suspense} from 'react';
 import {fetchHeatPumpRecordsDays} from '@/app/api/heating';
 import Spinner from '@/app/components/spinner';
-import Graph from '@/app/components/dashboard/graph';
+import Graph from '@/app/dashboard/graph';
 
 const OutsideTemperatureGraph = async () => {
   const records = await fetchHeatPumpRecordsDays(2);

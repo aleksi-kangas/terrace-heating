@@ -1,8 +1,8 @@
 'use client';
 import React, {FormEvent, useMemo, useState} from 'react';
+import {updateBoostingSchedule} from '@/app/api/heat_pump';
 import {BoostingSchedule, BoostingScheduleVariable} from '@/app/api/types';
-import {updateBoostingSchedule} from '../../api/heat_pump';
-import Spinner from '../spinner';
+import Spinner from '@/app/components/spinner';
 
 interface FormElements extends HTMLFormControlsCollection {
   mondayStartHour: HTMLInputElement;
