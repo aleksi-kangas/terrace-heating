@@ -15,9 +15,8 @@ RUN apt-get update && apt-get install -y \
     protobuf-compiler \
     gdb
 
-RUN export VCPKG_FORCE_SYSTEM_BINARIES=1
-
-RUN git clone https://github.com/Microsoft/vcpkg.git && \
+RUN export VCPKG_FORCE_SYSTEM_BINARIES=1 && \
+    git clone https://github.com/Microsoft/vcpkg.git && \
     cd vcpkg && \
     ./bootstrap-vcpkg.sh
 
