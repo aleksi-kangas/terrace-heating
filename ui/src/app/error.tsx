@@ -1,6 +1,6 @@
 'use client';
-
-import ErrorAlert from './components/error_alert';
+import React from 'react';
+import ErrorAlert from '@/app/components/error_alert';
 
 const Error = () => {
   return (
