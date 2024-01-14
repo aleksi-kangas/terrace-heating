@@ -12,21 +12,19 @@ const SchedulesPage = async () => {
     BoostingScheduleVariable.LowerTank
   );
   return (
-    <div className="flex flex-1 max-w-7xl">
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="col-span-full md:col-span-1 flex flex-col justify-center items-center">
-          <BoostingScheduleTable
-            boostingScheduleVariable={BoostingScheduleVariable.Circuit3}
-            boostingSchedule={circuit3BoostingSchedule}
-          />
-        </Card>
-        <Card className="col-span-full md:col-span-1 flex flex-col justify-center items-center">
-          <BoostingScheduleTable
-            boostingScheduleVariable={BoostingScheduleVariable.LowerTank}
-            boostingSchedule={lowerTankBoostingSchedule}
-          />
-        </Card>
-      </div>
+    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card className="col-span-full md:col-span-1 flex flex-col justify-center items-center">
+        <BoostingScheduleTable
+          boostingScheduleVariable={BoostingScheduleVariable.Circuit3}
+          boostingSchedule={circuit3BoostingSchedule}
+        />
+      </Card>
+      <Card className="col-span-full md:col-span-1 flex flex-col justify-center items-center">
+        <BoostingScheduleTable
+          boostingScheduleVariable={BoostingScheduleVariable.LowerTank}
+          boostingSchedule={lowerTankBoostingSchedule}
+        />
+      </Card>
     </div>
   );
 };
