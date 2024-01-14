@@ -1,8 +1,8 @@
 # Terrace Heating
 
-[![Heat Pump Service](https://github.com/aleksi-kangas/terrace-heating-new/actions/workflows/heat_pump_service.yaml/badge.svg)](https://github.com/aleksi-kangas/terrace-heating-new/actions/workflows/heat_pump_service.yaml)
-[![Heating Gateway](https://github.com/aleksi-kangas/terrace-heating-new/actions/workflows/heating_gateway.yaml/badge.svg)](https://github.com/aleksi-kangas/terrace-heating-new/actions/workflows/heating_gateway.yaml)
-[![UI](https://github.com/aleksi-kangas/terrace-heating-new/actions/workflows/ui.yaml/badge.svg)](https://github.com/aleksi-kangas/terrace-heating-new/actions/workflows/ui.yaml)
+[![Heat Pump Service](https://github.com/aleksi-kangas/terrace-heating/actions/workflows/heat_pump_service.yaml/badge.svg)](https://github.com/aleksi-kangas/terrace-heating/actions/workflows/heat_pump_service.yaml)
+[![Heating Gateway](https://github.com/aleksi-kangas/terrace-heating/actions/workflows/heating_gateway.yaml/badge.svg)](https://github.com/aleksi-kangas/terrace-heating/actions/workflows/heating_gateway.yaml)
+[![UI](https://github.com/aleksi-kangas/terrace-heating/actions/workflows/ui.yaml/badge.svg)](https://github.com/aleksi-kangas/terrace-heating/actions/workflows/ui.yaml)
 
 > Full stack application for monitoring and controlling a terrace heating system
 
