@@ -65,6 +65,7 @@ public static class DependencyInjection {
       builder.Services.AddScoped<HeatPumpRecordRepository>();
       builder.AddJob<ComputeHeatingStateJob, ComputeHeatingStateJobOptions>();
       builder.AddJob<QueryHeatPumpRecordJob, QueryHeatPumpRecordJobOptions>();
+      builder.AddJob<RemoveOldRecordsJob, RemoveOldRecordsJobOptions>();
     });
     return services;
   }

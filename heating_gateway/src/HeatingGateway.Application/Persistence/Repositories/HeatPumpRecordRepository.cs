@@ -33,4 +33,12 @@ public class HeatPumpRecordRepository : RepositoryBase<HeatPumpRecord>, IHeatPum
       .Where(r => r.Time < beforeThis)
       .OrderByDescending(r => r.Time).Cast<HeatPumpRecord?>().FirstOrDefault());
   }
+
+  public async Task DeleteOlderThanAsync(DateTime olderThanThis) {
+    var records = Context.HeatPumpRecords.Where(r => r.Time < olderThanThis);
+    foreach (var record in records) {
+      Context.HeatPumpRecords.Remove(record);
+    }
+    await Context.SaveChangesAsync();
+  }
 }

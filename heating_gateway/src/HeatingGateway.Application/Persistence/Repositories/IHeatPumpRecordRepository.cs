@@ -19,4 +19,6 @@ public interface IHeatPumpRecordRepository : IRepositoryBase<HeatPumpRecord> {
    * @return                    The latest record before beforeThis satisfying the given conditions.
    */
   Task<HeatPumpRecord?> FindLatestBeforeAsync(DateTime beforeThis, bool? compressorActive = null, bool? hasUsage = null);
+
+  Task DeleteOlderThanAsync(DateTime olderThanThis);
 }
