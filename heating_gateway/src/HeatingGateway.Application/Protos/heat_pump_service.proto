@@ -7,25 +7,96 @@ package heat_pump;
 option csharp_namespace = "HeatPumpProto";
 
 service HeatPumpSvc {
+  /*
+   * Returns the current number of active heat distribution circuits.
+   * @param request   Not used.
+   * @return          The number of active heat distribution circuits.
+   */
   rpc GetActiveCircuitCount(google.protobuf.Empty) returns (google.protobuf.UInt32Value) {}
+
+  /*
+   * Returns the current boosting schedule of the heat distribution circuit 3.
+   * @param request   Not used.
+   * @return          The current boosting schedule of the heat distribution circuit 3.
+   */
   rpc GetCircuit3BoostingSchedule(google.protobuf.Empty) returns (BoostingSchedule) {}
+
+  /*
+   * Returns the current boosting schedule of the lower tank.
+   * @param request   Not used.
+   * @return          The current boosting schedule of the lower tank.
+   */
   rpc GetLowerTankBoostingSchedule(google.protobuf.Empty) returns (BoostingSchedule) {}
+
+  /*
+   * Returns the current temperatures of various parts of the heat pump.
+   * @param request   Not used.
+   * @return          The current temperatures of various parts of the heat pump.
+   */
   rpc GetTemperatures(google.protobuf.Empty) returns (Temperatures) {}
+
+  /*
+   * Returns the current tank temperature limits which guide the heat pump in its operation.
+   * @param request   Not used.
+   * @return          The current tank temperature limits which guide the heat pump in its operation.
+   */
   rpc GetTankLimits(google.protobuf.Empty) returns (TankLimits) {}
+
+  /*
+   * Returns whether the compressor is currently active.
+   * @param request   Not used.
+   * @return          Whether the compressor is currently active.
+   */
   rpc IsCompressorActive(google.protobuf.Empty) returns (google.protobuf.BoolValue) {}
+
+  /*
+   * Returns whether the scheduled boosting is enabled (distinct from it being currently active).
+   * @param request   Not used.
+   * @return          Whether the scheduled boosting is enabled.
+   */
   rpc IsSchedulingEnabled(google.protobuf.Empty) returns (google.protobuf.BoolValue) {}
+
+  /*
+   * Sets the current number of active heat distribution circuits.
+   * @param request   The new count of active heat distribution circuits.
+   * @return          None.
+   */
   rpc SetActiveCircuitCount(google.protobuf.UInt32Value) returns (google.protobuf.Empty) {}
+
+  /*
+   * Sets the boosting schedule of the heat distribution circuit 3.
+   * @param request   The new boosting schedule of the heat distribution circuit 3.
+   * @return          None.
+   */
   rpc SetCircuit3BoostingSchedule(BoostingSchedule) returns (google.protobuf.Empty) {}
+
+  /*
+   * Sets the boosting schedule of the lower tank.
+   * @param request   The new boosting schedule of the lower tank.
+   * @return          None.
+   */
   rpc SetLowerTankBoostingSchedule(BoostingSchedule) returns (google.protobuf.Empty) {}
+
+  /*
+   * Disables/Enables the scheduled boosting (distinct from it being currently active).
+   * @param request   Whether the scheduled boosting should be enabled.
+   * @return          None.
+   */
   rpc SetSchedulingEnabled(google.protobuf.BoolValue) returns (google.protobuf.Empty) {}
 }
 
+/*
+ * Weekday schedule defines an adjusted temperature delta for a given time period.
+ */
 message WeekdayBoostingSchedule {
   uint32 start_hour = 1;        // [  0, 24]
   uint32 end_hour = 2;          // [  0, 24]
   int32 temperature_delta = 3;  // [-10, 10]
 }
 
+/*
+ * Boosting schedule consists of weekday schedules which define  an adjusted temperature delta for a given time period.
+ */
 message BoostingSchedule {
   WeekdayBoostingSchedule monday = 1;
   WeekdayBoostingSchedule tuesday = 2;
@@ -36,6 +107,9 @@ message BoostingSchedule {
   WeekdayBoostingSchedule sunday = 7;
 }
 
+/*
+ * Temperatures of various parts of the heat pump.
+ */
 message Temperatures {
   float circuit1 = 1;
   float circuit2 = 2;
@@ -49,6 +123,9 @@ message Temperatures {
   float upper_tank = 10;
 }
 
+/**
+ * Temperature limits which guide the heat pump in its operation.
+ */
 message TankLimits {
   int32 lower_tank_minimum = 1;
   int32 lower_tank_minimum_adjusted = 2;

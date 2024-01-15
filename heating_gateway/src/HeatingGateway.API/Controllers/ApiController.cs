@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace HeatingGateway.API.Controllers;
 
+/*
+ * ApiController is a base class for all controllers in the API project.
+ */
 [ApiController]
 public class ApiController : ControllerBase {
   protected IActionResult Problem(List<Error> errors) {
