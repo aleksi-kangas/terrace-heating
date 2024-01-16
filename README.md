@@ -27,3 +27,11 @@ The overall architecture is illustrated with the following image:
   a service for storing queried heat pump records into a database as well as serving them
 - The database of choice is [PostgreSQL](https://www.postgresql.org/)
 - All components are built and deployed using [Docker Compose](https://docs.docker.com/compose/)
+
+## UI
+
+![Dashboard](docs/dashboard.png)
+
+![Graphs](docs/graphs.png)
+
+![Schedules](docs/schedules.png)
