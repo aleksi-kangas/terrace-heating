@@ -37,7 +37,7 @@ const Graph = ({
   fill,
   stepped,
 }: GraphProps): React.JSX.Element => {
-  const styles = 'p-8 flex justify-center items-center';
+  const styles = 'p-2 md:p-8 flex justify-center items-center';
   className = className ? styles.concat(' ', className) : styles;
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
