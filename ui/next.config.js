@@ -9,6 +9,9 @@ const nextConfig = {
       },
     ];
   },
+  async generateBuildId() {
+    return '00000000-0000-0000-0000-000000000000'; // For now an empty guid suffices.
+  },
 };
 
 module.exports = nextConfig;
