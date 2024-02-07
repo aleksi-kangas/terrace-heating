@@ -13,7 +13,7 @@ interface NextRequestInit extends RequestInit {
   };
 }
 
-const baseUrl = 'http://host.docker.internal:8000/heat-pump';
+const baseUrl = 'http://heating-gateway:80/heat-pump';
 
 export const fetchBoostingSchedule = async (
   boostingScheduleVariable: BoostingScheduleVariable

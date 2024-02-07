@@ -25,7 +25,7 @@ public static class DependencyInjection {
   private static IServiceCollection AddServices(this IServiceCollection services) {
     services
       .AddGrpcClient<HeatPumpProto.HeatPumpSvc.HeatPumpSvcClient>(o => {
-        o.Address = new Uri("https://host.docker.internal:50051");
+        o.Address = new Uri("https://heat-pump-service:50051");
       })
       .ConfigurePrimaryHttpMessageHandler(() => {
         var heatingServiceCert = X509Certificate2.CreateFromPemFile(

@@ -15,7 +15,7 @@ interface NextRequestInit extends RequestInit {
   };
 }
 
-const baseUrl = 'http://host.docker.internal:8000/heating';
+const baseUrl = 'http://heating-gateway:80/heating';
 
 export const fetchCompressorRecordsRange = async (
   from: DateTime,
