@@ -27,6 +27,7 @@ const Graph = ({series}: DashboardGraphProps): React.JSX.Element => {
   const chartData: ChartData<'line'> = useMemo(
     () => ({
       datasets: series.map(s => ({
+        animation: false,
         backgroundColor: s.color,
         borderColor: s.color,
         data: s.data,
@@ -42,10 +43,8 @@ const Graph = ({series}: DashboardGraphProps): React.JSX.Element => {
   const chartOptions: ChartOptions<'line'> = useMemo(
     () => ({
       animation: {
-        onProgress: context => {
-          if (context.initial) {
-            setIsLoading(false);
-          }
+        onComplete: () => {
+          setIsLoading(false);
         },
       },
       maintainAspectRatio: false,
@@ -53,6 +52,9 @@ const Graph = ({series}: DashboardGraphProps): React.JSX.Element => {
       plugins: {
         legend: {
           position: 'top',
+        },
+        tooltip: {
+          animation: false,
         },
       },
       responsive: true,

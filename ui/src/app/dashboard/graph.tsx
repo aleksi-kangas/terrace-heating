@@ -63,10 +63,8 @@ const Graph = ({
   const chartOptions: ChartOptions<'line'> = useMemo(
     () => ({
       animation: {
-        onProgress: context => {
-          if (context.initial) {
-            setIsLoading(false);
-          }
+        onComplete: () => {
+          setIsLoading(false);
         },
       },
       maintainAspectRatio: false,
@@ -76,6 +74,9 @@ const Graph = ({
           // Disable legend interactivity
           onClick: () => {},
           position: 'bottom',
+        },
+        tooltip: {
+          animation: false,
         },
       },
       responsive: true,
