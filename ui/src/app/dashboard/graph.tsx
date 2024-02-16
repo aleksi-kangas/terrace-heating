@@ -4,6 +4,7 @@ import {
   Chart as ChartJS,
   ChartData,
   ChartOptions,
+  Point,
   registerables,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
@@ -15,8 +16,7 @@ ChartJS.register(...registerables);
 
 interface GraphProps {
   className?: string;
-  dateTimes: string[];
-  values: number[];
+  data: Point[];
   label: string;
   xLimits?: string[];
   yLimits?: number[];
@@ -29,8 +29,7 @@ interface GraphProps {
 
 const Graph = ({
   className,
-  dateTimes,
-  values,
+  data,
   label,
   xLimits,
   yLimits,
@@ -42,14 +41,13 @@ const Graph = ({
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const data: ChartData<'line'> = useMemo(
+  const chartData: ChartData<'line'> = useMemo(
     () => ({
-      labels: dateTimes.map(dt => DateTime.fromISO(dt).toLocal()),
       datasets: [
         {
           backgroundColor: 'rgb(110, 160, 176)',
           borderColor: 'rgb(110, 160, 176)',
-          data: values,
+          data: data,
           label: label,
           pointHitRadius: 5,
           pointRadius: 2,
@@ -60,9 +58,9 @@ const Graph = ({
         },
       ],
     }),
-    [dateTimes, values, label, fill, stepped]
+    [data, label, fill, stepped]
   );
-  const options: ChartOptions<'line'> = useMemo(
+  const chartOptions: ChartOptions<'line'> = useMemo(
     () => ({
       animation: {
         onProgress: context => {
@@ -72,6 +70,7 @@ const Graph = ({
         },
       },
       maintainAspectRatio: false,
+      parsing: false,
       plugins: {
         legend: {
           // Disable legend interactivity
@@ -111,7 +110,7 @@ const Graph = ({
   return (
     <div className={className}>
       {isLoading && <Spinner className="absolute" />}
-      <Line data={data} options={options} />
+      <Line data={chartData} options={chartOptions} />
     </div>
   );
 };

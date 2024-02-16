@@ -1,4 +1,5 @@
 import React, {Suspense} from 'react';
+import {DateTime} from 'luxon';
 import {fetchHeatPumpRecordsDays} from '@/app/api/heating';
 import Spinner from '@/app/components/spinner';
 import Graph from '@/app/graphs/graph';
@@ -18,22 +19,30 @@ const ExternalGraphsPage = async ({searchParams}: ExternalGraphsPageProps) => {
   return (
     <Suspense fallback={<Spinner className="flex-1 h-full w-full" />}>
       <Graph
-        dateTimes={records.map(r => r.time)}
         series={[
           {
             color: 'rgb(78, 121, 167)',
+            data: records.map(r => ({
+              x: DateTime.fromISO(r.time).toLocal().toMillis(),
+              y: r.temperatures.outside,
+            })),
             label: 'Outside °C',
-            values: records.map(r => r.temperatures.outside),
           },
           {
             color: 'rgb(242, 142, 43)',
+            data: records.map(r => ({
+              x: DateTime.fromISO(r.time).toLocal().toMillis(),
+              y: r.temperatures.groundInput,
+            })),
             label: 'Ground-Loop Input °C',
-            values: records.map(r => r.temperatures.groundInput),
           },
           {
             color: 'rgb(225, 87, 89)',
+            data: records.map(r => ({
+              x: DateTime.fromISO(r.time).toLocal().toMillis(),
+              y: r.temperatures.groundOutput,
+            })),
             label: 'Ground-Loop Output °C',
-            values: records.map(r => r.temperatures.groundOutput),
           },
         ]}
       />

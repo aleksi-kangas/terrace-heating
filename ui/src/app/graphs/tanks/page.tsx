@@ -1,4 +1,5 @@
 import React, {Suspense} from 'react';
+import {DateTime} from 'luxon';
 import {fetchHeatPumpRecordsDays} from '@/app/api/heating';
 import Spinner from '@/app/components/spinner';
 import Graph from '@/app/graphs/graph';
@@ -18,22 +19,30 @@ const TankGraphsPage = async ({searchParams}: TankGraphsPageProps) => {
   return (
     <Suspense fallback={<Spinner className="flex-1 h-full w-full" />}>
       <Graph
-        dateTimes={records.map(r => r.time)}
         series={[
           {
             color: 'rgb(78, 121, 167)',
+            data: records.map(r => ({
+              x: DateTime.fromISO(r.time).toLocal().toMillis(),
+              y: r.temperatures.lowerTank,
+            })),
             label: 'Lower Tank °C',
-            values: records.map(r => r.temperatures.lowerTank),
           },
           {
             color: 'rgb(242, 142, 43)',
+            data: records.map(r => ({
+              x: DateTime.fromISO(r.time).toLocal().toMillis(),
+              y: r.temperatures.upperTank,
+            })),
             label: 'Upper Tank °C',
-            values: records.map(r => r.temperatures.upperTank),
           },
           {
             color: 'rgb(225, 87, 89)',
+            data: records.map(r => ({
+              x: DateTime.fromISO(r.time).toLocal().toMillis(),
+              y: r.temperatures.hotGas,
+            })),
             label: 'Hot Gas °C',
-            values: records.map(r => r.temperatures.hotGas),
           },
         ]}
       />

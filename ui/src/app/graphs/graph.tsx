@@ -4,34 +4,32 @@ import {
   Chart as ChartJS,
   ChartData,
   ChartOptions,
+  Point,
   registerables,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import {Line} from 'react-chartjs-2';
-import {DateTime} from 'luxon';
 import Spinner from '@/app/components/spinner';
 
 ChartJS.register(...registerables);
 
 interface DashboardGraphProps {
-  dateTimes: string[];
   series: {
     color: string;
+    data: Point[];
     label: string;
-    values: number[];
   }[];
 }
 
-const Graph = ({dateTimes, series}: DashboardGraphProps): React.JSX.Element => {
+const Graph = ({series}: DashboardGraphProps): React.JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const data: ChartData<'line'> = useMemo(
+  const chartData: ChartData<'line'> = useMemo(
     () => ({
-      labels: dateTimes.map(dt => DateTime.fromISO(dt).toLocal()),
       datasets: series.map(s => ({
         backgroundColor: s.color,
         borderColor: s.color,
-        data: s.values,
+        data: s.data,
         label: s.label,
         pointHitRadius: 5,
         pointRadius: 2,
@@ -39,9 +37,9 @@ const Graph = ({dateTimes, series}: DashboardGraphProps): React.JSX.Element => {
         spanGaps: false,
       })),
     }),
-    [dateTimes, series]
+    [series]
   );
-  const options: ChartOptions<'line'> = useMemo(
+  const chartOptions: ChartOptions<'line'> = useMemo(
     () => ({
       animation: {
         onProgress: context => {
@@ -51,6 +49,7 @@ const Graph = ({dateTimes, series}: DashboardGraphProps): React.JSX.Element => {
         },
       },
       maintainAspectRatio: false,
+      parsing: false,
       plugins: {
         legend: {
           position: 'top',
@@ -59,10 +58,6 @@ const Graph = ({dateTimes, series}: DashboardGraphProps): React.JSX.Element => {
       responsive: true,
       scales: {
         x: {
-          // min: DateTime.now()
-          //   .minus(Duration.fromObject({days: 2}))
-          //   .toMillis(),
-          // max: DateTime.now().toMillis(),
           ticks: {
             major: {enabled: true},
           },
@@ -79,7 +74,7 @@ const Graph = ({dateTimes, series}: DashboardGraphProps): React.JSX.Element => {
   return (
     <>
       {isLoading && <Spinner className="absolute" />}
-      <Line data={data} options={options} />
+      <Line data={chartData} options={chartOptions} />
     </>
   );
 };

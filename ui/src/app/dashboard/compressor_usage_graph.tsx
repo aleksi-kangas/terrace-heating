@@ -1,4 +1,5 @@
 import React, {Suspense} from 'react';
+import {DateTime} from 'luxon';
 import {fetchCompressorRecordsDays} from '@/app/api/heating';
 import Graph from '@/app/dashboard/graph';
 import Spinner from '@/app/components/spinner';
@@ -16,8 +17,10 @@ const CompressorUsageGraph = async () => {
     <Suspense fallback={<Spinner className="flex-1 max-h-[45%] w-full" />}>
       <Graph
         className="flex-1 max-h-[45%] w-full"
-        dateTimes={compressorUsageRecords.map(r => r.time)}
-        values={compressorUsageRecords.map(r => r.usage! * 100)}
+        data={compressorUsageRecords.map(r => ({
+          x: DateTime.fromISO(r.time).toLocal().toMillis(),
+          y: r.usage! * 100,
+        }))}
         label="Compressor Usage %"
         xLimits={xLimits}
         yLimits={yLimits}
