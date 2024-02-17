@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async redirects() {
+  output: 'standalone',
+  redirects: async () => {
     return [
       {
         source: '/',
@@ -9,7 +10,7 @@ const nextConfig = {
       },
     ];
   },
-  async generateBuildId() {
+  generateBuildId: async () => {
     return '00000000-0000-0000-0000-000000000000'; // For now an empty guid suffices.
   },
 };
