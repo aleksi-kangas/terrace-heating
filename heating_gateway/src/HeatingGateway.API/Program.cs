@@ -5,12 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
   .AddAPI()
-  .AddApplication(builder.Configuration);
+  .AddApplication();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => {
-  options.AddPolicy(name: "Allow-All", policy => {
+  options.AddPolicy("Allow-All", policy => {
     policy.AllowAnyHeader();
     policy.AllowAnyMethod();
     policy.AllowAnyOrigin();

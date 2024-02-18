@@ -6,17 +6,15 @@ using HeatingGateway.Application.Services.Heating;
 using HeatingGateway.Application.Services.HeatPump;
 using HeatingGateway.Application.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HeatingGateway.Application;
 
 public static class DependencyInjection {
-  public static IServiceCollection AddApplication(this IServiceCollection services,
-    ConfigurationManager configurationManager) {
+  public static IServiceCollection AddApplication(this IServiceCollection services) {
     services
       .AddServices()
-      .AddPersistence(configurationManager)
+      .AddPersistence()
       .AddTasks()
       .AddMappings();
     return services;
@@ -45,15 +43,16 @@ public static class DependencyInjection {
     return services;
   }
 
-  private static IServiceCollection AddPersistence(this IServiceCollection services,
-    ConfigurationManager configurationManager) {
+  private static IServiceCollection AddPersistence(this IServiceCollection services) {
     var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
     var database = Environment.GetEnvironmentVariable("POSTGRES_DATABASE");
     var username = Environment.GetEnvironmentVariable("POSTGRES_USER");
     var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
     services.AddDbContext<HeatingDbContext>(options =>
       options.UseNpgsql($"host={host};database={database};username={username};password={password}"));
-    services.AddScoped<IHeatPumpRecordRepository, HeatPumpRecordRepository>();
+    services.AddScoped<ICompressorRecordRepository, CompressorRecordRepository>();
+    services.AddScoped<ITankLimitRecordRepository, TankLimitRecordRepository>();
+    services.AddScoped<ITemperatureRecordRepository, TemperatureRecordRepository>();
     return services;
   }
 
@@ -61,9 +60,11 @@ public static class DependencyInjection {
     services.AddScheduler(builder => {
       builder.Services.AddScoped<HeatPumpService>();
       builder.Services.AddSingleton<HeatingStateService>();
-      builder.Services.AddScoped<HeatPumpRecordRepository>();
+      builder.Services.AddScoped<CompressorRecordRepository>();
+      builder.Services.AddScoped<TankLimitRecordRepository>();
+      builder.Services.AddScoped<TemperatureRecordRepository>();
       builder.AddJob<ComputeHeatingStateJob, ComputeHeatingStateJobOptions>();
-      builder.AddJob<QueryHeatPumpRecordJob, QueryHeatPumpRecordJobOptions>();
+      builder.AddJob<QueryRecordsJob, QueryRecordsJobOptions>();
       builder.AddJob<RemoveOldRecordsJob, RemoveOldRecordsJobOptions>();
     });
     return services;

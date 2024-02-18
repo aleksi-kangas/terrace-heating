@@ -1,6 +1,7 @@
-﻿namespace HeatingGateway.Contracts.History;
+namespace HeatingGateway.Application.Domain; 
 
-public record TankLimitsResponse(
+public record TankLimitRecord(
+  DateTime Time,
   Int32 LowerTankMinimum,
   Int32 LowerTankMinimumAdjusted,
   Int32 LowerTankMaximum,

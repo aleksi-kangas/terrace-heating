@@ -25,10 +25,14 @@ public class RemoveOldRecordsJob : IScheduledJob {
   public async Task ExecuteAsync(CancellationToken cancellationToken) {
     using var scope = _provider.CreateScope();
     try {
-      var heatPumpRecordRepository = scope.ServiceProvider.GetRequiredService<IHeatPumpRecordRepository>();
+      var compressorRecordRepository = scope.ServiceProvider.GetRequiredService<CompressorRecordRepository>();
+      var tankLimitRecordRepository = scope.ServiceProvider.GetRequiredService<TankLimitRecordRepository>();
+      var temperatureRecordRepository = scope.ServiceProvider.GetRequiredService<TemperatureRecordRepository>();
       var now = DateTime.UtcNow;
       var twoWeeksBefore = now.Subtract(TimeSpan.FromDays(14));
-      await heatPumpRecordRepository.DeleteOlderThanAsync(twoWeeksBefore);
+      await compressorRecordRepository.DeleteOlderThanAsync(twoWeeksBefore);
+      await tankLimitRecordRepository.DeleteOlderThanAsync(twoWeeksBefore);
+      await temperatureRecordRepository.DeleteOlderThanAsync(twoWeeksBefore);
     } catch (Exception e) {
       _logger.LogError(e.Message);
     }

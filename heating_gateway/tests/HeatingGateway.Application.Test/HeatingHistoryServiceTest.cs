@@ -8,32 +8,28 @@ namespace HeatingGateway.Application.Test;
 
 public class HeatingHistoryServiceTest {
   [Fact]
-  public async void GetCompressorRecordDateTimeRangeAsync_WhenFromToValid_ReturnsRecordsInRange() {
+  public async void GetCompressorRecordsDateTimeRangeAsync_WhenFromToValid_ReturnsRecordsInRange() {
     // Arrange
     var fromDatetime = DateTime.UtcNow - TimeSpan.FromDays(1);
     var toDatetime = DateTime.UtcNow;
-    var heatPumpRecords = new List<HeatPumpRecord> {
-      new() {
-        Time = fromDatetime,
-        Compressor = new Compressor(true, 0.1),
-        TankLimits = new TankLimits(1, 1, 1, 1, 1, 1, 1, 1),
-        Temperatures = new Temperatures(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-      },
-      new() {
-        Time = fromDatetime,
-        Compressor = new Compressor(false, 0.2),
-        TankLimits = new TankLimits(1, 1, 1, 1, 1, 1, 1, 1),
-        Temperatures = new Temperatures(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-      },
+    var compressorRecords = new List<CompressorRecord> {
+      new(
+        fromDatetime,
+        true,
+        0.1),
+      new(
+        toDatetime,
+        false,
+        0.2)
     };
-
-    var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-
-    mockHeatPumpRecordRepository
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    mockCompressorRecordRepository
       .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime))
-      .ReturnsAsync(heatPumpRecords);
-
-    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
+      .ReturnsAsync(compressorRecords);
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
 
     // Act
     var result = await service.GetCompressorRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
@@ -41,18 +37,22 @@ public class HeatingHistoryServiceTest {
     // Assert
     Assert.False(result.IsError);
     Assert.Equal(
-      new List<Compressor> { new(true, 0.1), new(false, 0.2) }, result.Value);
+      new List<CompressorRecord> { new(fromDatetime, true, 0.1), new(toDatetime, false, 0.2) }, result.Value);
   }
 
   [Fact]
   public async void
-    GetCompressorRecordDateTimeRangeAsync_WhenFromToNotUTC_ReturnsValidationError() {
+    GetCompressorRecordsDateTimeRangeAsync_WhenFromToNotUTC_ReturnsValidationError() {
+    // Arrange
     var fromDatetime = DateTime.Now - TimeSpan.FromDays(1);
     var toDatetime = DateTime.Now;
     Assert.NotEqual(DateTimeKind.Utc, fromDatetime.Kind);
     Assert.NotEqual(DateTimeKind.Utc, toDatetime.Kind);
-    var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
 
     // Act
     var result = await service.GetCompressorRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
@@ -63,11 +63,15 @@ public class HeatingHistoryServiceTest {
   }
 
   [Fact]
-  public async void GetCompressorRecordDateTimeRangeAsync_WhenFromAfterTo_ReturnsValidationError() {
+  public async void GetCompressorRecordsDateTimeRangeAsync_WhenFromAfterTo_ReturnsValidationError() {
+    // Arrange
     var fromDatetime = DateTime.UtcNow;
     var toDatetime = DateTime.UtcNow - TimeSpan.FromDays(1);
-    var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
 
     // Act
     var result = await service.GetCompressorRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
@@ -78,57 +82,221 @@ public class HeatingHistoryServiceTest {
   }
 
   [Fact]
-  public async void GetHeatPumpRecordDateTimeRangeAsync_WhenFromToValid_ReturnsRecordsInRange() {
+  public async void GetTankLimitRecordsDateTimeRangeAsync_WhenFromToValid_ReturnsRecordsInRange() {
     // Arrange
     var fromDatetime = DateTime.UtcNow - TimeSpan.FromDays(1);
     var toDatetime = DateTime.UtcNow;
-    var heatPumpRecords = new List<HeatPumpRecord> {
-      new() {
-        TankLimits = new TankLimits(1, 2, 3, 4, 5, 6, 7, 8),
-        Temperatures = new Temperatures(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-        Time = toDatetime
-      }
+    var tankLimitRecords = new List<TankLimitRecord> {
+      new(
+        fromDatetime,
+        40,
+        44,
+        48,
+        52,
+        60,
+        65,
+        70,
+        75),
+      new(
+        toDatetime,
+        30,
+        34,
+        38,
+        42,
+        50,
+        55,
+        60,
+        65)
     };
-    var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    mockHeatPumpRecordRepository
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    mockTankLimitRecordRepository
       .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime))
-      .ReturnsAsync(heatPumpRecords);
-    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
+      .ReturnsAsync(tankLimitRecords);
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
 
     // Act
-    var result = await service.GetHeatPumpRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
+    var result = await service.GetTankLimitRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
 
     // Assert
     Assert.False(result.IsError);
-    Assert.Equal(heatPumpRecords, result.Value);
+    Assert.Equal(
+      new List<TankLimitRecord> {
+        new(
+          fromDatetime,
+          40,
+          44,
+          48,
+          52,
+          60,
+          65,
+          70,
+          75),
+        new(
+          toDatetime,
+          30,
+          34,
+          38,
+          42,
+          50,
+          55,
+          60,
+          65)
+      }, result.Value);
   }
-
+  
   [Fact]
-  public async void GetHeatPumpRecordDateTimeRangeAsync_WhenFromToNotUTC_ReturnsValidationError() {
+  public async void
+    GetTankLimitRecordsDateTimeRangeAsync_WhenFromToNotUTC_ReturnsValidationError() {
+    // Arrange
     var fromDatetime = DateTime.Now - TimeSpan.FromDays(1);
     var toDatetime = DateTime.Now;
     Assert.NotEqual(DateTimeKind.Utc, fromDatetime.Kind);
     Assert.NotEqual(DateTimeKind.Utc, toDatetime.Kind);
-    var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
 
     // Act
-    var result = await service.GetHeatPumpRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
+    var result = await service.GetTankLimitRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
 
     // Assert
     Assert.True(result.IsError);
     Assert.Equal(Errors.DateTimeRange.DatetimeNotUTC, result.FirstError);
   }
-
+  
   [Fact]
-  public async void GetHeatPumpRecordDateTimeRangeAsync_WhenFromAfterTo_ReturnsValidationError() {
+  public async void GetTankLimitRecordsDateTimeRangeAsync_WhenFromAfterTo_ReturnsValidationError() {
+    // Arrange
     var fromDatetime = DateTime.UtcNow;
     var toDatetime = DateTime.UtcNow - TimeSpan.FromDays(1);
-    var mockHeatPumpRecordRepository = new Mock<IHeatPumpRecordRepository>();
-    var service = new HeatingHistoryService(mockHeatPumpRecordRepository.Object);
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
 
     // Act
-    var result = await service.GetHeatPumpRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
+    var result = await service.GetTankLimitRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
+
+    // Assert
+    Assert.True(result.IsError);
+    Assert.Equal(Errors.DateTimeRange.FromIsAfterTo, result.FirstError);
+  }
+  
+  [Fact]
+  public async void GetTemperatureRecordsDateTimeRangeAsync_WhenFromToValid_ReturnsRecordsInRange() {
+    // Arrange
+    var fromDatetime = DateTime.UtcNow - TimeSpan.FromDays(1);
+    var toDatetime = DateTime.UtcNow;
+    var temperatureRecords = new List<TemperatureRecord> {
+      new(
+        fromDatetime,
+        1.0f,
+        2.0f,
+        3.0f,
+        4.0f,
+        5.0f,
+        6.0f,
+        7.0f,
+        8.0f,
+        9.0f,
+        10.0f),
+      new(
+        toDatetime,
+        -1.0f,
+        -2.0f,
+        -3.0f,
+        -4.0f,
+        -5.0f,
+        -6.0f,
+        -7.0f,
+        -8.0f,
+        -9.0f,
+        -10.0f)
+    };
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    mockTemperatureRecordRepository
+      .Setup(x => x.FindByDateTimeRangeAsync(fromDatetime, toDatetime))
+      .ReturnsAsync(temperatureRecords);
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
+
+    // Act
+    var result = await service.GetTemperatureRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
+
+    // Assert
+    Assert.False(result.IsError);
+    Assert.Equal(
+      new List<TemperatureRecord> {
+        new(
+          fromDatetime,
+          1.0f,
+          2.0f,
+          3.0f,
+          4.0f,
+          5.0f,
+          6.0f,
+          7.0f,
+          8.0f,
+          9.0f,
+          10.0f),
+        new(
+          toDatetime,
+          -1.0f,
+          -2.0f,
+          -3.0f,
+          -4.0f,
+          -5.0f,
+          -6.0f,
+          -7.0f,
+          -8.0f,
+          -9.0f,
+          -10.0f)
+      }, result.Value);
+  }
+  
+  [Fact]
+  public async void
+    GetTemperatureRecordsDateTimeRangeAsync_WhenFromToNotUTC_ReturnsValidationError() {
+    // Arrange
+    var fromDatetime = DateTime.Now - TimeSpan.FromDays(1);
+    var toDatetime = DateTime.Now;
+    Assert.NotEqual(DateTimeKind.Utc, fromDatetime.Kind);
+    Assert.NotEqual(DateTimeKind.Utc, toDatetime.Kind);
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
+
+    // Act
+    var result = await service.GetTemperatureRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
+
+    // Assert
+    Assert.True(result.IsError);
+    Assert.Equal(Errors.DateTimeRange.DatetimeNotUTC, result.FirstError);
+  }
+  
+  [Fact]
+  public async void GetTemperatureRecordsDateTimeRangeAsync_WhenFromAfterTo_ReturnsValidationError() {
+    // Arrange
+    var fromDatetime = DateTime.UtcNow;
+    var toDatetime = DateTime.UtcNow - TimeSpan.FromDays(1);
+    var mockCompressorRecordRepository = new Mock<ICompressorRecordRepository>();
+    var mockTankLimitRecordRepository = new Mock<ITankLimitRecordRepository>();
+    var mockTemperatureRecordRepository = new Mock<ITemperatureRecordRepository>();
+    var service = new HeatingHistoryService(mockCompressorRecordRepository.Object, mockTankLimitRecordRepository.Object,
+      mockTemperatureRecordRepository.Object);
+
+    // Act
+    var result = await service.GetTemperatureRecordsDateTimeRangeAsync(fromDatetime, toDatetime);
 
     // Assert
     Assert.True(result.IsError);

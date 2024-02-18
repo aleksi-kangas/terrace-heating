@@ -1,6 +1,7 @@
-﻿namespace HeatingGateway.Contracts.History;
+namespace HeatingGateway.Application.Domain;
 
-public record TemperaturesResponse(
+public record TemperatureRecord(
+  DateTime Time,
   float Circuit1,
   float Circuit2,
   float Circuit3,
