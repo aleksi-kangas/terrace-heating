@@ -1,5 +1,4 @@
 using HeatingGateway.Application.Domain;
-using HeatingGateway.Contracts.Heating;
 using HeatingGateway.Contracts.HeatPump;
 using Mapster;
 
@@ -9,13 +8,9 @@ public class HeatPumpMappingConfig : IRegister {
   public void Register(TypeAdapterConfig config) {
     config.NewConfig<PutBoostingScheduleRequest, BoostingSchedule>();
     config.NewConfig<PutWeekdayBoostingScheduleRequest, WeekdayBoostingSchedule>();
-
     config.NewConfig<BoostingSchedule, BoostingScheduleResponse>();
     config.NewConfig<WeekdayBoostingSchedule, WeekdayBoostingScheduleResponse>();
-
-    config.NewConfig<Compressor, CompressorResponse>();
     config.NewConfig<TankLimits, TankLimitsResponse>();
-
     config.NewConfig<Temperatures, TemperaturesResponse>();
   }
 }

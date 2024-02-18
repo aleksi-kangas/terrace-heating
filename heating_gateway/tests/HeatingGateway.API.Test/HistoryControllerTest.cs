@@ -2,24 +2,23 @@ using ErrorOr;
 using HeatingGateway.API.Controllers;
 using HeatingGateway.Application.Domain;
 using HeatingGateway.Application.Services.Heating;
-using HeatingGateway.Contracts.Heating;
-using HeatingGateway.Contracts.HeatPump;
+using HeatingGateway.Contracts.History;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 namespace HeatingGateway.API.Test;
 
-public class HeatingControllerTest {
+public class HistoryControllerTest {
   [Fact]
   public async void GetCompressorRecords_WhenRequestValid_ShouldReturn200() {
     // Arrange
     var mockMapper = new Mock<IMapper>();
-    var mockHeatingService = new Mock<IHeatingService>();
+    var mockHeatingService = new Mock<IHeatingHistoryService>();
     mockHeatingService.Setup(x =>
         x.GetCompressorRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
       .ReturnsAsync(ErrorOrFactory.From(new List<Compressor>()));
-    var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
+    var controller = new HistoryController(mockMapper.Object, mockHeatingService.Object);
 
     // Act
     var request =
@@ -46,11 +45,11 @@ public class HeatingControllerTest {
     var mockMapper = new Mock<IMapper>();
     mockMapper.Setup(x => x.Map<List<CompressorRecordResponse>>(heatPumpRecords))
       .Returns(new List<CompressorRecordResponse> { new(Active: true, Time: utcNow, Usage: 0.2) });
-    var mockHeatingService = new Mock<IHeatingService>();
+    var mockHeatingService = new Mock<IHeatingHistoryService>();
     mockHeatingService.Setup(x =>
         x.GetHeatPumpRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
       .ReturnsAsync(ErrorOrFactory.From(heatPumpRecords));
-    var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
+    var controller = new HistoryController(mockMapper.Object, mockHeatingService.Object);
 
     // Act
     var request =
@@ -67,11 +66,11 @@ public class HeatingControllerTest {
   public async void GetHeatPumpRecords_WhenRequestValid_ShouldReturn200() {
     // Arrange
     var mockMapper = new Mock<IMapper>();
-    var mockHeatingService = new Mock<IHeatingService>();
+    var mockHeatingService = new Mock<IHeatingHistoryService>();
     mockHeatingService.Setup(x =>
         x.GetHeatPumpRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
       .ReturnsAsync(ErrorOrFactory.From(new List<HeatPumpRecord>()));
-    var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
+    var controller = new HistoryController(mockMapper.Object, mockHeatingService.Object);
 
     // Act
     var request = new GetHeatPumpRecordsRequest(DateTime.Now - TimeSpan.FromDays(1), DateTime.Now);
@@ -101,11 +100,11 @@ public class HeatingControllerTest {
           new TemperaturesResponse(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
           utcNow)
       });
-    var mockHeatingService = new Mock<IHeatingService>();
+    var mockHeatingService = new Mock<IHeatingHistoryService>();
     mockHeatingService.Setup(x =>
         x.GetHeatPumpRecordsDateTimeRangeAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
       .ReturnsAsync(ErrorOrFactory.From(heatPumpRecords));
-    var controller = new HeatingController(mockMapper.Object, mockHeatingService.Object);
+    var controller = new HistoryController(mockMapper.Object, mockHeatingService.Object);
 
     // Act
     var request = new GetHeatPumpRecordsRequest(DateTime.Now - TimeSpan.FromDays(1), DateTime.Now);

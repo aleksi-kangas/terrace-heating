@@ -41,7 +41,6 @@ public static class DependencyInjection {
       });
     services.AddScoped<IHeatingHistoryService, HeatingHistoryService>();
     services.AddSingleton<IHeatingStateService, HeatingStateService>();
-    services.AddScoped<IHeatingService, HeatingService>();
     services.AddScoped<IHeatPumpService, HeatPumpService>();
     return services;
   }

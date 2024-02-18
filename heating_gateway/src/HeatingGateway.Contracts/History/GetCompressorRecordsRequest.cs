@@ -1,4 +1,4 @@
-namespace HeatingGateway.Contracts.Heating; 
+namespace HeatingGateway.Contracts.History; 
 
 public record GetCompressorRecordsRequest(
   DateTime From,

@@ -1,6 +1,4 @@
-using HeatingGateway.Contracts.HeatPump;
-
-namespace HeatingGateway.Contracts.Heating; 
+namespace HeatingGateway.Contracts.History; 
 
 public record HeatPumpRecordResponse(
   CompressorResponse Compressor,
