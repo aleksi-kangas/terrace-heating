@@ -1,11 +1,11 @@
 import React, {Suspense} from 'react';
-import {fetchCompressorRecordsDays} from '@/app/api/heating';
+import {fetchCompressorRecordsDaysRange} from '@/app/api/history';
 import {CompressorRecord} from '@/app/api/types';
 import {Gauge} from '@/app/components/gauge';
 import Spinner from '@/app/components/spinner';
 
 const CompressorUsageGauge = async () => {
-  const records = await fetchCompressorRecordsDays(2);
+  const records: CompressorRecord[] = await fetchCompressorRecordsDaysRange(2);
 
   let currentUsage: number | undefined = undefined;
   const lastWithUsage = records

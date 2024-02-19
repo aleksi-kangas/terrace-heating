@@ -1,11 +1,13 @@
 import React, {Suspense} from 'react';
 import {DateTime} from 'luxon';
-import {fetchHeatPumpRecordsDays} from '@/app/api/heating';
+import {fetchTemperatureRecordsDaysRange} from '@/app/api/history';
+import {TemperatureRecord} from '@/app/api/types';
 import Spinner from '@/app/components/spinner';
 import Graph from '@/app/dashboard/graph';
 
 const OutsideTemperatureGraph = async () => {
-  const records = await fetchHeatPumpRecordsDays(2);
+  const records: TemperatureRecord[] =
+    await fetchTemperatureRecordsDaysRange(2);
   const xLimits =
     records.length > 0
       ? [records[0].time, records[records.length - 1].time]
@@ -15,9 +17,9 @@ const OutsideTemperatureGraph = async () => {
     <Suspense fallback={<Spinner className="flex-1 max-h-[45%] w-full" />}>
       <Graph
         className="flex-1 max-h-[45%] w-full"
-        data={records.map(r => ({
+        data={records.map((r: TemperatureRecord) => ({
           x: DateTime.fromISO(r.time).toLocal().toMillis(),
-          y: r.temperatures.outside,
+          y: r.outside,
         }))}
         label="Outside °C"
         xLimits={xLimits}

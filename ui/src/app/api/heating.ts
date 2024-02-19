@@ -1,13 +1,6 @@
 'use server';
-import {DateTime} from 'luxon';
 import {revalidateTag} from 'next/cache';
-import {URLSearchParams} from 'url';
-import {
-  CacheTags,
-  CompressorRecord,
-  HeatingState,
-  HeatPumpRecord,
-} from '@/app/api/types';
+import {CacheTags, HeatingState} from '@/app/api/types';
 
 interface NextRequestInit extends RequestInit {
   next: {
@@ -16,56 +9,6 @@ interface NextRequestInit extends RequestInit {
 }
 
 const baseUrl = 'http://heating-gateway:80/heating';
-
-export const fetchCompressorRecordsRange = async (
-  from: DateTime,
-  to: DateTime
-): Promise<CompressorRecord[]> => {
-  const url =
-    `${baseUrl}/history/compressor?` +
-    new URLSearchParams({
-      from: from.toISO()!,
-      to: to.toISO()!,
-    });
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error();
-  }
-  return response.json();
-};
-
-export const fetchCompressorRecordsDays = async (
-  days: number
-): Promise<CompressorRecord[]> => {
-  const to = DateTime.utc().set({second: 0, millisecond: 0});
-  const from = to.minus({days: days});
-  return fetchCompressorRecordsRange(from, to);
-};
-
-export const fetchHeatPumpRecordsRange = async (
-  from: DateTime,
-  to: DateTime
-): Promise<HeatPumpRecord[]> => {
-  const url =
-    `${baseUrl}/history?` +
-    new URLSearchParams({
-      from: from.toISO()!,
-      to: to.toISO()!,
-    });
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error();
-  }
-  return response.json();
-};
-
-export const fetchHeatPumpRecordsDays = async (
-  days: number
-): Promise<HeatPumpRecord[]> => {
-  const to = DateTime.utc().set({second: 0, millisecond: 0});
-  const from = to.minus({days: days});
-  return fetchHeatPumpRecordsRange(from, to);
-};
 
 const parseHeatingState = (state: number): HeatingState => {
   switch (state) {

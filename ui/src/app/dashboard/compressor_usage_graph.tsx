@@ -1,12 +1,15 @@
 import React, {Suspense} from 'react';
 import {DateTime} from 'luxon';
-import {fetchCompressorRecordsDays} from '@/app/api/heating';
+import {fetchCompressorRecordsDaysRange} from '@/app/api/history';
+import {CompressorRecord} from '@/app/api/types';
 import Graph from '@/app/dashboard/graph';
 import Spinner from '@/app/components/spinner';
 
 const CompressorUsageGraph = async () => {
-  const records = await fetchCompressorRecordsDays(2);
-  const compressorUsageRecords = records.filter(r => r.usage !== null);
+  const records: CompressorRecord[] = await fetchCompressorRecordsDaysRange(2);
+  const compressorUsageRecords = records.filter(
+    (r: CompressorRecord) => r.usage !== null
+  );
   const xLimits =
     records.length > 0
       ? [records[0].time, records[records.length - 1].time]

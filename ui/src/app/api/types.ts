@@ -24,12 +24,6 @@ export interface CompressorRecord {
   usage?: number;
 }
 
-export interface HeatPumpRecord {
-  tankLimits: TankLimits;
-  temperatures: Temperatures;
-  time: string;
-}
-
 export enum HeatingState {
   Inactive = 0,
   SoftStarting = 1,
@@ -37,7 +31,8 @@ export enum HeatingState {
   Boosting = 3,
 }
 
-export interface TankLimits {
+export interface TankLimitRecord {
+  time: string;
   lowerTankMinimum: number;
   lowerTankMinimumAdjusted: number;
   lowerTankMaximum: number;
@@ -46,6 +41,20 @@ export interface TankLimits {
   upperTankMinimumAdjusted: number;
   upperTankMaximum: number;
   upperTankMaximumAdjusted: number;
+}
+
+export interface TemperatureRecord {
+  time: string;
+  circuit1: number;
+  circuit2: number;
+  circuit3: number;
+  groundInput: number;
+  groundOutput: number;
+  hotGas: number;
+  inside: number;
+  lowerTank: number;
+  outside: number;
+  upperTank: number;
 }
 
 export interface Temperatures {
