@@ -50,6 +50,10 @@ const Graph = ({series}: DashboardGraphProps): React.JSX.Element => {
       maintainAspectRatio: false,
       parsing: false,
       plugins: {
+        decimation: {
+          enabled: true,
+          algorithm: 'lttb',
+        },
         legend: {
           position: 'top',
         },
