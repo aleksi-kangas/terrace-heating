@@ -17,7 +17,7 @@ const CircuitGraphsPage = async ({searchParams}: CircuitGraphsPageProps) => {
   const days = searchParams.days ?? 2;
   if (days < 1 || days > 365) throw new Error('Invalid days');
   const records: TemperatureRecord[] =
-    await fetchTemperatureRecordsDaysRange(2);
+    await fetchTemperatureRecordsDaysRange(days);
   return (
     <Suspense fallback={<Spinner className="flex-1 h-full w-full" />}>
       <Graph
