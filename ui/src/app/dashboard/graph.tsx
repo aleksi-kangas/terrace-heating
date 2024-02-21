@@ -63,8 +63,10 @@ const Graph = ({
   const chartOptions: ChartOptions<'line'> = useMemo(
     () => ({
       animation: {
-        onComplete: () => {
-          setIsLoading(false);
+        onProgress: context => {
+          if (context.initial) {
+            setIsLoading(false);
+          }
         },
       },
       maintainAspectRatio: false,
