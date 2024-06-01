@@ -33,7 +33,7 @@ const Graph = ({series}: DashboardGraphProps): React.JSX.Element => {
         data: s.data,
         label: s.label,
         pointHitRadius: 5,
-        pointRadius: 2,
+        pointRadius: 1,
         showLine: true,
         spanGaps: false,
       })),

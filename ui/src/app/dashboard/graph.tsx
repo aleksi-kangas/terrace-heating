@@ -50,7 +50,7 @@ const Graph = ({
           data: data,
           label: label,
           pointHitRadius: 5,
-          pointRadius: 2,
+          pointRadius: 1,
           showLine: true,
           spanGaps: false,
           fill: fill ? fill : false,
