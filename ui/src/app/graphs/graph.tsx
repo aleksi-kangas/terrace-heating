@@ -17,7 +17,9 @@ interface DashboardGraphProps {
   series: {
     color: string;
     data: Point[];
-    label: string;
+    label?: string;
+    pointHitRadius?: number;
+    pointRadius?: number;
   }[];
 }
 
@@ -32,8 +34,8 @@ const Graph = ({series}: DashboardGraphProps): React.JSX.Element => {
         borderColor: s.color,
         data: s.data,
         label: s.label,
-        pointHitRadius: 5,
-        pointRadius: 1,
+        pointHitRadius: s.pointHitRadius !== undefined ? s.pointHitRadius : 5,
+        pointRadius: s.pointRadius !== undefined ? s.pointRadius : 1,
         showLine: true,
         spanGaps: false,
       })),
@@ -55,6 +57,7 @@ const Graph = ({series}: DashboardGraphProps): React.JSX.Element => {
           algorithm: 'lttb',
         },
         legend: {
+          labels: {filter: l => l.text !== undefined},
           position: 'top',
         },
         tooltip: {
