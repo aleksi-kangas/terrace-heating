@@ -15,7 +15,7 @@ const RootLayout = ({children}: {children: React.ReactNode}) => {
     <html lang="en">
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <NavigationBar />
-        <div className="flex flex-1 justify-center p-1 sm:p-2 lg:p-8">
+        <div className="flex flex-1 justify-center p-2 sm:p-4 lg:p-8">
           {children}
         </div>
       </body>

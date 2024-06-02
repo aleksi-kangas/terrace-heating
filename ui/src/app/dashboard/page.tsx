@@ -9,12 +9,12 @@ import OutsideTemperatureGraph from '@/app/dashboard/outside_temperature_graph';
 const Dashboard = () => {
   return (
     <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card className="col-span-full md:col-span-2 flex flex-col justify-evenly items-center">
+      <Card className="col-span-full md:col-span-2 h-svh md:h-full flex flex-col justify-evenly items-center">
         <OutsideTemperatureGraph />
         <HorizontalDivider />
         <CompressorUsageGraph />
       </Card>
-      <Card className="col-span-full md:col-span-1 flex flex-col justify-evenly items-center">
+      <Card className="col-span-full md:col-span-1 h-svh md:h-full flex flex-col justify-evenly items-center">
         <HeatingControl />
         <HorizontalDivider />
         <CompressorUsageGauge />
