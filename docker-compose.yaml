@@ -11,6 +11,7 @@ services:
     image: postgres:15.3
     ports:
       - "5432:5432"
+    restart: always
     volumes:
       - database-data:/var/lib/postgresql/data
       
@@ -27,6 +28,7 @@ services:
       - HEAT_PUMP_PORT=${HEAT_PUMP_PORT}
     ports:
       - "50051:50051"
+    restart: always
     volumes:
       - ./certs:/usr/src/app/certs
 
@@ -50,6 +52,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "8000:80"
+    restart: always
     volumes:
       - ./certs:/usr/src/app/certs
 
@@ -63,6 +66,7 @@ services:
     image: dpage/pgadmin4
     ports:
       - "5050:80"
+    restart: always
 
   ui:
     build:
@@ -78,6 +82,7 @@ services:
       - NODE_ENV=${NODE_ENV}
     ports:
       - "80:3000"
+    restart: always
 
 volumes:
   database-data:
