@@ -17,4 +17,10 @@ class MockCommunicator : public communicator::ICommunicator {
   MOCK_METHOD(void, WriteCircuit3BoostingSchedule, (const communicator::BoostingSchedule& schedule), (override));
   MOCK_METHOD(void, WriteLowerTankBoostingSchedule, (const communicator::BoostingSchedule& schedule), (override));
   MOCK_METHOD(void, WriteSchedulingEnabled, (bool scheduling_enabled), (override));
+
+  class Factory : public IFactory {
+    [[nodiscard]] std::unique_ptr<communicator::ICommunicator> Instance() override {
+      return std::make_unique<MockCommunicator>();
+    }
+  };
 };

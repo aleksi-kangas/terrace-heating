@@ -11,7 +11,7 @@
 namespace service {
 class HeatPumpService final : public heat_pump::HeatPumpSvc::Service {
  public:
-  explicit HeatPumpService(std::unique_ptr<communicator::ICommunicator> communicator);
+  explicit HeatPumpService(std::unique_ptr<communicator::ICommunicator::IFactory> communicator_factory);
   ~HeatPumpService() override = default;
 
   /*
@@ -148,7 +148,16 @@ class HeatPumpService final : public heat_pump::HeatPumpSvc::Service {
   grpc::Status SetSchedulingEnabled(grpc::ServerContext* context, const google::protobuf::BoolValue* request,
                                     google::protobuf::Empty* response) override;
 
+  communicator::ICommunicator* GetCommunicator() const { return communicator_.get(); }
+
  private:
+  std::unique_ptr<communicator::ICommunicator::IFactory> communicator_factory_{nullptr};
   std::unique_ptr<communicator::ICommunicator> communicator_{nullptr};
+
+  /*
+   * Allows the reconnect to the heat pump using the supplied ICommunicator::IFactory.
+   * May be useful in scenarios where the communicator fails and cannot recover.
+   */
+  void Reconnect();
 };
 }  // namespace service

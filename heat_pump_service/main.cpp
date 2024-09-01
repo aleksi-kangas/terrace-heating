@@ -66,7 +66,7 @@ int main() {
     throw std::runtime_error{"Failed to create SSL credentials"};
   builder.AddListeningPort("0.0.0.0:50051", server_credentials);
 
-  service::HeatPumpService service{std::make_unique<communicator::ModbusTCPCommunicator>(kHeatPumpIp, kHeatPumpPort)};
+  service::HeatPumpService service{std::make_unique<communicator::ModbusTCPCommunicator::Factory>(kHeatPumpIp, kHeatPumpPort)};
   builder.RegisterService(&service);
 
   std::unique_ptr<grpc::Server> server{builder.BuildAndStart()};

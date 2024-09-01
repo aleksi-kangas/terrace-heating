@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <mutex>
 #include <string>
 
@@ -93,6 +94,17 @@ class ModbusTCPCommunicator final : public ICommunicator {
    * @throw      std::runtime_error if the write operation fails.
    */
   void WriteSchedulingEnabled(bool scheduling_enabled) override;
+
+  class Factory : public IFactory {
+    public:
+    Factory(std::string host, int32_t port);
+
+    [[nodiscard]] std::unique_ptr<ICommunicator> Instance() override;
+
+    private:
+    std::string host_;
+    int32_t port_;
+  };
 
  private:
   modbus_t* context_{nullptr};

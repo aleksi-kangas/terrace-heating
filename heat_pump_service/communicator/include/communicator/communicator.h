@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 #include "communicator/types.h"
 
@@ -87,5 +88,10 @@ class ICommunicator {
    * @throw      std::runtime_error if the write operation fails.
    */
   virtual void WriteSchedulingEnabled(bool scheduling_enabled) = 0;
+
+  class IFactory {
+    public:
+    [[nodiscard]] virtual std::unique_ptr<ICommunicator> Instance() = 0;
+  };
 };
 }  // namespace communicator

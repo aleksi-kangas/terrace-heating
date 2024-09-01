@@ -166,6 +166,12 @@ BoostingSchedule ModbusTCPCommunicator::ReadBoostingSchedule(
   return utils::ParseBoostingSchedule(addresses, hour_values, delta_values);
 }
 
+ModbusTCPCommunicator::Factory::Factory(std::string host, int32_t port) : host_{std::move(host)}, port_{port} {}
+
+std::unique_ptr<ICommunicator> ModbusTCPCommunicator::Factory::Instance() {
+  return std::make_unique<ModbusTCPCommunicator>(host_, port_);
+}
+
 void ModbusTCPCommunicator::WriteBoostingSchedule(
     const addresses::boosting_schedules::BoostingScheduleAddresses& addresses,
     const BoostingSchedule& schedule) {

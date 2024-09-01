@@ -1,5 +1,7 @@
 #include "service/service.h"
 
+#include <format>
+#include <stdexcept>
 #include <utility>
 
 namespace {
@@ -70,8 +72,10 @@ communicator::BoostingSchedule MapProtoToBoostingSchedule(const heat_pump::Boost
 }  // namespace
 
 namespace service {
-HeatPumpService::HeatPumpService(std::unique_ptr<communicator::ICommunicator> communicator)
-    : communicator_{std::move(communicator)} {}
+HeatPumpService::HeatPumpService(std::unique_ptr<communicator::ICommunicator::IFactory> communicator_factory)
+    : communicator_factory_{std::move(communicator_factory)} {
+      Reconnect();
+    }
 
 grpc::Status HeatPumpService::GetActiveCircuitCount(grpc::ServerContext* /* context */,
                                                     const google::protobuf::Empty* /* request */,
@@ -80,7 +84,8 @@ grpc::Status HeatPumpService::GetActiveCircuitCount(grpc::ServerContext* /* cont
     response->set_value(communicator_->ActiveCircuitCount());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}", e.what())};
   }
 }
 
@@ -92,7 +97,8 @@ grpc::Status HeatPumpService::GetCircuit3BoostingSchedule(grpc::ServerContext* /
     MapBoostingScheduleToProto(schedule, response);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}", e.what())};
   }
 }
 
@@ -104,7 +110,8 @@ grpc::Status HeatPumpService::GetLowerTankBoostingSchedule(grpc::ServerContext* 
     MapBoostingScheduleToProto(schedule, response);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}", e.what())};
   }
 }
 
@@ -125,7 +132,8 @@ grpc::Status HeatPumpService::GetTemperatures(grpc::ServerContext* /* context */
     response->set_upper_tank(temperatures.upper_tank);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}", e.what())};
   }
 }
 
@@ -144,7 +152,8 @@ grpc::Status HeatPumpService::GetTankLimits(grpc::ServerContext* /* context */,
     response->set_upper_tank_maximum_adjusted(tank_limits.upper_tank_maximum_adjusted);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}", e.what())};
   }
 }
 
@@ -155,7 +164,8 @@ grpc::Status HeatPumpService::IsCompressorActive(grpc::ServerContext* /* context
     response->set_value(communicator_->IsCompressorActive());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}.", e.what())};
   }
 }
 
@@ -166,7 +176,8 @@ grpc::Status HeatPumpService::IsSchedulingEnabled(grpc::ServerContext* /* contex
     response->set_value(communicator_->IsSchedulingEnabled());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}.", e.what())};
   }
 }
 
@@ -179,7 +190,8 @@ grpc::Status HeatPumpService::SetActiveCircuitCount(grpc::ServerContext* /* cont
     communicator_->WriteActiveCircuitCount(request->value());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}", e.what())};
   }
 }
 
@@ -193,7 +205,8 @@ grpc::Status HeatPumpService::SetCircuit3BoostingSchedule(grpc::ServerContext* /
     communicator_->WriteCircuit3BoostingSchedule(boosting_schedule);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}", e.what())};
   }
 }
 
@@ -207,7 +220,8 @@ grpc::Status HeatPumpService::SetLowerTankBoostingSchedule(grpc::ServerContext* 
     communicator_->WriteLowerTankBoostingSchedule(boosting_schedule);
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error: {}", e.what())};
   }
 }
 
@@ -218,7 +232,18 @@ grpc::Status HeatPumpService::SetSchedulingEnabled(grpc::ServerContext* /* conte
     communicator_->WriteSchedulingEnabled(request->value());
     return grpc::Status::OK;
   } catch (const std::exception& e) {
-    return {grpc::StatusCode::INTERNAL, "Internal server error."};
+    Reconnect();
+    return {grpc::StatusCode::INTERNAL, std::format("Internal server error.", e.what())};
+  }
+}
+
+void HeatPumpService::Reconnect() {
+  if (communicator_factory_ == nullptr) {
+    throw std::runtime_error{"ICommunicatorFactory shall not be nullptr."};
+  }
+  communicator_ = communicator_factory_->Instance();  // Reconnect by creating a new communicator instance.
+  if (communicator_ == nullptr) {
+    throw std::runtime_error{"Failed to instantiate ICommunicator."};
   }
 }
 

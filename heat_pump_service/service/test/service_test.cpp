@@ -31,17 +31,17 @@ constexpr communicator::BoostingSchedule kLowerTankBoostingSchedule{
 class HeatPumpServiceTest : public Test {
  protected:
   HeatPumpServiceTest() {
-    auto mockCommunicator = std::make_unique<MockCommunicator>();
-    mockCommunicator_ = mockCommunicator.get();
-    service_ = std::make_unique<HeatPumpService>(std::move(mockCommunicator));
+    service_ = std::make_unique<HeatPumpService>(std::make_unique<MockCommunicator::Factory>());
   }
-
-  MockCommunicator* mockCommunicator_;
   std::unique_ptr<HeatPumpService> service_{nullptr};
+
+  MockCommunicator* GetMockCommunicator() {
+    return dynamic_cast<MockCommunicator*>(service_->GetCommunicator());
+  }
 };
 
 TEST_F(HeatPumpServiceTest, GetActiveCircuitCount) {
-  EXPECT_CALL(*mockCommunicator_, ActiveCircuitCount())
+  EXPECT_CALL(*GetMockCommunicator(), ActiveCircuitCount())
       .Times(1)
       .WillOnce(Return(3));
   google::protobuf::Empty request{};
@@ -54,7 +54,7 @@ TEST_F(HeatPumpServiceTest, GetActiveCircuitCount) {
 }
 
 TEST_F(HeatPumpServiceTest, GetActiveCircuitCountFailure) {
-  EXPECT_CALL(*mockCommunicator_, ActiveCircuitCount())
+  EXPECT_CALL(*GetMockCommunicator(), ActiveCircuitCount())
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -68,7 +68,7 @@ TEST_F(HeatPumpServiceTest, GetActiveCircuitCountFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, GetCircuit3BoostingSchedule) {
-  EXPECT_CALL(*mockCommunicator_, ReadCircuit3BoostingSchedule())
+  EXPECT_CALL(*GetMockCommunicator(), ReadCircuit3BoostingSchedule())
       .Times(1)
       .WillOnce(Return(kCircuit3BoostingSchedule));
 
@@ -110,7 +110,7 @@ TEST_F(HeatPumpServiceTest, GetCircuit3BoostingSchedule) {
 }
 
 TEST_F(HeatPumpServiceTest, GetCircuit3BoostingScheduleFailure) {
-  EXPECT_CALL(*mockCommunicator_, ReadCircuit3BoostingSchedule())
+  EXPECT_CALL(*GetMockCommunicator(), ReadCircuit3BoostingSchedule())
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -124,7 +124,7 @@ TEST_F(HeatPumpServiceTest, GetCircuit3BoostingScheduleFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, GetLowerTankBoostingSchedule) {
-  EXPECT_CALL(*mockCommunicator_, ReadLowerTankBoostingSchedule())
+  EXPECT_CALL(*GetMockCommunicator(), ReadLowerTankBoostingSchedule())
       .Times(1)
       .WillOnce(Return(kLowerTankBoostingSchedule));
 
@@ -166,7 +166,7 @@ TEST_F(HeatPumpServiceTest, GetLowerTankBoostingSchedule) {
 }
 
 TEST_F(HeatPumpServiceTest, GetLowerTankBoostingScheduleFailure) {
-  EXPECT_CALL(*mockCommunicator_, ReadLowerTankBoostingSchedule())
+  EXPECT_CALL(*GetMockCommunicator(), ReadLowerTankBoostingSchedule())
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -180,7 +180,7 @@ TEST_F(HeatPumpServiceTest, GetLowerTankBoostingScheduleFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, GetTemperatures) {
-  EXPECT_CALL(*mockCommunicator_, ReadTemperatures())
+  EXPECT_CALL(*GetMockCommunicator(), ReadTemperatures())
       .Times(1)
       .WillOnce(
           Return(communicator::Temperatures{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
@@ -203,7 +203,7 @@ TEST_F(HeatPumpServiceTest, GetTemperatures) {
 }
 
 TEST_F(HeatPumpServiceTest, GetTemperaturesFailure) {
-  EXPECT_CALL(*mockCommunicator_, ReadTemperatures())
+  EXPECT_CALL(*GetMockCommunicator(), ReadTemperatures())
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -216,7 +216,7 @@ TEST_F(HeatPumpServiceTest, GetTemperaturesFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, GetTankLimits) {
-  EXPECT_CALL(*mockCommunicator_, ReadTankLimits())
+  EXPECT_CALL(*GetMockCommunicator(), ReadTankLimits())
       .Times(1)
       .WillOnce(Return(communicator::TankLimits{1, 2, 3, 4, 5, 6, 7, 8}));
 
@@ -236,7 +236,7 @@ TEST_F(HeatPumpServiceTest, GetTankLimits) {
 }
 
 TEST_F(HeatPumpServiceTest, GetTankLimitsFailure) {
-  EXPECT_CALL(*mockCommunicator_, ReadTankLimits())
+  EXPECT_CALL(*GetMockCommunicator(), ReadTankLimits())
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -249,7 +249,7 @@ TEST_F(HeatPumpServiceTest, GetTankLimitsFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, IsCompressorActive) {
-  EXPECT_CALL(*mockCommunicator_, IsCompressorActive())
+  EXPECT_CALL(*GetMockCommunicator(), IsCompressorActive())
       .Times(1)
       .WillOnce(Return(true));
 
@@ -263,7 +263,7 @@ TEST_F(HeatPumpServiceTest, IsCompressorActive) {
 }
 
 TEST_F(HeatPumpServiceTest, IsCompressorActiveFailure) {
-  EXPECT_CALL(*mockCommunicator_, IsCompressorActive())
+  EXPECT_CALL(*GetMockCommunicator(), IsCompressorActive())
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -277,7 +277,7 @@ TEST_F(HeatPumpServiceTest, IsCompressorActiveFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, IsSchedulingEnabled) {
-  EXPECT_CALL(*mockCommunicator_, IsSchedulingEnabled())
+  EXPECT_CALL(*GetMockCommunicator(), IsSchedulingEnabled())
       .Times(1)
       .WillOnce(Return(true));
 
@@ -291,7 +291,7 @@ TEST_F(HeatPumpServiceTest, IsSchedulingEnabled) {
 }
 
 TEST_F(HeatPumpServiceTest, IsSchedulingEnabledFailure) {
-  EXPECT_CALL(*mockCommunicator_, IsSchedulingEnabled())
+  EXPECT_CALL(*GetMockCommunicator(), IsSchedulingEnabled())
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -305,7 +305,8 @@ TEST_F(HeatPumpServiceTest, IsSchedulingEnabledFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, SetActiveCircuitCount) {
-  EXPECT_CALL(*mockCommunicator_, WriteActiveCircuitCount(3)).Times(1);
+  EXPECT_CALL(*GetMockCommunicator(), WriteActiveCircuitCount(3))
+      .Times(1);
 
   google::protobuf::UInt32Value request{};
   request.set_value(3);
@@ -317,7 +318,7 @@ TEST_F(HeatPumpServiceTest, SetActiveCircuitCount) {
 }
 
 TEST_F(HeatPumpServiceTest, SetActiveCircuitCountFailure) {
-  EXPECT_CALL(*mockCommunicator_, WriteActiveCircuitCount(_))
+  EXPECT_CALL(*GetMockCommunicator(), WriteActiveCircuitCount(_))
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -332,7 +333,8 @@ TEST_F(HeatPumpServiceTest, SetActiveCircuitCountFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, SetActiveCircuitCountInvalidArgument) {
-  EXPECT_CALL(*mockCommunicator_, WriteActiveCircuitCount(_)).Times(0);
+  EXPECT_CALL(*GetMockCommunicator(), WriteActiveCircuitCount(_))
+      .Times(0);
 
   google::protobuf::UInt32Value request{};
   request.set_value(4);
@@ -345,8 +347,7 @@ TEST_F(HeatPumpServiceTest, SetActiveCircuitCountInvalidArgument) {
 }
 
 TEST_F(HeatPumpServiceTest, SetCircuit3BoostingSchedule) {
-  EXPECT_CALL(*mockCommunicator_,
-              WriteCircuit3BoostingSchedule(_))
+  EXPECT_CALL(*GetMockCommunicator(), WriteCircuit3BoostingSchedule(_))
       .Times(1);
 
   heat_pump::BoostingSchedule request{};
@@ -380,7 +381,7 @@ TEST_F(HeatPumpServiceTest, SetCircuit3BoostingSchedule) {
 }
 
 TEST_F(HeatPumpServiceTest, SetCircuit3BoostingScheduleFailure) {
-  EXPECT_CALL(*mockCommunicator_, WriteCircuit3BoostingSchedule(_))
+  EXPECT_CALL(*GetMockCommunicator(), WriteCircuit3BoostingSchedule(_))
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
@@ -394,7 +395,7 @@ TEST_F(HeatPumpServiceTest, SetCircuit3BoostingScheduleFailure) {
 }
 
 TEST_F(HeatPumpServiceTest, SetCircuit3BoostingScheduleArgument) {
-  EXPECT_CALL(*mockCommunicator_, WriteCircuit3BoostingSchedule(_)).Times(0);
+  EXPECT_CALL(*GetMockCommunicator(), WriteCircuit3BoostingSchedule(_)).Times(0);
 
   heat_pump::BoostingSchedule request{};
   request.mutable_monday()->set_start_hour(25);
@@ -409,7 +410,7 @@ TEST_F(HeatPumpServiceTest, SetCircuit3BoostingScheduleArgument) {
 }
 
 TEST_F(HeatPumpServiceTest, SetSchedulingEnabled) {
-  EXPECT_CALL(*mockCommunicator_, WriteSchedulingEnabled(true)).Times(1);
+  EXPECT_CALL(*GetMockCommunicator(), WriteSchedulingEnabled(true)).Times(1);
 
   google::protobuf::BoolValue request{};
   request.set_value(true);
@@ -421,7 +422,7 @@ TEST_F(HeatPumpServiceTest, SetSchedulingEnabled) {
 }
 
 TEST_F(HeatPumpServiceTest, SetSchedulingEnabledFailure) {
-  EXPECT_CALL(*mockCommunicator_, WriteSchedulingEnabled(true))
+  EXPECT_CALL(*GetMockCommunicator(), WriteSchedulingEnabled(true))
       .Times(1)
       .WillOnce(Throw(std::runtime_error{"test"}));
 
